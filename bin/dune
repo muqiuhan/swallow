@@ -1,5 +1,5 @@
 (executable
- (public_name mlisp)
- (name mlisp)
+ (public_name swallow)
+ (name swallow)
  (modes byte native)
- (libraries mlisp))
+ (libraries swallow))

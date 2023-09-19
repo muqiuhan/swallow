@@ -1,5 +1,5 @@
 (****************************************************************************)
-(* MLisp                                                                    *)
+(* Swallow                                                                    *)
 (* Copyright (C) 2022 Muqiu Han                                             *)
 (*                                                                          *)
 (* This program is free software: you can redistribute it and/or modify     *)
@@ -16,22 +16,22 @@
 (* along with this program.  If not, see <https://www.gnu.org/licenses/>.   *)
 (****************************************************************************)
 
-open Mlisp_error
-open Mlisp_utils
+open Swallow_error
+open Swallow_utils
 
 let print_error (stream : 'a Stream_wrapper.t) exn =
-  let open Mlisp_error.Error in
-  let open Mlisp_error.Help in
-  let data =
-    {
-      file_name = stream.file_name;
-      line_number = stream.line_num;
-      column_number = stream.column_number;
-      message = Message.message exn;
-      help = help exn;
-    }
-  in
-  if stream.stdin then
-    data |> repl_error |> ignore |> flush_all
-  else
-    data |> file_error |> ignore |> flush_all
+    let open Swallow_error.Error in
+    let open Swallow_error.Help in
+    let data =
+        {
+          file_name = stream.file_name;
+          line_number = stream.line_num;
+          column_number = stream.column_number;
+          message = Message.message exn;
+          help = help exn;
+        }
+    in
+        if stream.stdin then
+          data |> repl_error |> ignore |> flush_all
+        else
+          data |> file_error |> ignore |> flush_all

@@ -6,9 +6,9 @@ maintainer: ["Muqiu Han"]
 authors: ["Muqiu Han"]
 license: "AGPL-3.0-only"
 tags: ["lisp" "interpreter" "compiler"]
-homepage: "https://github.com/muqiuhan/MLisp"
-doc: "https://github.com/muqiuhan/MLisp"
-bug-reports: "https://github.com/muqiuhan/MLisp/issues"
+homepage: "https://github.com/muqiuhan/Swallow"
+doc: "https://github.com/muqiuhan/Swallow"
+bug-reports: "https://github.com/muqiuhan/Swallow/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.3"}
@@ -31,4 +31,4 @@ build: [
     "@doc" {with-doc}
   ]
 ]
-dev-repo: "git+https://github.com/muqiuhan/MLisp.git"
+dev-repo: "git+https://github.com/muqiuhan/Swallow.git"

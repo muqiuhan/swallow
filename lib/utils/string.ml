@@ -1,5 +1,5 @@
 (****************************************************************************)
-(* MLisp                                                                    *)
+(* Swallow                                                                    *)
 (* Copyright (C) 2022 Muqiu Han                                             *)
 (*                                                                          *)
 (* This program is free software: you can redistribute it and/or modify     *)
@@ -21,13 +21,13 @@ include Core.String
 let spacesep ns = concat ~sep:" " ns
 
 let read_lines filename =
-  let lines = ref [] in
-  let chan = open_in filename in
-  try
-    while true do
-      lines := input_line chan :: !lines
-    done;
-    !lines
-  with End_of_file ->
-    close_in chan;
-    List.rev !lines
+    let lines = ref [] in
+    let chan = open_in filename in
+        try
+          while true do
+            lines := input_line chan :: !lines
+          done;
+          !lines
+        with End_of_file ->
+          close_in chan;
+          List.rev !lines

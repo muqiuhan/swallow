@@ -1,5 +1,5 @@
 (****************************************************************************)
-(* MLisp                                                                    *)
+(* Swallow                                                                    *)
 (* Copyright (C) 2022 Muqiu Han                                             *)
 (*                                                                          *)
 (* This program is free software: you can redistribute it and/or modify     *)
@@ -16,26 +16,26 @@
 (* along with this program.  If not, see <https://www.gnu.org/licenses/>.   *)
 (****************************************************************************)
 
-open Mlisp_object
-open Mlisp_error
-open Mlisp_eval
-open Mlisp_lexer
-open Mlisp_ast
-open Mlisp_utils
-open Mlisp_primitives
+open Swallow_object
+open Swallow_error
+open Swallow_eval
+open Swallow_lexer
+open Swallow_ast
+open Swallow_utils
+open Swallow_primitives
 
 let eval env e =
-  match e with
-  | Object.Defexpr d -> Eval.eval_def d env
-  | _ ->
-    raise
-      (Errors.Parse_error_exn
-         (Errors.Type_error "Can only have definitions in stdlib"))
+    match e with
+    | Object.Defexpr d -> Eval.eval_def d env
+    | _ ->
+        raise
+          (Errors.Parse_error_exn
+             (Errors.Type_error "Can only have definitions in stdlib"))
 
 let rec slurp stm env =
-  try stm |> Lexer.read_sexpr |> Ast.build_ast |> eval env |> snd |> slurp stm
-  with Stream.Failure -> env
+    try stm |> Lexer.read_sexpr |> Ast.build_ast |> eval env |> snd |> slurp stm
+    with Stream.Failure -> env
 
 let stdlib =
-  let stm = Stream_wrapper.make_stringstream Stdlib_string.stdlib_string in
-  slurp stm Basis.basis
+    let stm = Stream_wrapper.make_stringstream Stdlib_string.stdlib_string in
+        slurp stm Basis.basis

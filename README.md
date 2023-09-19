@@ -1,6 +1,6 @@
 <div align=center><img width="150" height="150" src="./.github/logo.png"/>
 
-# MLisp
+# Swallow
 
 *A Lisp dialect implementation in OCaml*
 

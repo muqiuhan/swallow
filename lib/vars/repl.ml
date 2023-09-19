@@ -1,5 +1,5 @@
 (****************************************************************************)
-(* MLisp                                                                    *)
+(* Swallow                                                                    *)
 (* Copyright (C) 2022 Muqiu Han                                             *)
 (*                                                                          *)
 (* This program is free software: you can redistribute it and/or modify     *)
@@ -16,4 +16,4 @@
 (* along with this program.  If not, see <https://www.gnu.org/licenses/>.   *)
 (****************************************************************************)
 
-let prompt_tip = "mlisp>"
+let prompt_tip = "swallow>"

@@ -1,5 +1,5 @@
 (****************************************************************************)
-(* MLisp                                                                    *)
+(* Swallow                                                                    *)
 (* Copyright (C) 2022 Muqiu Han                                             *)
 (*                                                                          *)
 (* This program is free software: you can redistribute it and/or modify     *)
@@ -16,14 +16,14 @@
 (* along with this program.  If not, see <https://www.gnu.org/licenses/>.   *)
 (****************************************************************************)
 
-open Mlisp_object
-open Mlisp_error
+open Swallow_object
+open Swallow_error
 
 let generate name operator =
-  ( name,
-    function
-    | [Object.Fixnum a; Object.Fixnum b] -> Object.Fixnum (operator a b)
-    | _ ->
-      raise
-        (Errors.Parse_error_exn (Errors.Type_error ("(" ^ name ^ " int int)")))
-  )
+    ( name,
+      function
+      | [Object.Fixnum a; Object.Fixnum b] -> Object.Fixnum (operator a b)
+      | _ ->
+          raise
+            (Errors.Parse_error_exn
+               (Errors.Type_error ("(" ^ name ^ " int int)"))) )

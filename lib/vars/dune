@@ -1,2 +1,2 @@
 (library
- (name mlisp_vars))
+ (name swallow_vars))

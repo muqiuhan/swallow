@@ -1,5 +1,5 @@
 (****************************************************************************)
-(* MLisp                                                                    *)
+(* Swallow                                                                    *)
 (* Copyright (C) 2022 Muqiu Han                                             *)
 (*                                                                          *)
 (* This program is free software: you can redistribute it and/or modify     *)
@@ -28,9 +28,16 @@ type 'a stream = {
 type 'a t = 'a stream
 
 let make_stream ?(file_name = "stdin") is_stdin stm =
-  {chrs = []; line_num = 1; stdin = is_stdin; stm; file_name; column_number = 0}
+    {
+      chrs = [];
+      line_num = 1;
+      stdin = is_stdin;
+      stm;
+      file_name;
+      column_number = 0;
+    }
 
 let make_stringstream s = make_stream false @@ Stream.of_string s
 
 let make_filestream ?(file_name = "stdin") f =
-  make_stream ~file_name (f = stdin) @@ Stream.of_channel f
+    make_stream ~file_name (f = stdin) @@ Stream.of_channel f

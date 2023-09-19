@@ -1,5 +1,5 @@
 (test
- (name mlisp)
+ (name swallow)
  (flags
   (:standard -w -32))
- (libraries mlisp))
+ (libraries swallow))

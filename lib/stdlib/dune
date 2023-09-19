@@ -1,11 +1,11 @@
 (library
- (name mlisp_stdlib)
+ (name swallow_stdlib)
  (libraries
   core
-  mlisp_object
-  mlisp_error
-  mlisp_eval
-  mlisp_lexer
-  mlisp_ast
-  mlisp_utils
-  mlisp_primitives))
+  swallow_object
+  swallow_error
+  swallow_eval
+  swallow_lexer
+  swallow_ast
+  swallow_utils
+  swallow_primitives))

@@ -1,11 +1,11 @@
 (lang dune 3.3)
 
-(name mlisp)
+(name swallow)
 
 (generate_opam_files true)
 
 (source
- (github muqiuhan/MLisp))
+ (github muqiuhan/Swallow))
 
 (authors "Muqiu Han")
 
@@ -13,10 +13,10 @@
 
 (license AGPL-3.0-only)
 
-(documentation https://github.com/muqiuhan/MLisp)
+(documentation https://github.com/muqiuhan/Swallow)
 
 (package
- (name mlisp)
+ (name swallow)
  (synopsis "A Lisp implementation in OCaml")
  (description "A Lisp implementation in OCaml")
  (depends ocaml dune core ocolor camlp-streams)
