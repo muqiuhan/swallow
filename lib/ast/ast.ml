@@ -37,7 +37,7 @@ let assert_unique_args args =
                 raise
                   (Errors.Parse_error_exn
                      (Type_error "(defun name (formals) body)")))
-          (Object.pair_to_list args)
+          (Object.list_of_pair args)
     in
     let () = assert_unique names in
         names
@@ -52,15 +52,16 @@ let rec build_ast sexpr =
     match sexpr with
     | Object.Primitive _ | Object.Closure _ ->
         raise Errors.This_can't_happen_exn
-    | Object.Fixnum _
+    | Object.Integer _
     | Object.Boolean _
     | Object.Quote _
     | Object.String _
-    | Object.Record _
+    | Object.Float _
+    | Object.Char _
     | Object.Nil -> literal_expr sexpr
     | Object.Symbol s -> symbol_expr s
     | Object.Pair _ when Object.is_list sexpr -> (
-        match Object.pair_to_list sexpr with
+        match Object.list_of_pair sexpr with
         | [Object.Symbol "if"; cond; if_true; if_false] ->
             if_expr cond if_true if_false
         | Object.Symbol "cond" :: conditions -> cond_to_if conditions
@@ -69,8 +70,6 @@ let rec build_ast sexpr =
         | [Object.Symbol "quote"; expr] -> quote_expr expr
         | [Object.Symbol "setq"; Object.Symbol name; expr] ->
             setq_expr name expr
-        | [Object.Symbol "record"; Object.Symbol name; fields] ->
-            record_expr name fields
         | [Object.Symbol "lambda"; args; body] when Object.is_list args ->
             lambda_expr args body
         | [Object.Symbol "apply"; fn_expr; args] -> apply_expr fn_expr args
@@ -93,9 +92,6 @@ and setq_expr name expr = Object.Defexpr (Object.Setq (name, build_ast expr))
 and if_expr cond if_true if_false =
     If (build_ast cond, build_ast if_true, build_ast if_false)
 
-and record_expr name fields =
-    Defexpr (Defrecord (name, assert_unique_args fields))
-
 and lambda_expr args body =
     Lambda ("lambda", assert_unique_args args, build_ast body)
 
@@ -117,7 +113,7 @@ and let_expr s bindings expr =
             raise
               (Errors.Parse_error_exn (Errors.Type_error "(let bindings expr)"))
     in
-    let bindings = List.map make_binding (Object.pair_to_list bindings) in
+    let bindings = List.map make_binding (Object.list_of_pair bindings) in
     let () = assert_unique (List.map fst bindings) in
         Object.Let (to_kind s, bindings, build_ast expr)
 
@@ -134,7 +130,7 @@ let rec string_expr =
     let spacesep_exp es = String.spacesep (List.map string_expr es) in
     let string_of_binding (n, e) = "(" ^ n ^ " " ^ string_expr e ^ ")" in
         function
-        | Object.Literal e -> Object.string_object e
+        | Object.Literal e -> Repr.to_string e
         | Object.Var n -> n
         | Object.If (c, t, f) ->
             "(if "
@@ -168,8 +164,6 @@ let rec string_expr =
             ^ string_expr e
             ^ ")"
         | Object.Defexpr (Object.Expr e) -> string_expr e
-        | Object.Defexpr (Object.Defrecord (name, field_list)) ->
-            "(record " ^ name ^ String.spacesep field_list ^ ")"
         | Object.Let (kind, bs, e) ->
             let str =
                 match kind with

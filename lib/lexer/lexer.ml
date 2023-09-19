@@ -53,14 +53,14 @@ let rec eat_comment stream =
     else
       eat_comment stream
 
-let read_fixnum stream acc =
+let read_integer stream acc =
     let rec loop acc =
         let num_char = read_char stream in
             if Char.is_digit num_char then
               num_char |> Char.escaped |> ( ^ ) acc |> loop
             else
               let _ = unread_char stream num_char in
-                  Object.Fixnum (int_of_string acc)
+                  Object.Integer (Int64.of_string acc)
     in
         loop acc
 
@@ -113,7 +113,7 @@ let rec read_sexpr stream =
            else
              ch)
           |> Char.escaped
-          |> read_fixnum stream
+          |> read_integer stream
         else if Char.equal ch '(' then
           read_list stream
         else if Char.is_boolean ch then

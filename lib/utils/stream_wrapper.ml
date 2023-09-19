@@ -16,6 +16,7 @@
 (* along with this program.  If not, see <https://www.gnu.org/licenses/>.   *)
 (****************************************************************************)
 
+
 type 'a stream = {
   mutable line_num : int;
   mutable chrs : char list;

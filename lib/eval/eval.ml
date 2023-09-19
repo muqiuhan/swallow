@@ -56,7 +56,7 @@ let rec eval_expr expr env =
                 raise
                   (Errors.Parse_error_exn (Errors.Type_error "(or bool bool)")))
         | Object.Apply (fn, args) ->
-            eval_apply (eval fn) (Object.pair_to_list (eval args)) env
+            eval_apply (eval fn) (Object.list_of_pair (eval args)) env
         | Object.Call (Var "env", []) -> Object.env_to_val env
         | Object.Call (fn, args) ->
             eval_apply (eval fn) (List.map eval args) env
@@ -95,7 +95,7 @@ and eval_apply fn_expr args env =
         eval_closure names expr args clenv env
     | fn_expr ->
         raise
-          (Errors.Parse_error_exn (Apply_error (Object.string_object fn_expr)))
+          (Errors.Parse_error_exn (Apply_error (Repr.to_string fn_expr)))
 
 and eval_closure names expr args clenv env =
     eval_expr expr (extend (Object.bind_list names args clenv) env)
@@ -121,19 +121,6 @@ and eval_def def env =
         in
         let () = loc := Some clo in
             (clo, Object.bind_local (name, loc, env))
-    | Defrecord (name, fields) ->
-        let constructor =
-            Object.Defun
-              ( name,
-                fields,
-                Object.Literal
-                  (Object.Record
-                     ( name,
-                       List.map
-                         (fun field -> (field, Object.lookup (field, env)))
-                         fields )) )
-        in
-            eval_def constructor env
     | Expr e -> (eval_expr e env, env)
 
 and eval ast env =

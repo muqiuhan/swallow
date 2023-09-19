@@ -19,13 +19,14 @@
 open Swallow_error
 
 type lobject =
-  | Fixnum of int
+  | Integer of Int64.t
+  | Float of float
   | Boolean of bool
   | Symbol of string
   | String of string
+  | Char of char
   | Nil
   | Pair of lobject * lobject
-  | Record of name * (name * lobject) list
   | Primitive of string * (lobject list -> lobject)
   | Quote of value
   | Closure of name * name list * expr * value env
@@ -53,7 +54,6 @@ and expr =
 and def =
   | Setq of name * expr
   | Defun of name * name list * expr
-  | Defrecord of name * name list
   | Expr of expr
 
 and 'a env = (string * 'a option ref) list
@@ -65,108 +65,13 @@ let rec is_list = function
     | Pair (_, b) -> is_list b
     | _ -> false
 
-let object_type = function
-    | Fixnum _ -> "int"
-    | Boolean _ -> "boolean"
-    | String _ -> "string"
-    | Symbol _ -> "symbol"
-    | Nil -> "nil"
-    | Pair _ -> "pair"
-    | Primitive _ -> "primitive"
-    | Quote _ -> "quote"
-    | Closure _ -> "closure"
-    | Record _ -> "record"
-
-let rec print_sexpr sexpr =
-    match sexpr with
-    | Fixnum v -> print_int v
-    | Boolean b ->
-        print_string
-          (if b then
-             "#t"
-           else
-             "#f")
-    | Symbol s -> print_string s
-    | Nil -> print_string "nil"
-    | Pair (_, _) ->
-        print_string "(";
-        if is_list sexpr then
-          print_list sexpr
-        else
-          print_pair sexpr;
-        print_string ")"
-    | _ -> failwith "print_sexpr"
-
-and print_list lst =
-    match lst with
-    | Pair (a, Nil) -> print_sexpr a
-    | Pair (a, b) ->
-        print_sexpr a;
-        print_string " ";
-        print_list b
-    | _ -> failwith "This can't happen!!!!"
-
-and print_pair pair =
-    match pair with
-    | Pair (a, b) ->
-        print_sexpr a;
-        print_string " . ";
-        print_sexpr b
-    | _ -> failwith "This can't happen!!!!"
-
-let rec pair_to_list pair =
+let rec list_of_pair pair =
     match pair with
     | Nil -> []
-    | Pair (a, b) -> a :: pair_to_list b
+    | Pair (a, b) -> a :: list_of_pair b
     | _ -> failwith "This can't happen!!!!"
 
 let string_of_char a_char = String.make 1 a_char
-
-let rec string_object e =
-    let rec string_list l =
-        match l with
-        | Pair (a, Nil) -> string_object a
-        | Pair (a, b) -> string_object a ^ " " ^ string_list b
-        | _ -> failwith "This can't happen!!!!"
-    in
-    let string_pair p =
-        match p with
-        | Pair (a, b) -> string_object a ^ " . " ^ string_object b
-        | _ -> failwith "This can't happen!!!!"
-    in
-        match e with
-        | Fixnum v -> string_of_int v
-        | Boolean b ->
-            if b then
-              "#t"
-            else
-              "#f"
-        | String s -> "\"" ^ s ^ "\""
-        | Symbol s -> s
-        | Nil -> "nil"
-        | Pair _ ->
-            "("
-            ^ (if is_list e then
-                 string_list e
-               else
-                 string_pair e)
-            ^ ")\n"
-        | Primitive (name, _) -> "#<primitive:" ^ name ^ ">"
-        | Quote expr -> "'" ^ string_object expr
-        | Closure (name, name_list, _, _) ->
-            "#<" ^ name ^ ":(" ^ String.concat " " name_list ^ ")>"
-        | Record (name, fields) ->
-            let fields_string =
-                let to_string (field_name, field_value) =
-                    Format.sprintf "%s: %s = %s" field_name
-                      (object_type field_value)
-                      (string_object field_value)
-                in
-                    "\n\t\t"
-                    ^ String.concat "\n\t\t" (List.map to_string fields)
-                    ^ "\n\t"
-            in
-                "#<record:" ^ name ^ "\n\t(" ^ fields_string ^ ")>"
 
 let rec lookup = function
     | n, [] -> raise (Errors.Runtime_error_exn (Errors.Not_found n))

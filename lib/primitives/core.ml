@@ -55,18 +55,18 @@ let symp = function
 
 let getchar = function
     | [] -> (
-        try Object.Fixnum (int_of_char @@ input_char stdin)
-        with End_of_file -> Object.Fixnum (-1))
+        try Object.Integer (input_char stdin |> int_of_char |> Int64.of_int)
+        with End_of_file -> Object.Integer (Int64.of_int (-1)))
     | _ -> raise (Errors.Parse_error_exn (Errors.Type_error "(getchar)"))
 
 let print = function
     | [v] ->
-        let () = print_string @@ Object.string_object v in
+        let () = print_string @@ Repr.to_string v in
             Object.Symbol "ok"
     | _ -> raise (Errors.Parse_error_exn (Errors.Type_error "(print object)"))
 
 let int_to_char = function
-    | [Object.Fixnum i] -> Object.Symbol (Object.string_of_char @@ char_of_int i)
+    | [Object.Integer i] -> Object.Symbol (Int64.to_string i)
     | _ ->
         raise (Errors.Parse_error_exn (Errors.Type_error "(int_to_char int)"))
 

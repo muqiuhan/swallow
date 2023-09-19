@@ -22,7 +22,7 @@ open Swallow_error
 let generate name operator =
     ( name,
       function
-      | [Object.Fixnum a; Object.Fixnum b] -> Object.Fixnum (operator a b)
+      | [Object.Integer a; Object.Integer b] -> Object.Integer (operator a b)
       | _ ->
           raise
             (Errors.Parse_error_exn

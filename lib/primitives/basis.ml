@@ -22,12 +22,13 @@ let basis =
     let newprim acc (name, func) =
         Object.bind (name, Object.Primitive (name, func), acc)
     in
+        let open Stdint.Int64 in
         List.fold_left newprim
           [("empty-symbol", ref (Some (Object.Symbol "")))]
           [
             Num.generate "+" ( + ); Num.generate "-" ( - );
             Num.generate "*" ( * ); Num.generate "/" ( / );
-            Num.generate "mod" ( mod ); Cmp.generate "=" ( = );
+            Num.generate "rem" rem; Cmp.generate "=" ( = );
             Cmp.generate "<" ( < ); Cmp.generate ">" ( > );
             Cmp.generate ">=" ( >= ); Cmp.generate "<=" ( <= );
             ("list", Core.list); ("pair", Core.pair); ("car", Core.car);

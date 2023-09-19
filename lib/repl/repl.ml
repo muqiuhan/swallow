@@ -29,9 +29,7 @@ let print_prompt () =
     flush_all ()
 
 let print_result result =
-    Printf.printf "- : %s = %s\n\n"
-      (Object.object_type result)
-      (Object.string_object result);
+    Printf.printf "-: %s\n\n" (Repr.to_string result);
     flush_all ()
 
 let rec repl stream env =
