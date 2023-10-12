@@ -1,3 +1,0 @@
-(library
- (name swallow_object)
- (libraries core swallow_error))

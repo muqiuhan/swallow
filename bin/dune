@@ -1,5 +1,0 @@
-(executable
- (public_name swallow)
- (name swallow)
- (modes byte native)
- (libraries swallow))

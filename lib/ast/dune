@@ -1,3 +1,0 @@
-(library
- (name swallow_ast)
- (libraries core swallow_object swallow_error swallow_utils))

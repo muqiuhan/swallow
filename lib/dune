@@ -1,4 +1,0 @@
-(library
- (name swallow)
- (modes byte native)
- (libraries core swallow_utils swallow_repl swallow_stdlib))

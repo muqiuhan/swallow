@@ -1,9 +1,0 @@
-(library
- (name swallow_lexer)
- (libraries
-  core
-  camlp-streams
-  swallow_object
-  swallow_utils
-  swallow_error
-  swallow_vars))
