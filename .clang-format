@@ -20,7 +20,7 @@ BreakBeforeTernaryOperators:	true
 BreakConstructorInitializersBeforeComma:	true
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: true
-ColumnLimit: 90
+ColumnLimit: 120
 CommentPragmas:	'^ IWYU pragma:'
 ConstructorInitializerAllOnOneLineOrOnePerLine:	false
 ConstructorInitializerIndentWidth:	2

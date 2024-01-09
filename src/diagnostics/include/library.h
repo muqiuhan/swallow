@@ -2,7 +2,6 @@
 #define PRETTY_ERRORS_LIBRARY_H
 
 #include <cassert>
-#include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
@@ -10,8 +9,7 @@
 
 #include "termcolor.hpp"
 
-#define COLOR_BY_TYPE(type, text)                                                        \
-  color_by_type(std::cout, type) << text << termcolor::reset
+#define COLOR_BY_TYPE(type, text) color_by_type(std::cout, type) << text << termcolor::reset
 #define COLOR_RGB(text, rgb) termcolor::color<rgb> << text << termcolor::reset
 
 #define assertm(exp, msg) assert(((void)msg, exp))
@@ -45,7 +43,7 @@ namespace diagnostics
 
   auto get_color_by_name(const std::string & name) -> ColorType;
 
-  void print_formatted_text(std::ostream & output, const std::string & text);
+  auto print_formatted_text(std::ostream & output, const std::string & text) -> void;
 
   class Label;
 
@@ -136,8 +134,7 @@ namespace diagnostics
 
     [[nodiscard]] auto get_label_line(const Label & label) const -> size_t;
 
-    [[nodiscard]] auto get_line_spans() const
-      -> const std::vector<std::shared_ptr<Span>> &;
+    [[nodiscard]] auto get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -156,20 +153,17 @@ namespace diagnostics
    public:
     LabelGroup(Details * general_details, Labels labels);
 
-    void print(std::ostream & output, const std::string & spaces_prefix) const;
+    auto print(std::ostream & output, const std::string & spaces_prefix) const -> void;
 
-    static void print_labels_level(const std::vector<Labels> & level_labels,
+    static auto print_labels_level(const std::vector<Labels> & level_labels,
                                    size_t current_level,
                                    const Span & line_span,
                                    std::ostream & output,
-                                   const std::string & spaces_prefix);
+                                   const std::string & spaces_prefix) -> void;
 
-    void print_colored_source_line(std::ostream & output,
-                                   const Span & label_span,
-                                   const Labels & labels) const;
+    auto print_colored_source_line(std::ostream & output, const Span & label_span, const Labels & labels) const -> void;
 
-    [[nodiscard]] static auto find_label_levels(const Labels & labels)
-      -> std::vector<Labels>;
+    [[nodiscard]] static auto find_label_levels(const Labels & labels) -> std::vector<Labels>;
 
     [[nodiscard]] static auto find_remove_overlapping_labels(Labels & labels) -> Labels;
 
@@ -195,7 +189,7 @@ namespace diagnostics
    public:
     FileGroup(Details * details, Labels labels);
 
-    void print(std::ostream & output, const std::string & spaces_prefix) const;
+    auto print(std::ostream & output, const std::string & spaces_prefix) const -> void;
 
     [[nodiscard]] auto get_biggest_displayed_number() const -> size_t;
 
@@ -211,13 +205,10 @@ namespace diagnostics
   class Report
   {
    public:
-    Report(ReportType type,
-           std::string message,
-           size_t code,
-           std::vector<Label> labels,
-           std::optional<std::string> note);
+    Report(
+      ReportType type, std::string message, size_t code, std::vector<Label> labels, std::optional<std::string> note);
 
-    void print(std::ostream & output) const;
+    auto print(std::ostream & output) const -> void;
 
     [[nodiscard]] auto find_file_groups() const -> std::vector<FileGroup>;
 
@@ -264,6 +255,6 @@ namespace diagnostics
     std::vector<Label> labels_;
   };
 
-}
+} // namespace diagnostics
 
 #endif // PRETTY_ERRORS_LIBRARY_H

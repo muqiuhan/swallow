@@ -148,8 +148,7 @@ diagnostics::print_formatted_text(std::ostream & output, const std::string & tex
 bool
 AscendingLabels::operator()(const Label * first, const Label * second) const
 {
-  auto difference =
-    (int)first->get_span().get_start_index() - (int)second->get_span().get_start_index();
+  auto difference = (int)first->get_span().get_start_index() - (int)second->get_span().get_start_index();
   if (difference == 0)
     return first->get_span().get_end_index() < second->get_span().get_end_index();
 
@@ -159,8 +158,7 @@ AscendingLabels::operator()(const Label * first, const Label * second) const
 bool
 DescendingLabels::operator()(const Label * first, const Label * second) const
 {
-  auto difference =
-    (int)first->get_span().get_start_index() - (int)second->get_span().get_start_index();
+  auto difference = (int)first->get_span().get_start_index() - (int)second->get_span().get_start_index();
   if (difference == 0)
     return first->get_span().get_end_index() < second->get_span().get_end_index();
 
@@ -184,16 +182,13 @@ Span::Span()
 auto
 Span::relative_to(const Span & span) const -> Span
 {
-  return { span.get_details(),
-           this->start_index_ - span.start_index_,
-           this->end_index_ - span.start_index_ };
+  return { span.get_details(), this->start_index_ - span.start_index_, this->end_index_ - span.start_index_ };
 }
 
 auto
 Span::is_inside_span(const Span & span) const -> bool
 {
-  return (this->start_index_ <= span.start_index_)
-         && (this->end_index_ >= span.end_index_);
+  return (this->start_index_ <= span.start_index_) && (this->end_index_ >= span.end_index_);
 }
 
 auto
@@ -371,8 +366,7 @@ LabelGroup::LabelGroup(Details * general_details_, std::vector<const Label *> la
   , details_(general_details_)
   , labels_(std::move(labels))
 {
-  assertm(!this->labels_.empty(),
-          "Couldn't find the last labels as there are no labels.");
+  assertm(!this->labels_.empty(), "Couldn't find the last labels as there are no labels.");
 
   auto ascending_labels(this->labels_);
   std::sort(ascending_labels.begin(), ascending_labels.end(), AscendingLabels());
@@ -401,8 +395,7 @@ LabelGroup::print(std::ostream & output, const std::string & spaces_prefix) cons
 
       auto line_number = line_index + 1;
       output << "  "
-             << COLOR_RGB(std::setw(spaces_prefix.length() - 3)
-                            << std::setfill(' ') << line_number << " │  ",
+             << COLOR_RGB(std::setw(spaces_prefix.length() - 3) << std::setfill(' ') << line_number << " │  ",
                           COLOR_GREY);
 
       auto labels = this->find_labels_in_line(line_index);
@@ -543,9 +536,7 @@ LabelGroup::print_labels_level(const std::vector<Labels> & level_labels,
 }
 
 void
-LabelGroup::print_colored_source_line(std::ostream & output,
-                                      const Span & label_span,
-                                      const Labels & labels) const
+LabelGroup::print_colored_source_line(std::ostream & output, const Span & label_span, const Labels & labels) const
 {
   const auto source = this->details_->get_line_source(label_span);
 
@@ -573,8 +564,7 @@ LabelGroup::print_colored_source_line(std::ostream & output,
       output << current_char;
 
       auto starting_index = char_index;
-      for (char_index++; char_index < starting_index + label->get_span().get_width() + 1;
-           char_index++)
+      for (char_index++; char_index < starting_index + label->get_span().get_width() + 1; char_index++)
         {
           if (mapped_labels.contains(char_index))
             break;
@@ -626,8 +616,7 @@ LabelGroup::find_remove_overlapping_labels(Labels & labels) -> Labels
     {
       auto next_label = *iterator;
 
-      if (next_label->get_span().get_end_index()
-          < current_label->get_span().get_start_index())
+      if (next_label->get_span().get_end_index() < current_label->get_span().get_start_index())
         current_label = next_label;
       else
         {
@@ -679,8 +668,7 @@ LabelGroup::get_details() const -> Details *
 FileGroup::FileGroup(Details * details, Labels labels)
   : details_(details)
 {
-  assertm(!labels.empty(),
-          "Cannot find label current_labels if there are no labels_collection.");
+  assertm(!labels.empty(), "Cannot find label current_labels if there are no labels_collection.");
 
   std::vector<Labels> labels_collection;
   auto current_labels = &labels_collection.emplace_back();
@@ -707,8 +695,7 @@ FileGroup::FileGroup(Details * details, Labels labels)
 void
 FileGroup::print(std::ostream & output, const std::string & spaces_prefix) const
 {
-  output << COLOR_RGB("─[", COLOR_GREY)
-         << COLOR_RGB(this->details_->get_path(), COLOR_WHITE)
+  output << COLOR_RGB("─[", COLOR_GREY) << COLOR_RGB(this->details_->get_path(), COLOR_WHITE)
          << COLOR_RGB("]", COLOR_GREY);
   output << "\n";
 
@@ -740,8 +727,8 @@ FileGroup::get_biggest_displayed_number() const -> size_t
         biggest_number = line_number;
     }
 
-  // Add 1 to get a number starting at 1. Add the line padding to get the last line
-  // displayed by the report.
+  // Add 1 to get a number starting at 1. Add the line padding to get the
+  // last line displayed by the report.
   biggest_number += 1 + DISPLAYED_LINE_PADDING;
 
   return biggest_number;
@@ -759,11 +746,8 @@ FileGroup::get_details() const -> Details *
   return this->details_;
 }
 
-Report::Report(ReportType type,
-               std::string message,
-               size_t code,
-               std::vector<Label> labels,
-               std::optional<std::string> note)
+Report::Report(
+  ReportType type, std::string message, size_t code, std::vector<Label> labels, std::optional<std::string> note)
   : note_(std::move(note))
   , labels_(std::move(labels))
   , message_(std::move(message))
@@ -775,9 +759,8 @@ Report::Report(ReportType type,
 void
 Report::print(std::ostream & output) const
 {
-  output << COLOR_RGB("[" << report_type_to_prefix(this->type_) << std::setw(3)
-                          << std::setfill('0') << this->code_ << "] "
-                          << report_type_to_string(this->type_) << ":",
+  output << COLOR_RGB("[" << report_type_to_prefix(this->type_) << std::setw(3) << std::setfill('0') << this->code_
+                          << "] " << report_type_to_string(this->type_) << ":",
                       COLOR_RED)
          << " " << COLOR_RGB(this->message_, COLOR_WHITE);
   output << "\n";
@@ -815,15 +798,13 @@ Report::print(std::ostream & output) const
 
   if (this->note_)
     {
-      output << spaces_prefix << COLOR_RGB("│", COLOR_GREY)
-             << COLOR_RGB("  Note: ", COLOR_BEACH);
+      output << spaces_prefix << COLOR_RGB("│", COLOR_GREY) << COLOR_RGB("  Note: ", COLOR_BEACH);
       print_formatted_text(output, this->note_.value());
       output << "\n";
     }
 
   auto dashes_prefix = biggest_number_width + 3;
-  output << COLOR_RGB(repeat_string("─", dashes_prefix), COLOR_GREY)
-         << COLOR_RGB("╯", COLOR_GREY);
+  output << COLOR_RGB(repeat_string("─", dashes_prefix), COLOR_GREY) << COLOR_RGB("╯", COLOR_GREY);
   output << "\n";
 }
 
@@ -928,9 +909,5 @@ ReportBuilder::build()
   assertm(this->type_, "A type is required to build a report.");
   assertm(this->message_, "A message is required to build a report.");
   assertm(this->code_, "A message is required to build a report.");
-  return { this->type_.value(),
-           this->message_.value(),
-           this->code_.value(),
-           this->labels_,
-           this->note_ };
+  return { this->type_.value(), this->message_.value(), this->code_.value(), this->labels_, this->note_ };
 }
