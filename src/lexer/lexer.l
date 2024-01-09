@@ -1,7 +1,7 @@
 %option noyywrap
 
 %{
-#include <iostream>
+  #include <iostream>
 %}
 
 %%
@@ -28,6 +28,7 @@ of { std::cout << "KEYWORD: of" << std::endl; }
 
 %%
 
-int main() {
-    yylex();
+auto main() -> int
+{
+  yylex();
 }
