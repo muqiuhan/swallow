@@ -1,30 +1,36 @@
 %option noyywrap
 
 %{
-  #include <iostream>
+
+#include "ast.hpp"
+#include "bison_parser.hpp"
+
+#define YY_DECL yy::parser::symbol_type yylex()
+
 %}
 
 %%
 
-[ \n]+ {}
-\+ { std::cout << "PLUS" << std::endl; }
-\* { std::cout << "TIMES" << std::endl; }
-- { std::cout << "MINUS" << std::endl; }
-\/ { std::cout << "DIVIDE" << std::endl; }
-[0-9]+ { std::cout << "NUMBER: " << yytext << std::endl; }
-Fn { std::cout << "KEYWORD: defn" << std::endl; }
-Data { std::cout << "KEYWORD: data" << std::endl; }
-Match { std::cout << "KEYWORD: case" << std::endl; }
-of { std::cout << "KEYWORD: of" << std::endl; }
-\{ { std::cout << "OPEN CURLY" << std::endl; }
-\} { std::cout << "CLOSED CURLY" << std::endl; }
-\( { std::cout << "OPEN PARENTH" << std::endl; }
-\) { std::cout << "CLOSE PARENTH" << std::endl; }
-,  { std::cout << "COMMA" << std::endl; }
--> { std::cout << "PATTERN ARROW" << std::endl; }
-= { std::cout << "EQUAL" << std::endl; }
-[a-z][a-zA-Z]* { std::cout << "LOWERCASE IDENTIFIER: " << yytext << std::endl; }
-[A-Z][a-zA-Z]* { std::cout << "UPPERCASE IDENTIFIER: " << yytext << std::endl; }
+[ \n]+  {}
+\+      { return yy::parser::make_PLUS(); }
+\*      { return yy::parser::make_TIMES(); }
+-       { return yy::parser::make_MINUS(); }
+\/      { return yy::parser::make_DIVIDE(); }
+[0-9]+  { return yy::parser::make_INT(atoi(yytext)); }
+fn      { return yy::parser::make_FN(); }
+data    { return yy::parser::make_DATA(); }
+match   { return yy::parser::make_MATCH(); }
+with    { return yy::parser::make_WITH(); }
+\{      { return yy::parser::make_OCURLY(); }
+\}      { return yy::parser::make_CCURLY(); }
+\(      { return yy::parser::make_OPAREN(); }
+\)      { return yy::parser::make_CPAREN(); }
+,       { return yy::parser::make_COMMA(); }
+->      { return yy::parser::make_ARROW(); }
+=       { return yy::parser::make_EQUAL(); }
+
+[a-z][a-zA-Z]* { return yy::parser::make_LID(std::string(yytext)); }
+[A-Z][a-zA-Z]* { return yy::parser::make_UID(std::string(yytext)); }
 
 %%
 
