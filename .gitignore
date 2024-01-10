@@ -1,29 +1,12 @@
-*.annot
-*.cmo
-*.cma
-*.cmi
-*.a
-*.o
-*.cmx
-*.cmxs
-*.cmxa
+# Xmake cache
+.xmake/
+build/
+.cache/
 
-# ocamlbuild working directory
-_build/
+# MacOS Cache
+.DS_Store
 
-# ocamlbuild targets
-*.byte
-*.native
+# Development tools
+.vscode/
 
-# oasis generated files
-setup.data
-setup.log
-
-# Merlin configuring file for Vim and Emacs
-.merlin
-
-# Dune generated files
-*.install
-
-# Local OPAM switch
-_opam/
+compile_commands.json

@@ -1,3 +1,30 @@
+*  Swallow
+*  A minimalist functional programming language
+*  Copyright (c) 2023 Muqiu Han
+*  
+*  This project is built using xmake: https://xmake.io/
+*  
+*  FAQ: https://github.com/muqiuhan/Swallow/blob/main/FAQ
+*  Issues: https://github.com/muqiuhan/Swallow/issues
+*  Contribution: https://github.com/muqiuhan/Swallow/pulls
+
+
+To build and run with xmake:
+
+    setup: Install the xmake, flex and bison
+    To build:   xmake build
+    To run:     xmake run
+    To install: xmake install
+
+
+Features
+----------
+o- Typechecking
+o- Pattern match
+o- Garbage Collection
+o- Polymorphism
+
+-------------------------------------------------------------------------
 Copyright (c) 2023 Muqiu Han
 
 All rights reserved.
