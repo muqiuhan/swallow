@@ -33,8 +33,3 @@ with    { return yy::parser::make_WITH(); }
 [A-Z][a-zA-Z]* { return yy::parser::make_UID(std::string(yytext)); }
 
 %%
-
-auto main() -> int
-{
-  yylex();
-}
