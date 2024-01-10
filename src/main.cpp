@@ -1,4 +1,5 @@
-#include "diagnostics/include/library.h"
+#include "diagnostics/include/diagnostics.h"
+#include "parser/include/parser.h"
 #include <iostream>
 
 using namespace swallow;
