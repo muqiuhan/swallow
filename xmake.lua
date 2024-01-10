@@ -7,10 +7,10 @@ add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
 
 add_requires("stx")
 
-includes("src/diagnostics", "src/lexer")
+includes("**/xmake.lua")
 target("Swallow")
     set_kind("binary")
     add_files("src/*.cpp")
 
     add_packages("STX")
-    add_deps("diagnostics", "lexer")
+    add_deps("diagnostics", "lexer", "ast")

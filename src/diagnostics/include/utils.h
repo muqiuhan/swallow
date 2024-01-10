@@ -7,7 +7,7 @@
 
 #include <string>
 
-namespace diagnostics
+namespace swallow::diagnostics
 {
   std::string repeat_string(const std::string & input, size_t amount);
 }

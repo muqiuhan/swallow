@@ -14,7 +14,7 @@
 
 #define assertm(exp, msg) assert(((void)msg, exp))
 
-namespace diagnostics
+namespace swallow::diagnostics
 {
 
   enum class ReportType
