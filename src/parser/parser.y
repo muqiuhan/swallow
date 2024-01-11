@@ -27,8 +27,12 @@ extern yy::parser::symbol_type yylex();
 %token CCURLY
 %token OPAREN
 %token CPAREN
+%token OBRACKET
+%token CBRACKET
 %token COMMA
 %token ARROW
+%token VERTIAL
+%token DOUBLEARROW
 %token EQUAL
 %token <std::string> LID
 %token <std::string> UID
@@ -66,8 +70,8 @@ Definition
     ;
 
 Fn
-    : FN LID LowercaseParams EQUAL OCURLY Add CCURLY
-        { $$ = Definition::Ptr(new Fn(std::move($2), std::move($3), std::move($6))); }
+    : FN LID OPAREN LowercaseParams CPAREN EQUAL OCURLY Add CCURLY
+        { $$ = Definition::Ptr(new Fn(std::move($2), std::move($4), std::move($8))); }
     ;
 
 LowercaseParams
@@ -116,8 +120,8 @@ Branches
     ;
 
 Branch
-    : Pattern ARROW OCURLY Add CCURLY
-        { $$ = Branch::Ptr(new Branch(std::move($1), std::move($4))); }
+    : VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY
+        { $$ = Branch::Ptr(new Branch(std::move($2), std::move($5))); }
     ;
 
 Pattern
@@ -127,7 +131,7 @@ Pattern
     ;
 
 Data
-    : DATA UID EQUAL OCURLY Constructors CCURLY
+    : DATA UID EQUAL OBRACKET Constructors CBRACKET
         { $$ = Definition::Ptr(new Data(std::move($2), std::move($5))); }
     ;
 

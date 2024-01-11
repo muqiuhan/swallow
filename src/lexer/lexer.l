@@ -17,7 +17,7 @@
 -       { return yy::parser::make_MINUS(); }
 \/      { return yy::parser::make_DIVIDE(); }
 [0-9]+  { return yy::parser::make_INT(atoi(yytext)); }
-fn      { return yy::parser::make_FN(); }
+let     { return yy::parser::make_FN(); }
 data    { return yy::parser::make_DATA(); }
 match   { return yy::parser::make_MATCH(); }
 with    { return yy::parser::make_WITH(); }
@@ -25,8 +25,12 @@ with    { return yy::parser::make_WITH(); }
 \}      { return yy::parser::make_CCURLY(); }
 \(      { return yy::parser::make_OPAREN(); }
 \)      { return yy::parser::make_CPAREN(); }
+\[      { return yy::parser::make_OBRACKET(); }
+\]      { return yy::parser::make_CBRACKET(); }
 ,       { return yy::parser::make_COMMA(); }
 ->      { return yy::parser::make_ARROW(); }
+\|      { return yy::parser::make_VERTIAL(); }
+=>      { return yy::parser::make_DOUBLEARROW(); }
 =       { return yy::parser::make_EQUAL(); }
 
 [a-z][a-zA-Z]* { return yy::parser::make_LID(std::string(yytext)); }

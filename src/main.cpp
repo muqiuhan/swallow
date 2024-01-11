@@ -5,6 +5,7 @@
 using namespace swallow;
 
 auto main(int argc, char **argv) -> int {
+#if 0
   auto details = diagnostics::Details{"This is a test text\n"
                                       "Maybe you could have guessed that.",
                                       "some/weird/path"};
@@ -26,5 +27,9 @@ auto main(int argc, char **argv) -> int {
           .build();
 
   report.print(std::cout);
+
+#endif
+
+  swallow::parser::parse();
   return 0;
 }

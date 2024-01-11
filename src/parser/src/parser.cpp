@@ -42,7 +42,7 @@ namespace swallow::parser {
 void parse() {
   yy::parser parser;
   parser.parse();
-  std::cout << Program.size() << std::endl;
+  std::cout << "Find " << Program.size() << " definitions :)" << std::endl;
 }
 
 } // namespace swallow::parser
