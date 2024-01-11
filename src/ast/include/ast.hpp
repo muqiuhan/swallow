@@ -34,154 +34,213 @@
 #include <string>
 #include <vector>
 
-namespace swallow::ast {
-class AST {
-public:
-  using Ptr = std::unique_ptr<AST>;
+namespace swallow::ast
+{
+  class AST
+  {
+  public:
+    using Ptr = std::unique_ptr<AST>;
 
-public:
-  virtual ~AST() = default;
-};
+  public:
+    virtual ~AST() = default;
+  };
 
-class Pattern {
-public:
-  using Ptr = std::unique_ptr<Pattern>;
+  class Pattern
+  {
+  public:
+    using Ptr = std::unique_ptr<Pattern>;
 
-public:
-  virtual ~Pattern() = default;
-};
+  public:
+    virtual ~Pattern() = default;
+  };
 
-class Branch {
-public:
-  using Ptr = std::unique_ptr<Branch>;
+  class Branch
+  {
+  public:
+    using Ptr = std::unique_ptr<Branch>;
 
-private:
-  const Pattern::Ptr Patt;
-  const AST::Ptr Expr;
+  private:
+    const Pattern::Ptr Patt;
+    const AST::Ptr Expr;
 
-public:
-  Branch(Pattern::Ptr Patt, AST::Ptr Expr)
-      : Patt(std::move(Patt)), Expr(std::move(Expr)) {}
-};
+  public:
+    Branch(Pattern::Ptr Patt, AST::Ptr Expr)
+      : Patt(std::move(Patt))
+      , Expr(std::move(Expr))
+    {
+    }
+  };
 
-class Constructor {
-public:
-  using Ptr = std::unique_ptr<Constructor>;
+  class Constructor
+  {
+  public:
+    using Ptr = std::unique_ptr<Constructor>;
 
-private:
-  const std::string Name;
-  const std::vector<std::string> Types;
+  private:
+    const std::string Name;
+    const std::vector<std::string> Types;
 
-public:
-  Constructor(std::string Name, std::vector<std::string> Types)
-      : Name(std::move(Name)), Types(std::move(Types)) {}
-};
+  public:
+    Constructor(std::string Name, std::vector<std::string> Types)
+      : Name(std::move(Name))
+      , Types(std::move(Types))
+    {
+    }
+  };
 
-class Definition {
-public:
-  using Ptr = std::unique_ptr<Definition>;
+  class Definition
+  {
+  public:
+    using Ptr = std::unique_ptr<Definition>;
 
-public:
-  virtual ~Definition() = default;
-};
+  public:
+    virtual ~Definition() = default;
+  };
 
-class Int : public AST {
-private:
-  const int Value;
+  class Int : public AST
+  {
+  private:
+    const int Value;
 
-public:
-  explicit Int(int V) : Value(V) {}
-};
+  public:
+    explicit Int(const int V)
+      : Value(V)
+    {
+    }
+  };
 
-class LID : public AST {
-private:
-  const std::string ID;
+  class LID final : public AST
+  {
+  private:
+    const std::string ID;
 
-public:
-  explicit LID(std::string ID) : ID(std::move(ID)) {}
-};
+  public:
+    explicit LID(std::string ID)
+      : ID(std::move(ID))
+    {
+    }
+  };
 
-class UID : public AST {
-private:
-  const std::string ID;
+  class UID final : public AST
+  {
+  private:
+    const std::string ID;
 
-public:
-  explicit UID(std::string ID) : ID(std::move(ID)) {}
-};
+  public:
+    explicit UID(std::string ID)
+      : ID(std::move(ID))
+    {
+    }
+  };
 
-class Binop : public AST {
-public:
-  enum class Operators { PLUS, MINUS, TIMES, DIVIDE };
+  class Binop final : public AST
+  {
+  public:
+    enum class Operators
+    {
+      PLUS,
+      MINUS,
+      TIMES,
+      DIVIDE
+    };
 
-private:
-  const Operators Operator;
-  const AST::Ptr Left;
-  const AST::Ptr Right;
+  private:
+    const Operators Operator;
+    const AST::Ptr Left;
+    const AST::Ptr Right;
 
-public:
-  Binop(Operators Operator, AST::Ptr Left, AST::Ptr Right)
-      : Operator(Operator), Left(std::move(Left)), Right(std::move(Right)) {}
-};
+  public:
+    Binop(Operators Operator, AST::Ptr Left, AST::Ptr Right)
+      : Operator(Operator)
+      , Left(std::move(Left))
+      , Right(std::move(Right))
+    {
+    }
+  };
 
-class Application : public AST {
-private:
-  const AST::Ptr left;
-  const AST::Ptr right;
+  class Application final : public AST
+  {
+  private:
+    const AST::Ptr left;
+    const AST::Ptr right;
 
-public:
-  Application(AST::Ptr Left, AST::Ptr Right)
-      : left(std::move(Left)), right(std::move(Right)) {}
-};
+  public:
+    Application(AST::Ptr Left, AST::Ptr Right)
+      : left(std::move(Left))
+      , right(std::move(Right))
+    {
+    }
+  };
 
-class Match : public AST {
-private:
-  const AST::Ptr With;
-  const std::vector<Branch::Ptr> Branches;
+  class Match final : public AST
+  {
+  private:
+    const AST::Ptr With;
+    const std::vector<Branch::Ptr> Branches;
 
-public:
-  Match(AST::Ptr o, std::vector<Branch::Ptr> b)
-      : With(std::move(o)), Branches(std::move(b)) {}
-};
+  public:
+    Match(AST::Ptr o, std::vector<Branch::Ptr> b)
+      : With(std::move(o))
+      , Branches(std::move(b))
+    {
+    }
+  };
 
-class PatternVariable : public Pattern {
-private:
-  const std::string Variable;
+  class PatternVariable final : public Pattern
+  {
+  private:
+    const std::string Variable;
 
-public:
-  PatternVariable(std::string Variable) : Variable(std::move(Variable)) {}
-};
+  public:
+    explicit PatternVariable(std::string Variable)
+      : Variable(std::move(Variable))
+    {
+    }
+  };
 
-class PatternConstr : public Pattern {
-private:
-  const std::string Constr;
-  const std::vector<std::string> Params;
+  class PatternConstr final : public Pattern
+  {
+  private:
+    const std::string Constr;
+    const std::vector<std::string> Params;
 
-public:
-  PatternConstr(std::string Constr, std::vector<std::string> Params)
-      : Constr(std::move(Constr)), Params(std::move(Params)) {}
-};
+  public:
+    PatternConstr(std::string Constr, std::vector<std::string> Params)
+      : Constr(std::move(Constr))
+      , Params(std::move(Params))
+    {
+    }
+  };
 
-class Fn : public Definition {
-private:
-  const std::string Name;
-  const std::vector<std::string> Params;
-  const AST::Ptr Body;
+  class Fn final : public Definition
+  {
+  private:
+    const std::string Name;
+    const std::vector<std::string> Params;
+    const AST::Ptr Body;
 
-public:
-  Fn(std::string Name, std::vector<std::string> Params, AST::Ptr Body)
-      : Name(std::move(Name)), Params(std::move(Params)),
-        Body(std::move(Body)) {}
-};
+  public:
+    Fn(std::string Name, std::vector<std::string> Params, AST::Ptr Body)
+      : Name(std::move(Name))
+      , Params(std::move(Params))
+      , Body(std::move(Body))
+    {
+    }
+  };
 
-class Data : public Definition {
-private:
-  const std::string Name;
-  const std::vector<Constructor::Ptr> Constructors;
+  class Data final : public Definition
+  {
+  private:
+    const std::string Name;
+    const std::vector<Constructor::Ptr> Constructors;
 
-public:
-  Data(std::string Name, std::vector<Constructor::Ptr> Constructors)
-      : Name(std::move(Name)), Constructors(std::move(Constructors)) {}
-};
+  public:
+    Data(std::string Name, std::vector<Constructor::Ptr> Constructors)
+      : Name(std::move(Name))
+      , Constructors(std::move(Constructors))
+    {
+    }
+  };
 } // namespace swallow::ast
 
 #endif

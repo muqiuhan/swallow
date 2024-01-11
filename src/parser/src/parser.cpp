@@ -29,20 +29,24 @@
 
 #include "parser.h"
 
-namespace yy {
+namespace yy
+{
 
-void parser::error(const std::string &msg) {
-  std::cout << "An error occured: " << msg << std::endl;
-}
+  void parser::error(const std::string & msg)
+  {
+    std::cout << "An error occured: " << msg << std::endl;
+  }
 
 } // namespace yy
 
-namespace swallow::parser {
+namespace swallow::parser
+{
 
-void parse() {
-  yy::parser parser;
-  parser.parse();
-  std::cout << "Find " << Program.size() << " definitions :)" << std::endl;
-}
+  void parse()
+  {
+    yy::parser parser;
+    parser.parse();
+    std::cout << "Find " << Program.size() << " definitions :)" << std::endl;
+  }
 
 } // namespace swallow::parser
