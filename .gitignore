@@ -8,5 +8,6 @@ build/
 
 # Development tools
 .vscode/
+.idea/
 
 compile_commands.json
