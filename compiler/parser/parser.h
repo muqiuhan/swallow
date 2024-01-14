@@ -27,28 +27,18 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.h"
-#include <optional>
+#ifndef SWALLOW_PARSER_H
+#define SWALLOW_PARSER_H
 
-namespace swallow::type {
+#include "../ast/ast.h"
+#include "bison_parser.hpp"
 
-  std::optional<Type::Ptr>
-  TypeEnvironment::lookup(const std::string &name) const noexcept {
-    if (const auto it = Names.find(name); it != Names.end())
-      return std::optional(it->second);
+extern std::vector<swallow::ast::Definition::Ptr> Program;
 
-    if (Parent)
-      return std::optional(Parent->lookup(name));
+namespace swallow::parser {
 
-    return std::nullopt;
-  }
+  void parse() noexcept;
 
-  void TypeEnvironment::bind(const std::string &name, Type::Ptr type) noexcept {
-    Names[name] = type;
-  }
+} // namespace swallow::parser
 
-  TypeEnvironment TypeEnvironment::scope() const noexcept {
-    return TypeEnvironment(this);
-  }
-
-} // namespace swallow::type
+#endif

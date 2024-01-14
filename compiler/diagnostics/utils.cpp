@@ -27,18 +27,16 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_PARSER_H
-#define SWALLOW_PARSER_H
+#include "utils.h"
 
-#include "../../ast/include/ast.hpp"
-#include "bison_parser.hpp"
+namespace swallow::diagnostics
+{
+  std::string repeat_string(const std::string & input, size_t amount)
+  {
+    std::string output;
+    while (amount--)
+      output += input;
 
-extern std::vector<swallow::ast::Definition::Ptr> Program;
-
-namespace swallow::parser {
-
-  void parse() noexcept;
-
-} // namespace swallow::parser
-
-#endif
+    return output;
+  }
+} // namespace swallow::diagnostics

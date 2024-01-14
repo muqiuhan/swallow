@@ -6,13 +6,3 @@ add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
 
 includes("**/xmake.lua")
-target("swc")
-    set_kind("binary")
-    add_files("compiler/*.cpp")
-
-    add_packages("STX")
-    add_deps("diagnostics", "lexer", "ast", "parser", "type")
-
-    after_build(function (_)
-        os.run("xmake format")
-    end)

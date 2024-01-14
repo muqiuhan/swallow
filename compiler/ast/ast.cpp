@@ -27,42 +27,34 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_UTILS_PANIC_H
-#define SWALLOW_UTILS_PANIC_H
+#include "ast.h"
+#include "panic/panic.hpp"
 
-#include <exception>
-#include <format>
-#include <iostream>
-#include <source_location>
+using namespace swallow::utils;
 
-namespace swallow::utils
+namespace swallow::ast
 {
-  template <class... Args> struct panic_format
+
+  std::string Binop::operatorsToString(const Operators op) noexcept
   {
-    template <class T>
-    consteval panic_format(
+    switch (op)
+      {
+      case Operators::PLUS:
+        return "+";
+      case Operators::MINUS:
+        return "-";
+      case Operators::TIMES:
+        return "*";
+      case Operators::DIVIDE:
+        return "/";
+      }
 
-      const T & s,
-      std::source_location loc = std::source_location::current()) noexcept
-      : fmt{ s }
-      , loc{ loc }
-    {}
-
-    std::format_string<Args...> fmt;
-    std::source_location loc;
-  };
-
-  template <class... Args>
-  [[noreturn]] void panic(panic_format<std::type_identity_t<Args>...> fmt,
-                          Args &&... args) noexcept
-  {
-    auto msg = std::format("{}:{} panic: {}\n",
-                           fmt.loc.file_name(),
-                           fmt.loc.line(),
-                           std::format(fmt.fmt, std::forward<Args>(args)...));
-    std::cout << msg.c_str() << std::endl;
-    std::terminate();
+    panic("Unknown operator");
   }
-} // namespace swallow::utils
 
-#endif
+  // Type::Ptr Int::typecheck(TypeManager &typeManager,
+  //                          const TypeEnvironment &typeEnvironment) const {
+  //   return Type::Ptr(new TypeBase("Int"));
+  // }
+
+} // namespace swallow::ast

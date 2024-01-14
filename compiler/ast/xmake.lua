@@ -1,5 +1,0 @@
-target("ast")
-  set_kind("shared")
-  set_languages("c++20")
-  add_includedirs("include")
-  add_files("src/*.cpp")

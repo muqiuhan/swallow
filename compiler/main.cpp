@@ -1,14 +1,15 @@
-#include "diagnostics/include/diagnostics.h"
-#include "parser/include/parser.h"
+#include "diagnostics/diagnostics.h"
+#include "parser/parser.h"
 #include <iostream>
 
 using namespace swallow;
 
-auto main(int argc, char **argv) -> int {
-#if 0
-  auto details = diagnostics::Details{ "This is a test text\n"
-                                       "Maybe you could have guessed that.",
-                                       "some/weird/path" };
+auto main(int argc, char ** argv) -> int
+{
+  auto details = diagnostics::Details{
+    "This is a test text\nMaybe you could have guessed that.",
+    "some/weird/path"
+  };
 
   auto report =
     diagnostics::ReportBuilder()
@@ -25,9 +26,7 @@ auto main(int argc, char **argv) -> int {
       .with_note("Can be used to give a hint about what you could do better.")
       .build();
 
-  report.print(std::cout);
-
-#endif
+  // report.print(std::cout);
 
   swallow::parser::parse();
   return 0;

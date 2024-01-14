@@ -27,6 +27,36 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.hpp"
+#ifndef SWALLOW_TYPE_ENVIRONMENT_H
+#define SWALLOW_TYPE_ENVIRONMENT_H
 
-namespace swallow::ast {}
+#include "optional/optional.hpp"
+#include "type.h"
+#include <map>
+#include <string>
+
+namespace swallow::type
+{
+
+  class TypeEnvironment
+  {
+  public:
+    std::map<std::string, Type::Ptr> Names;
+    TypeEnvironment const * Parent = nullptr;
+
+    explicit TypeEnvironment(TypeEnvironment const * Parent)
+      : Parent(Parent)
+    {}
+
+    TypeEnvironment()
+      : TypeEnvironment(nullptr)
+    {}
+
+    std::optional<Type::Ptr> lookup(const std::string & name) const noexcept;
+    void bind(const std::string & name, Type::Ptr type) noexcept;
+    TypeEnvironment scope() const noexcept;
+  };
+
+} // namespace swallow::type
+
+#endif /* SWALLOW_TYPE_ENVIRONMENT_H */

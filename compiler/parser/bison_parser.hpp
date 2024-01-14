@@ -32,7 +32,7 @@
 
 
 /**
- ** \file /home/muqiuhan/Workspace/swallow/compiler/parser/include/bison_parser.hpp
+ ** \file /home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp
  ** Define the yy::parser class.
  */
 
@@ -42,15 +42,15 @@
 // especially those whose name start with YY_ or yy_.  They are
 // private implementation details that can be changed or removed.
 
-#ifndef YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_INCLUDE_BISON_PARSER_HPP_INCLUDED
-# define YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_INCLUDE_BISON_PARSER_HPP_INCLUDED
+#ifndef YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_BISON_PARSER_HPP_INCLUDED
+# define YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_BISON_PARSER_HPP_INCLUDED
 // "%code requires" blocks.
 #line 12 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
 
-    #include "../../ast/include/ast.hpp"
+    #include "ast.h"
     using namespace swallow::ast;
 
-#line 54 "/home/muqiuhan/Workspace/swallow/compiler/parser/include/bison_parser.hpp"
+#line 54 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
 
 # include <cstdlib> // std::abort
@@ -185,7 +185,7 @@
 #endif
 
 namespace yy {
-#line 189 "/home/muqiuhan/Workspace/swallow/compiler/parser/include/bison_parser.hpp"
+#line 189 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
 
 
@@ -1975,9 +1975,9 @@ switch (yykind)
 
 
 } // yy
-#line 1979 "/home/muqiuhan/Workspace/swallow/compiler/parser/include/bison_parser.hpp"
+#line 1979 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
 
 
 
-#endif // !YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_INCLUDE_BISON_PARSER_HPP_INCLUDED
+#endif // !YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_BISON_PARSER_HPP_INCLUDED

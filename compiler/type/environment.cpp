@@ -27,63 +27,32 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_TYPE_H
-#define SWALLOW_TYPE_H
+#include "environment.h"
+#include <optional>
 
-#include <cstdint>
-#include <map>
-#include <memory>
-#include <string>
+namespace swallow::type
+{
 
-namespace swallow::type {
-  class Type {
-  public:
-    using Ptr = std::shared_ptr<Type>;
+  std::optional<Type::Ptr>
+  TypeEnvironment::lookup(const std::string & name) const noexcept
+  {
+    if (const auto it = Names.find(name); it != Names.end())
+      return std::optional(it->second);
 
-    virtual ~Type() = default;
-  };
+    if (Parent)
+      return std::optional(Parent->lookup(name));
 
-  class TypeVar final : public Type {
-  public:
-    const std::string Name;
+    return std::nullopt;
+  }
 
-    explicit TypeVar(std::string Name) : Name(std::move(Name)) {}
-  };
+  void TypeEnvironment::bind(const std::string & name, Type::Ptr type) noexcept
+  {
+    Names[name] = type;
+  }
 
-  class TypeBase final : public Type {
-  public:
-    const std::string Name;
+  TypeEnvironment TypeEnvironment::scope() const noexcept
+  {
+    return TypeEnvironment(this);
+  }
 
-    explicit TypeBase(std::string Name) : Name(std::move(Name)) {}
-  };
-
-  class TypeArrow final : public Type {
-  public:
-    const Ptr Left;
-    const Ptr Right;
-
-    TypeArrow(Ptr Left, Ptr Right)
-        : Left(std::move(Left)), Right(std::move(Right)) {}
-  };
-
-  class TypeManager {
-    int32_t LastID = 0;
-    std::map<std::string, Type::Ptr> Types;
-
-  public:
-    std::string newTypeName() noexcept;
-    Type::Ptr newType() noexcept;
-    Type::Ptr newArrowType() noexcept;
-
-    /** Find values for placeholder variables such that they can equal. */
-    void unify(Type::Ptr left, Type::Ptr right) noexcept;
-
-    /** Get to the bottom of a chain of equations. */
-    Type::Ptr resolve(Type::Ptr type, TypeVar *&var) noexcept;
-
-    /** Map a type variable of some name to a type. */
-    void bind(const std::string &name, const Type::Ptr &type) noexcept;
-  };
 } // namespace swallow::type
-
-#endif
