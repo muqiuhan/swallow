@@ -1278,6 +1278,7 @@ static int input(void)
  * @note This function does not reset the start condition to @c INITIAL .
  */
 void yyrestart(FILE *input_file) {
+
   if (!YY_CURRENT_BUFFER) {
     yyensure_buffer_stack();
     YY_CURRENT_BUFFER_LVALUE = yy_create_buffer(yyin, YY_BUF_SIZE);
@@ -1292,6 +1293,7 @@ void yyrestart(FILE *input_file) {
  *
  */
 void yy_switch_to_buffer(YY_BUFFER_STATE new_buffer) {
+
   /* TODO. We should be able to replace this entire function body
    * with
    *		yypop_buffer_state();
@@ -1361,6 +1363,7 @@ YY_BUFFER_STATE yy_create_buffer(FILE *file, int size) {
  *
  */
 void yy_delete_buffer(YY_BUFFER_STATE b) {
+
   if (!b)
     return;
 
@@ -1483,6 +1486,7 @@ static void yyensure_buffer_stack(void) {
   yy_size_t num_to_alloc;
 
   if (!(yy_buffer_stack)) {
+
     /* First allocation is just for 2 elements, since we don't know if this
      * scanner will even need a stack. We use 2 instead of 1 to avoid an
      * immediate realloc on the next call.
@@ -1502,6 +1506,7 @@ static void yyensure_buffer_stack(void) {
   }
 
   if ((yy_buffer_stack_top) >= ((yy_buffer_stack_max)) - 1) {
+
     /* Increase the buffer to prepare for a possible push. */
     yy_size_t grow_size = 8 /* arbitrary grow size */;
 
@@ -1561,6 +1566,7 @@ YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size) {
  *       yy_scan_bytes() instead.
  */
 YY_BUFFER_STATE yy_scan_string(const char *yystr) {
+
   return yy_scan_bytes(yystr, (int)strlen(yystr));
 }
 
@@ -1701,6 +1707,7 @@ static int yy_init_globals(void) {
 
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy(void) {
+
   /* Pop the buffer stack, destroying each element. */
   while (YY_CURRENT_BUFFER) {
     yy_delete_buffer(YY_CURRENT_BUFFER);
@@ -1725,6 +1732,7 @@ int yylex_destroy(void) {
 
 #ifndef yytext_ptr
 static void yy_flex_strncpy(char *s1, const char *s2, int n) {
+
   int i;
   for (i = 0; i < n; ++i)
     s1[i] = s2[i];
@@ -1744,6 +1752,7 @@ static int yy_flex_strlen(const char *s) {
 void *yyalloc(yy_size_t size) { return malloc(size); }
 
 void *yyrealloc(void *ptr, yy_size_t size) {
+
   /* The cast to (char *) in the following accommodates both
    * implementations that use char* generic pointers, and those
    * that use void* generic pointers.  It works with the latter
