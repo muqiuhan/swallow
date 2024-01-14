@@ -48,11 +48,21 @@ namespace swallow::type
 
   class TypeVar : public Type
   {
-  private:
+  public:
     const std::string Name;
 
-  public:
     explicit TypeVar(const std::string Name)
+      : Name(std::move(Name))
+    {
+    }
+  };
+
+  class TypeBase : public Type
+  {
+  public:
+    const std::string Name;
+
+    explicit TypeBase(const std::string Name)
       : Name(std::move(Name))
     {
     }
@@ -60,11 +70,10 @@ namespace swallow::type
 
   class TypeArrow : public Type
   {
-  private:
+  public:
     const Type::Ptr Left;
     const Type::Ptr Right;
 
-  public:
     TypeArrow(const Type::Ptr Left, const Type::Ptr Right)
       : Left(std::move(Left))
       , Right(std::move(Right))
@@ -87,7 +96,7 @@ namespace swallow::type
     void unify(Type::Ptr left, Type::Ptr right) noexcept;
 
     /** Get to the bottom of a chain of equations. */
-    Type::Ptr resolve(Type::Ptr type, TypeVar var) noexcept;
+    Type::Ptr resolve(Type::Ptr type, TypeVar *& var) noexcept;
 
     /** Map a type variable of some name to a type. */
     void bind(const std::string & name, Type::Ptr type) noexcept;
