@@ -28,99 +28,83 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "type.h"
+#include "stx/panic.h"
 #include <algorithm>
 #include <cstdint>
 #include <stdexcept>
 
-namespace swallow::type
-{
-  std::string TypeManager::newTypeName() noexcept
-  {
+namespace swallow::type {
+  std::string TypeManager::newTypeName() noexcept {
     int32_t currentID = LastID++;
     std::string name = "";
 
-    while (LastID != -1)
-      {
-        name += static_cast<char>(('a' + (currentID % 26)));
-        currentID = currentID / 26 - 1;
-      }
+    while (LastID != -1) {
+      name += static_cast<char>(('a' + (currentID % 26)));
+      currentID = currentID / 26 - 1;
+    }
 
     std::reverse(name.begin(), name.end());
     return name;
   }
 
-  Type::Ptr TypeManager::newType() noexcept
-  {
+  Type::Ptr TypeManager::newType() noexcept {
     return Type::Ptr(new TypeVar(newTypeName()));
   }
 
-  Type::Ptr TypeManager::newArrowType() noexcept
-  {
+  Type::Ptr TypeManager::newArrowType() noexcept {
     return Type::Ptr(new TypeArrow(newType(), newType()));
   }
 
-  Type::Ptr TypeManager::resolve(Type::Ptr type, TypeVar *& var) noexcept
-  {
-    TypeVar * cast = nullptr;
+  Type::Ptr TypeManager::resolve(Type::Ptr type, TypeVar *&var) noexcept {
+    TypeVar *cast = nullptr;
     var = nullptr;
 
-    while ((cast = dynamic_cast<TypeVar *>(type.get())))
-      {
-        const auto it = Types.find(cast->Name);
-        if (it == Types.end())
-          {
-            var = cast;
-            break;
-          }
-
-        type = it->second;
+    while ((cast = dynamic_cast<TypeVar *>(type.get()))) {
+      const auto it = Types.find(cast->Name);
+      if (it == Types.end()) {
+        var = cast;
+        break;
       }
+
+      type = it->second;
+    }
 
     return type;
   }
 
-  void TypeManager::unify(Type::Ptr left, Type::Ptr right) noexcept
-  {
-    TypeVar * leftVar = nullptr;
-    TypeVar * rightVar = nullptr;
-    TypeArrow * leftArrow = nullptr;
-    TypeArrow * rightArrow = nullptr;
-    TypeBase * leftID = nullptr;
-    TypeBase * rightID = nullptr;
+  void TypeManager::unify(Type::Ptr left, Type::Ptr right) noexcept {
+    TypeVar *leftVar = nullptr;
+    TypeVar *rightVar = nullptr;
+    TypeArrow *leftArrow = nullptr;
+    TypeArrow *rightArrow = nullptr;
+    TypeBase *leftID = nullptr;
+    TypeBase *rightID = nullptr;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
 
-    if (leftVar)
-      {
-        bind(leftVar->Name, right);
+    if (leftVar) {
+      bind(leftVar->Name, right);
+      return;
+    } else if (rightVar) {
+      bind(rightVar->Name, left);
+      return;
+    } else if ((leftArrow = dynamic_cast<TypeArrow *>(left.get())) &&
+               (rightArrow = dynamic_cast<TypeArrow *>(right.get()))) {
+      unify(leftArrow->Left, rightArrow->Left);
+      unify(leftArrow->Right, rightArrow->Right);
+      return;
+    } else if ((leftID = dynamic_cast<TypeBase *>(left.get())) &&
+               (rightID = dynamic_cast<TypeBase *>(right.get()))) {
+      if (leftID->Name == rightID->Name)
         return;
-      }
-    else if (rightVar)
-      {
-        bind(rightVar->Name, left);
-        return;
-      }
-    else if ((leftArrow = dynamic_cast<TypeArrow *>(left.get()))
-             && (rightArrow = dynamic_cast<TypeArrow *>(right.get())))
-      {
-        unify(leftArrow->Left, rightArrow->Left);
-        unify(leftArrow->Right, rightArrow->Right);
-        return;
-      }
-    else if ((leftID = dynamic_cast<TypeBase *>(left.get()))
-             && (rightID = dynamic_cast<TypeBase *>(right.get())))
-      {
-        if (leftID->Name == rightID->Name)
-          return;
-      }
+    }
 
-    throw std::runtime_error("type checking error!!!");
+    panic("type checking error!!!");
   }
 
-  void TypeManager::bind(const std::string & name, Type::Ptr type) noexcept
-  {
-    TypeVar * other = dynamic_cast<TypeVar *>(type.get());
+  void TypeManager::bind(const std::string &name, Type::Ptr type) noexcept {
+    TypeVar *other = dynamic_cast<TypeVar *>(type.get());
     if (other && other->Name == name)
       return;
     Types[name] = type;

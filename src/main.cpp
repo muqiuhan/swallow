@@ -4,8 +4,7 @@
 
 using namespace swallow;
 
-auto main(int argc, char ** argv) -> int
-{
+auto main(int argc, char **argv) -> int {
 #if 0
   auto details = diagnostics::Details{ "This is a test text\n"
                                        "Maybe you could have guessed that.",
