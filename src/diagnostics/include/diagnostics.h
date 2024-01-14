@@ -15,11 +15,9 @@
 
 #define assertm(exp, msg) assert(((void)msg, exp))
 
-namespace swallow::diagnostics
-{
+namespace swallow::diagnostics {
 
-  enum class ReportType
-  {
+  enum class ReportType {
     ERROR,
     INFO,
     WARNING,
@@ -29,38 +27,28 @@ namespace swallow::diagnostics
 
   auto report_type_to_string(ReportType type) -> std::string;
 
-  enum class ColorType
-  {
-    DEFAULT,
-    RED,
-    GREEN,
-    BLUE,
-    ORANGE,
-    YELLOW,
-    AQUA
-  };
+  enum class ColorType { DEFAULT, RED, GREEN, BLUE, ORANGE, YELLOW, AQUA };
 
-  auto color_by_type(std::ostream & stream, ColorType type) -> std::ostream &;
+  auto color_by_type(std::ostream &stream, ColorType type) -> std::ostream &;
 
-  auto get_color_by_name(const std::string & name) -> ColorType;
+  auto get_color_by_name(const std::string &name) -> ColorType;
 
-  auto print_formatted_text(std::ostream & output, const std::string & text)
-    -> void;
+  auto print_formatted_text(std::ostream &output, const std::string &text)
+      -> void;
 
   class Label;
 
   class Details;
 
-  class Span
-  {
+  class Span {
   public:
-    Span(Details * details, size_t start_index, size_t end_index);
+    Span(Details *details, size_t start_index, size_t end_index);
 
     Span();
 
-    [[nodiscard]] auto relative_to(const Span & span) const -> Span;
+    [[nodiscard]] auto relative_to(const Span &span) const -> Span;
 
-    [[nodiscard]] auto is_inside_span(const Span & span) const -> bool;
+    [[nodiscard]] auto is_inside_span(const Span &span) const -> bool;
 
     [[nodiscard]] auto get_start_index() const -> size_t;
 
@@ -74,19 +62,17 @@ namespace swallow::diagnostics
 
   private:
     size_t start_index_;
-    Details * details_;
+    Details *details_;
     size_t end_index_;
   };
 
-  class Label
-  {
+  class Label {
   public:
-    Label(std::optional<std::string> message,
-          const Span & span,
+    Label(std::optional<std::string> message, const Span &span,
           ColorType color_type);
 
     [[nodiscard]] auto get_message() const
-      -> const std::optional<std::string> &;
+        -> const std::optional<std::string> &;
 
     [[nodiscard]] auto get_span() const -> const Span &;
 
@@ -101,16 +87,15 @@ namespace swallow::diagnostics
     Span span_;
   };
 
-  class LabelBuilder
-  {
+  class LabelBuilder {
   public:
     LabelBuilder();
 
-    LabelBuilder & with_message(const std::string & message);
+    LabelBuilder &with_message(const std::string &message);
 
-    LabelBuilder & with_color(ColorType color);
+    LabelBuilder &with_color(ColorType color);
 
-    LabelBuilder & with_span(const Span & span);
+    LabelBuilder &with_span(const Span &span);
 
     Label build();
 
@@ -120,27 +105,24 @@ namespace swallow::diagnostics
     std::optional<Span> span_;
   };
 
-  struct AscendingLabels
-  {
-    bool operator()(const Label * first, const Label * second) const;
+  struct AscendingLabels {
+    bool operator()(const Label *first, const Label *second) const;
   };
 
-  struct DescendingLabels
-  {
-    bool operator()(const Label * first, const Label * second) const;
+  struct DescendingLabels {
+    bool operator()(const Label *first, const Label *second) const;
   };
 
-  class Details
-  {
+  class Details {
   public:
     Details(std::string source, std::string path);
 
-    [[nodiscard]] auto get_line_source(const Span & span) const -> std::string;
+    [[nodiscard]] auto get_line_source(const Span &span) const -> std::string;
 
-    [[nodiscard]] auto get_label_line(const Label & label) const -> size_t;
+    [[nodiscard]] auto get_label_line(const Label &label) const -> size_t;
 
     [[nodiscard]] auto get_line_spans() const
-      -> const std::vector<std::shared_ptr<Span>> &;
+        -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -154,29 +136,26 @@ namespace swallow::diagnostics
 
   using Labels = std::vector<const Label *>;
 
-  class LabelGroup
-  {
+  class LabelGroup {
   public:
-    LabelGroup(Details * general_details, Labels labels);
+    LabelGroup(Details *general_details, Labels labels);
 
-    auto print(std::ostream & output, const std::string & spaces_prefix) const
-      -> void;
+    auto print(std::ostream &output, const std::string &spaces_prefix) const
+        -> void;
 
-    static auto print_labels_level(const std::vector<Labels> & level_labels,
-                                   size_t current_level,
-                                   const Span & line_span,
-                                   std::ostream & output,
-                                   const std::string & spaces_prefix) -> void;
+    static auto print_labels_level(const std::vector<Labels> &level_labels,
+                                   size_t current_level, const Span &line_span,
+                                   std::ostream &output,
+                                   const std::string &spaces_prefix) -> void;
 
-    auto print_colored_source_line(std::ostream & output,
-                                   const Span & label_span,
-                                   const Labels & labels) const -> void;
+    auto print_colored_source_line(std::ostream &output, const Span &label_span,
+                                   const Labels &labels) const -> void;
 
-    [[nodiscard]] static auto find_label_levels(const Labels & labels)
-      -> std::vector<Labels>;
+    [[nodiscard]] static auto find_label_levels(const Labels &labels)
+        -> std::vector<Labels>;
 
-    [[nodiscard]] static auto find_remove_overlapping_labels(Labels & labels)
-      -> Labels;
+    [[nodiscard]] static auto find_remove_overlapping_labels(Labels &labels)
+        -> Labels;
 
     [[nodiscard]] auto find_labels_in_line(size_t line_index) const -> Labels;
 
@@ -189,42 +168,37 @@ namespace swallow::diagnostics
     [[nodiscard]] auto get_last_label() const -> const Label *;
 
   private:
-    const Label * first_label_;
-    const Label * last_label_;
-    Details * details_;
+    const Label *first_label_;
+    const Label *last_label_;
+    Details *details_;
     Labels labels_;
   };
 
-  class FileGroup
-  {
+  class FileGroup {
   public:
-    FileGroup(Details * details, Labels labels);
+    FileGroup(Details *details, Labels labels);
 
-    auto print(std::ostream & output, const std::string & spaces_prefix) const
-      -> void;
+    auto print(std::ostream &output, const std::string &spaces_prefix) const
+        -> void;
 
     [[nodiscard]] auto get_biggest_displayed_number() const -> size_t;
 
     [[nodiscard]] auto get_label_groups() const
-      -> const std::vector<LabelGroup> &;
+        -> const std::vector<LabelGroup> &;
 
     [[nodiscard]] auto get_details() const -> Details *;
 
   private:
     std::vector<LabelGroup> label_groups_;
-    Details * details_;
+    Details *details_;
   };
 
-  class Report
-  {
+  class Report {
   public:
-    Report(ReportType type,
-           std::string message,
-           size_t code,
-           std::vector<Label> labels,
-           std::optional<std::string> note);
+    Report(ReportType type, std::string message, size_t code,
+           std::vector<Label> labels, std::optional<std::string> note);
 
-    auto print(std::ostream & output) const -> void;
+    auto print(std::ostream &output) const -> void;
 
     [[nodiscard]] auto find_file_groups() const -> std::vector<FileGroup>;
 
@@ -246,20 +220,19 @@ namespace swallow::diagnostics
     size_t code_;
   };
 
-  class ReportBuilder
-  {
+  class ReportBuilder {
   public:
     ReportBuilder();
 
-    ReportBuilder & with_message(const std::string & message);
+    ReportBuilder &with_message(const std::string &message);
 
-    ReportBuilder & with_note(const std::string & note);
+    ReportBuilder &with_note(const std::string &note);
 
-    ReportBuilder & add_label(const Label & label);
+    ReportBuilder &add_label(const Label &label);
 
-    ReportBuilder & with_type(ReportType type);
+    ReportBuilder &with_type(ReportType type);
 
-    ReportBuilder & with_code(size_t code);
+    ReportBuilder &with_code(size_t code);
 
     Report build();
 

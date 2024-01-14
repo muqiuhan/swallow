@@ -35,8 +35,7 @@
 
 extern std::vector<swallow::ast::Definition::Ptr> Program;
 
-namespace swallow::parser
-{
+namespace swallow::parser {
 
   void parse();
 

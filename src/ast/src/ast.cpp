@@ -29,6 +29,4 @@
 
 #include "ast.hpp"
 
-namespace swallow::ast
-{
-}
+namespace swallow::ast {}
