@@ -84,7 +84,8 @@ namespace swallow::diagnostics
       }
   }
 
-  auto color_by_type(std::ostream & stream, ColorType type) -> std::ostream &
+  auto color_by_type(std::ostream & stream, const ColorType type)
+    -> std::ostream &
   {
     switch (type)
       {

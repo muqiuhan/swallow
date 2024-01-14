@@ -13,7 +13,7 @@ target("Swallow")
     add_files("src/*.cpp")
 
     add_packages("STX")
-    add_deps("diagnostics", "lexer", "ast", "parser")
+    add_deps("diagnostics", "lexer", "ast", "parser", "type")
 
     after_build(function (target)
         os.run("xmake format")

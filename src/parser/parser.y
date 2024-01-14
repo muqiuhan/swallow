@@ -110,7 +110,7 @@ ApplicationBase
     ;
 
 Match
-    : MATCH Add WITH OCURLY Branches CCURLY 
+    : MATCH Add WITH OCURLY Branches CCURLY
         { $$ = AST::Ptr(new Match(std::move($2), std::move($5))); }
     ;
 
