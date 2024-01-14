@@ -30,10 +30,12 @@
 #include "environment.h"
 #include <optional>
 
-namespace swallow::type {
+namespace swallow::type
+{
 
   std::optional<Type::Ptr>
-  TypeEnvironment::lookup(const std::string &name) const noexcept {
+  TypeEnvironment::lookup(const std::string & name) const noexcept
+  {
     if (const auto it = Names.find(name); it != Names.end())
       return std::optional(it->second);
 
@@ -43,11 +45,13 @@ namespace swallow::type {
     return std::nullopt;
   }
 
-  void TypeEnvironment::bind(const std::string &name, Type::Ptr type) noexcept {
+  void TypeEnvironment::bind(const std::string & name, Type::Ptr type) noexcept
+  {
     Names[name] = type;
   }
 
-  TypeEnvironment TypeEnvironment::scope() const noexcept {
+  TypeEnvironment TypeEnvironment::scope() const noexcept
+  {
     return TypeEnvironment(this);
   }
 

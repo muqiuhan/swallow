@@ -34,48 +34,57 @@
 
 using namespace swallow::utils;
 
-namespace swallow::type {
-  std::string TypeManager::newTypeName() noexcept {
+namespace swallow::type
+{
+  std::string TypeManager::newTypeName() noexcept
+  {
     int32_t currentID = LastID++;
     std::string name;
 
-    while (LastID != -1) {
-      name += static_cast<char>(('a' + (currentID % 26)));
-      currentID = currentID / 26 - 1;
-    }
+    while (LastID != -1)
+      {
+        name += static_cast<char>(('a' + (currentID % 26)));
+        currentID = currentID / 26 - 1;
+      }
 
     std::reverse(name.begin(), name.end());
     return name;
   }
 
-  Type::Ptr TypeManager::newType() noexcept {
+  Type::Ptr TypeManager::newType() noexcept
+  {
     return std::make_shared<TypeVar>(TypeVar(newTypeName()));
   }
 
-  Type::Ptr TypeManager::newArrowType() noexcept {
+  Type::Ptr TypeManager::newArrowType() noexcept
+  {
     return std::make_shared<TypeArrow>(TypeArrow(newType(), newType()));
   }
 
-  Type::Ptr TypeManager::resolve(Type::Ptr type, TypeVar *&var) noexcept {
-    TypeVar *cast;
+  Type::Ptr TypeManager::resolve(Type::Ptr type, TypeVar *& var) noexcept
+  {
+    TypeVar * cast;
     var = nullptr;
 
-    while ((cast = dynamic_cast<TypeVar *>(type.get()))) {
-      const auto it = Types.find(cast->Name);
-      if (it == Types.end()) {
-        var = cast;
-        break;
-      }
+    while ((cast = dynamic_cast<TypeVar *>(type.get())))
+      {
+        const auto it = Types.find(cast->Name);
+        if (it == Types.end())
+          {
+            var = cast;
+            break;
+          }
 
-      type = it->second;
-    }
+        type = it->second;
+      }
 
     return type;
   }
 
-  void TypeManager::unify(Type::Ptr left, Type::Ptr right) noexcept {
-    TypeVar *leftVar = nullptr;
-    TypeVar *rightVar = nullptr;
+  void TypeManager::unify(Type::Ptr left, Type::Ptr right) noexcept
+  {
+    TypeVar * leftVar = nullptr;
+    TypeVar * rightVar = nullptr;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
@@ -85,28 +94,28 @@ namespace swallow::type {
     else if (rightVar)
       bind(rightVar->Name, left);
 
-    else if (auto *leftArrow = dynamic_cast<TypeArrow *>(left.get()),
+    else if (auto * leftArrow = dynamic_cast<TypeArrow *>(left.get()),
              *rightArrow = dynamic_cast<TypeArrow *>(right.get());
-             leftArrow && rightArrow) {
-
-      unify(leftArrow->Left, rightArrow->Left);
-      unify(leftArrow->Right, rightArrow->Right);
-
-    } else if (auto *leftID = dynamic_cast<TypeBase *>(left.get()),
-               *rightID = dynamic_cast<TypeBase *>(right.get());
-               leftID && rightID) {
-
-      if (leftID->Name == rightID->Name)
-        ;
-
-    } else {
+             leftArrow && rightArrow)
+      {
+        unify(leftArrow->Left, rightArrow->Left);
+        unify(leftArrow->Right, rightArrow->Right);
+      }
+    else if (auto * leftID = dynamic_cast<TypeBase *>(left.get()),
+             *rightID = dynamic_cast<TypeBase *>(right.get());
+             leftID && rightID)
+      {
+        if (leftID->Name == rightID->Name)
+          return;
+      }
+    else
       panic("type checking error!!!");
-    }
   }
 
-  void TypeManager::bind(const std::string &name,
-                         const Type::Ptr &type) noexcept {
-    if (auto *other = dynamic_cast<const TypeVar *>(type.get());
+  void TypeManager::bind(const std::string & name,
+                         const Type::Ptr & type) noexcept
+  {
+    if (auto * other = dynamic_cast<const TypeVar *>(type.get());
         other->Name == name)
       return;
     Types[name] = type;

@@ -32,19 +32,22 @@
 
 using namespace swallow::utils;
 
-namespace swallow::ast {
+namespace swallow::ast
+{
 
-  std::string Binop::operatorsToString(const Operators op) noexcept {
-    switch (op) {
-    case Operators::PLUS:
-      return "+";
-    case Operators::MINUS:
-      return "-";
-    case Operators::TIMES:
-      return "*";
-    case Operators::DIVIDE:
-      return "/";
-    }
+  std::string Binop::operatorsToString(const Operators op) noexcept
+  {
+    switch (op)
+      {
+      case Operators::PLUS:
+        return "+";
+      case Operators::MINUS:
+        return "-";
+      case Operators::TIMES:
+        return "*";
+      case Operators::DIVIDE:
+        return "/";
+      }
 
     panic("Unknown operator");
   }

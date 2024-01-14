@@ -35,38 +35,50 @@
 #include <memory>
 #include <string>
 
-namespace swallow::type {
-  class Type {
+namespace swallow::type
+{
+  class Type
+  {
   public:
     using Ptr = std::shared_ptr<Type>;
 
     virtual ~Type() = default;
   };
 
-  class TypeVar final : public Type {
+  class TypeVar final : public Type
+  {
   public:
     const std::string Name;
 
-    explicit TypeVar(std::string Name) : Name(std::move(Name)) {}
+    explicit TypeVar(std::string Name)
+      : Name(std::move(Name))
+    {}
   };
 
-  class TypeBase final : public Type {
+  class TypeBase final : public Type
+  {
   public:
     const std::string Name;
 
-    explicit TypeBase(std::string Name) : Name(std::move(Name)) {}
+    explicit TypeBase(std::string Name)
+      : Name(std::move(Name))
+    {}
   };
 
-  class TypeArrow final : public Type {
+  class TypeArrow final : public Type
+  {
   public:
     const Ptr Left;
     const Ptr Right;
 
     TypeArrow(Ptr Left, Ptr Right)
-        : Left(std::move(Left)), Right(std::move(Right)) {}
+      : Left(std::move(Left))
+      , Right(std::move(Right))
+    {}
   };
 
-  class TypeManager {
+  class TypeManager
+  {
     int32_t LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
@@ -79,10 +91,10 @@ namespace swallow::type {
     void unify(Type::Ptr left, Type::Ptr right) noexcept;
 
     /** Get to the bottom of a chain of equations. */
-    Type::Ptr resolve(Type::Ptr type, TypeVar *&var) noexcept;
+    Type::Ptr resolve(Type::Ptr type, TypeVar *& var) noexcept;
 
     /** Map a type variable of some name to a type. */
-    void bind(const std::string &name, const Type::Ptr &type) noexcept;
+    void bind(const std::string & name, const Type::Ptr & type) noexcept;
   };
 } // namespace swallow::type
 

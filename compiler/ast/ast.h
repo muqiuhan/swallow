@@ -37,8 +37,10 @@
 
 using namespace swallow::type;
 
-namespace swallow::ast {
-  class AST {
+namespace swallow::ast
+{
+  class AST
+  {
   public:
     using Ptr = std::unique_ptr<AST>;
     virtual ~AST() = default;
@@ -48,14 +50,16 @@ namespace swallow::ast {
     //                             const;
   };
 
-  class Pattern {
+  class Pattern
+  {
   public:
     using Ptr = std::unique_ptr<Pattern>;
 
     virtual ~Pattern() = default;
   };
 
-  class Branch {
+  class Branch
+  {
   public:
     using Ptr = std::unique_ptr<Branch>;
 
@@ -65,10 +69,13 @@ namespace swallow::ast {
 
   public:
     Branch(Pattern::Ptr Patt, AST::Ptr Expr)
-        : Patt(std::move(Patt)), Expr(std::move(Expr)) {}
+      : Patt(std::move(Patt))
+      , Expr(std::move(Expr))
+    {}
   };
 
-  class Constructor {
+  class Constructor
+  {
   public:
     using Ptr = std::unique_ptr<Constructor>;
 
@@ -78,44 +85,63 @@ namespace swallow::ast {
 
   public:
     Constructor(std::string Name, std::vector<std::string> Types)
-        : Name(std::move(Name)), Types(std::move(Types)) {}
+      : Name(std::move(Name))
+      , Types(std::move(Types))
+    {}
   };
 
-  class Definition {
+  class Definition
+  {
   public:
     using Ptr = std::unique_ptr<Definition>;
 
     virtual ~Definition() = default;
   };
 
-  class Int final : public AST {
+  class Int final : public AST
+  {
     const int Value;
 
   public:
-    explicit Int(const int V) : Value(V) {}
+    explicit Int(const int V)
+      : Value(V)
+    {}
 
     // virtual Type::Ptr typecheck(TypeManager &typeManager,
     //                             const TypeEnvironment &typeEnvironment)
     //                             const;
   };
 
-  class LID final : public AST {
+  class LID final : public AST
+  {
     const std::string ID;
 
   public:
-    explicit LID(std::string ID) : ID(std::move(ID)) {}
+    explicit LID(std::string ID)
+      : ID(std::move(ID))
+    {}
   };
 
-  class UID final : public AST {
+  class UID final : public AST
+  {
     const std::string ID;
 
   public:
-    explicit UID(std::string ID) : ID(std::move(ID)) {}
+    explicit UID(std::string ID)
+      : ID(std::move(ID))
+    {}
   };
 
-  class Binop final : public AST {
+  class Binop final : public AST
+  {
   public:
-    enum class Operators { PLUS, MINUS, TIMES, DIVIDE };
+    enum class Operators
+    {
+      PLUS,
+      MINUS,
+      TIMES,
+      DIVIDE
+    };
 
   private:
     const Operators Operator;
@@ -124,64 +150,84 @@ namespace swallow::ast {
 
   public:
     Binop(Operators Operator, Ptr Left, Ptr Right)
-        : Operator(Operator), Left(std::move(Left)), Right(std::move(Right)) {}
+      : Operator(Operator)
+      , Left(std::move(Left))
+      , Right(std::move(Right))
+    {}
 
     static std::string operatorsToString(const Operators op) noexcept;
   };
 
-  class Application final : public AST {
+  class Application final : public AST
+  {
     const Ptr left;
     const Ptr right;
 
   public:
     Application(Ptr Left, Ptr Right)
-        : left(std::move(Left)), right(std::move(Right)) {}
+      : left(std::move(Left))
+      , right(std::move(Right))
+    {}
   };
 
-  class Match final : public AST {
+  class Match final : public AST
+  {
     const Ptr With;
     const std::vector<Branch::Ptr> Branches;
 
   public:
     Match(Ptr o, std::vector<Branch::Ptr> b)
-        : With(std::move(o)), Branches(std::move(b)) {}
+      : With(std::move(o))
+      , Branches(std::move(b))
+    {}
   };
 
-  class PatternVariable final : public Pattern {
+  class PatternVariable final : public Pattern
+  {
     const std::string Variable;
 
   public:
     explicit PatternVariable(std::string Variable)
-        : Variable(std::move(Variable)) {}
+      : Variable(std::move(Variable))
+    {}
   };
 
-  class PatternConstr final : public Pattern {
+  class PatternConstr final : public Pattern
+  {
     const std::string Constr;
     const std::vector<std::string> Params;
 
   public:
     PatternConstr(std::string Constr, std::vector<std::string> Params)
-        : Constr(std::move(Constr)), Params(std::move(Params)) {}
+      : Constr(std::move(Constr))
+      , Params(std::move(Params))
+    {}
   };
 
-  class Fn final : public Definition {
+  class Fn final : public Definition
+  {
     const std::string Name;
     const std::vector<std::string> Params;
     const AST::Ptr Body;
 
   public:
     Fn(std::string Name, std::vector<std::string> Params, AST::Ptr Body)
-        : Name(std::move(Name)), Params(std::move(Params)),
-          Body(std::move(Body)) {}
+      : Name(std::move(Name))
+      , Params(std::move(Params))
+      , Body(std::move(Body))
+    {}
   };
 
-  class Data final : public Definition {
+  class Data final : public Definition
+  {
     const std::string Name;
     const std::vector<Constructor::Ptr> Constructors;
 
   public:
     Data(std::string Name, std::vector<Constructor::Ptr> Constructors)
-        : Name(std::move(Name)), Constructors(std::move(Constructors)) {}
+      : Name(std::move(Name))
+      , Constructors(std::move(Constructors))
+    {}
   };
 } // namespace swallow::ast
 
