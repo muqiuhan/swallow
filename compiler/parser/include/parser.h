@@ -27,22 +27,18 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "parser.h"
+#ifndef SWALLOW_PARSER_H
+#define SWALLOW_PARSER_H
 
-namespace yy {
+#include "../../ast/include/ast.hpp"
+#include "bison_parser.hpp"
 
-  void parser::error(const std::string &msg) {
-    std::cout << "An error occured: " << msg << std::endl;
-  }
-
-} // namespace yy
+extern std::vector<swallow::ast::Definition::Ptr> Program;
 
 namespace swallow::parser {
 
-  void parse() {
-    yy::parser parser;
-    parser.parse();
-    std::cout << "Find " << Program.size() << " definitions :)" << std::endl;
-  }
+  void parse() noexcept;
 
 } // namespace swallow::parser
+
+#endif

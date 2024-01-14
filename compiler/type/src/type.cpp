@@ -31,12 +31,11 @@
 #include "stx/panic.h"
 #include <algorithm>
 #include <cstdint>
-#include <stdexcept>
 
 namespace swallow::type {
   std::string TypeManager::newTypeName() noexcept {
     int32_t currentID = LastID++;
-    std::string name = "";
+    std::string name;
 
     while (LastID != -1) {
       name += static_cast<char>(('a' + (currentID % 26)));
@@ -48,15 +47,15 @@ namespace swallow::type {
   }
 
   Type::Ptr TypeManager::newType() noexcept {
-    return Type::Ptr(new TypeVar(newTypeName()));
+    return std::make_shared<TypeVar>(TypeVar(newTypeName()));
   }
 
   Type::Ptr TypeManager::newArrowType() noexcept {
-    return Type::Ptr(new TypeArrow(newType(), newType()));
+    return std::make_shared<TypeArrow>(TypeArrow(newType(), newType()));
   }
 
   Type::Ptr TypeManager::resolve(Type::Ptr type, TypeVar *&var) noexcept {
-    TypeVar *cast = nullptr;
+    TypeVar *cast;
     var = nullptr;
 
     while ((cast = dynamic_cast<TypeVar *>(type.get()))) {
@@ -75,37 +74,33 @@ namespace swallow::type {
   void TypeManager::unify(Type::Ptr left, Type::Ptr right) noexcept {
     TypeVar *leftVar = nullptr;
     TypeVar *rightVar = nullptr;
-    TypeArrow *leftArrow = nullptr;
-    TypeArrow *rightArrow = nullptr;
-    TypeBase *leftID = nullptr;
-    TypeBase *rightID = nullptr;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
 
     if (leftVar) {
       bind(leftVar->Name, right);
-      return;
     } else if (rightVar) {
       bind(rightVar->Name, left);
-      return;
-    } else if ((leftArrow = dynamic_cast<TypeArrow *>(left.get())) &&
-               (rightArrow = dynamic_cast<TypeArrow *>(right.get()))) {
+    } else if (auto *leftArrow = dynamic_cast<TypeArrow *>(left.get()),
+               *rightArrow = dynamic_cast<TypeArrow *>(right.get());
+               leftArrow && rightArrow) {
       unify(leftArrow->Left, rightArrow->Left);
       unify(leftArrow->Right, rightArrow->Right);
-      return;
-    } else if ((leftID = dynamic_cast<TypeBase *>(left.get())) &&
-               (rightID = dynamic_cast<TypeBase *>(right.get()))) {
+    } else if (auto *leftID = dynamic_cast<TypeBase *>(left.get()),
+               *rightID = dynamic_cast<TypeBase *>(right.get());
+               leftID && rightID) {
       if (leftID->Name == rightID->Name)
-        return;
+        ;
+    } else {
+      panic("type checking error!!!");
     }
-
-    panic("type checking error!!!");
   }
 
-  void TypeManager::bind(const std::string &name, Type::Ptr type) noexcept {
-    TypeVar *other = dynamic_cast<TypeVar *>(type.get());
-    if (other && other->Name == name)
+  void TypeManager::bind(const std::string &name,
+                         const Type::Ptr &type) noexcept {
+    if (auto *other = dynamic_cast<const TypeVar *>(type.get());
+        other->Name == name)
       return;
     Types[name] = type;
   }

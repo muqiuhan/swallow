@@ -8,13 +8,13 @@ add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
 add_requires("stx")
 
 includes("**/xmake.lua")
-target("Swallow")
+target("swc")
     set_kind("binary")
-    add_files("src/*.cpp")
+    add_files("compiler/*.cpp")
 
     add_packages("STX")
     add_deps("diagnostics", "lexer", "ast", "parser", "type")
 
-    after_build(function (target)
+    after_build(function (_)
         os.run("xmake format")
     end)

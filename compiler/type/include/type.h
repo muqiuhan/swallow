@@ -43,35 +43,33 @@ namespace swallow::type {
   public:
     using Ptr = std::shared_ptr<Type>;
 
-  public:
     virtual ~Type() = default;
   };
 
-  class TypeVar : public Type {
+  class TypeVar final : public Type {
   public:
     const std::string Name;
 
-    explicit TypeVar(const std::string Name) : Name(std::move(Name)) {}
+    explicit TypeVar(std::string Name) : Name(std::move(Name)) {}
   };
 
-  class TypeBase : public Type {
+  class TypeBase final : public Type {
   public:
     const std::string Name;
 
-    explicit TypeBase(const std::string Name) : Name(std::move(Name)) {}
+    explicit TypeBase(std::string Name) : Name(std::move(Name)) {}
   };
 
-  class TypeArrow : public Type {
+  class TypeArrow final : public Type {
   public:
-    const Type::Ptr Left;
-    const Type::Ptr Right;
+    const Ptr Left;
+    const Ptr Right;
 
-    TypeArrow(const Type::Ptr Left, const Type::Ptr Right)
+    TypeArrow(Ptr Left, Ptr Right)
         : Left(std::move(Left)), Right(std::move(Right)) {}
   };
 
   class TypeManager {
-  private:
     int32_t LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
@@ -87,7 +85,7 @@ namespace swallow::type {
     Type::Ptr resolve(Type::Ptr type, TypeVar *&var) noexcept;
 
     /** Map a type variable of some name to a type. */
-    void bind(const std::string &name, Type::Ptr type) noexcept;
+    void bind(const std::string &name, const Type::Ptr &type) noexcept;
   };
 } // namespace swallow::type
 
