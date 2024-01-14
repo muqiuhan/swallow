@@ -1,7 +1,7 @@
 %{
 #include <string>
 #include <iostream>
-#include "../../ast/include/ast.hpp"
+#include "ast.h"
 #include "bison_parser.hpp"
 
 std::vector<swallow::ast::Definition::Ptr> Program;
@@ -10,7 +10,7 @@ extern yy::parser::symbol_type yylex();
 %}
 
 %code requires {
-    #include "../../ast/include/ast.hpp"
+    #include "ast.h"
     using namespace swallow::ast;
 }
 

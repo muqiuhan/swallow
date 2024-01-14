@@ -1,6 +1,6 @@
-#line 1 "/home/muqiuhan/Workspace/swallow/compiler/lexer/src/flex_lexer.cpp"
+#line 1 "/home/muqiuhan/Workspace/swallow/compiler/lexer/flex_lexer.cpp"
 
-#line 3 "/home/muqiuhan/Workspace/swallow/compiler/lexer/src/flex_lexer.cpp"
+#line 3 "/home/muqiuhan/Workspace/swallow/compiler/lexer/flex_lexer.cpp"
 
 #define YY_INT_ALIGNED short int
 
@@ -426,13 +426,13 @@ char *yytext;
 #line 1 "/home/muqiuhan/Workspace/swallow/compiler/lexer/lexer.l"
 #line 4 "/home/muqiuhan/Workspace/swallow/compiler/lexer/lexer.l"
 
-#include "ast.hpp"
+#include "ast.h"
 #include "bison_parser.hpp"
 
 #define YY_DECL yy::parser::symbol_type yylex()
 
-#line 479 "/home/muqiuhan/Workspace/swallow/compiler/lexer/src/flex_lexer.cpp"
-#line 480 "/home/muqiuhan/Workspace/swallow/compiler/lexer/src/flex_lexer.cpp"
+#line 479 "/home/muqiuhan/Workspace/swallow/compiler/lexer/flex_lexer.cpp"
+#line 480 "/home/muqiuhan/Workspace/swallow/compiler/lexer/flex_lexer.cpp"
 
 #define INITIAL 0
 
@@ -645,7 +645,7 @@ YY_DECL {
   {
 #line 12 "/home/muqiuhan/Workspace/swallow/compiler/lexer/lexer.l"
 
-#line 700 "/home/muqiuhan/Workspace/swallow/compiler/lexer/src/flex_lexer.cpp"
+#line 700 "/home/muqiuhan/Workspace/swallow/compiler/lexer/flex_lexer.cpp"
 
     while (/*CONSTCOND*/ 1) /* loops until end-of-file is reached */
     {
@@ -862,7 +862,7 @@ YY_DECL {
 #line 39 "/home/muqiuhan/Workspace/swallow/compiler/lexer/lexer.l"
         ECHO;
         YY_BREAK
-#line 878 "/home/muqiuhan/Workspace/swallow/compiler/lexer/src/flex_lexer.cpp"
+#line 878 "/home/muqiuhan/Workspace/swallow/compiler/lexer/flex_lexer.cpp"
       case YY_STATE_EOF(INITIAL):
         yyterminate();
 

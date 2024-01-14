@@ -30,7 +30,7 @@
 #ifndef SWALLOW_PARSER_H
 #define SWALLOW_PARSER_H
 
-#include "../../ast/include/ast.hpp"
+#include "../ast/ast.h"
 #include "bison_parser.hpp"
 
 extern std::vector<swallow::ast::Definition::Ptr> Program;

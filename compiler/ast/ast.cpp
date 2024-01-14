@@ -27,6 +27,31 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.hpp"
+#include "ast.h"
+#include "panic/panic.hpp"
 
-namespace swallow::ast {}
+using namespace swallow::utils;
+
+namespace swallow::ast {
+
+  std::string Binop::operatorsToString(const Operators op) noexcept {
+    switch (op) {
+    case Operators::PLUS:
+      return "+";
+    case Operators::MINUS:
+      return "-";
+    case Operators::TIMES:
+      return "*";
+    case Operators::DIVIDE:
+      return "/";
+    }
+
+    panic("Unknown operator");
+  }
+
+  // Type::Ptr Int::typecheck(TypeManager &typeManager,
+  //                          const TypeEnvironment &typeEnvironment) const {
+  //   return Type::Ptr(new TypeBase("Int"));
+  // }
+
+} // namespace swallow::ast

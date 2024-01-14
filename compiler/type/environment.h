@@ -30,7 +30,7 @@
 #ifndef SWALLOW_TYPE_ENVIRONMENT_H
 #define SWALLOW_TYPE_ENVIRONMENT_H
 
-#include "optional.hpp"
+#include "optional/optional.hpp"
 #include "type.h"
 #include <map>
 #include <string>

@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "type.h"
-#include "panic.hpp"
+#include "../utils/panic/panic.hpp"
 #include <algorithm>
 #include <cstdint>
 

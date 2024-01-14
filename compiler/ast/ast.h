@@ -30,16 +30,22 @@
 #ifndef SWALLOW_AST_HPP
 #define SWALLOW_AST_HPP
 
+#include "type.hpp"
 #include <memory>
 #include <string>
 #include <vector>
+
+using namespace swallow::type;
 
 namespace swallow::ast {
   class AST {
   public:
     using Ptr = std::unique_ptr<AST>;
-
     virtual ~AST() = default;
+
+    // virtual Type::Ptr typecheck(TypeManager &typeManager,
+    //                             const TypeEnvironment &typeEnvironment)
+    //                             const;
   };
 
   class Pattern {
@@ -87,6 +93,10 @@ namespace swallow::ast {
 
   public:
     explicit Int(const int V) : Value(V) {}
+
+    // virtual Type::Ptr typecheck(TypeManager &typeManager,
+    //                             const TypeEnvironment &typeEnvironment)
+    //                             const;
   };
 
   class LID final : public AST {
@@ -115,6 +125,8 @@ namespace swallow::ast {
   public:
     Binop(Operators Operator, Ptr Left, Ptr Right)
         : Operator(Operator), Left(std::move(Left)), Right(std::move(Right)) {}
+
+    static std::string operatorsToString(const Operators op) noexcept;
   };
 
   class Application final : public AST {
