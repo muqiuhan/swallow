@@ -5,8 +5,6 @@ set_xmakever("2.8.1")
 add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
 
-add_requires("stx")
-
 includes("**/xmake.lua")
 target("swc")
     set_kind("binary")

@@ -28,9 +28,11 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "type.h"
-#include "stx/panic.h"
+#include "panic.hpp"
 #include <algorithm>
 #include <cstdint>
+
+using namespace swallow::utils;
 
 namespace swallow::type {
   std::string TypeManager::newTypeName() noexcept {
@@ -78,20 +80,25 @@ namespace swallow::type {
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
 
-    if (leftVar) {
+    if (leftVar)
       bind(leftVar->Name, right);
-    } else if (rightVar) {
+    else if (rightVar)
       bind(rightVar->Name, left);
-    } else if (auto *leftArrow = dynamic_cast<TypeArrow *>(left.get()),
-               *rightArrow = dynamic_cast<TypeArrow *>(right.get());
-               leftArrow && rightArrow) {
+
+    else if (auto *leftArrow = dynamic_cast<TypeArrow *>(left.get()),
+             *rightArrow = dynamic_cast<TypeArrow *>(right.get());
+             leftArrow && rightArrow) {
+
       unify(leftArrow->Left, rightArrow->Left);
       unify(leftArrow->Right, rightArrow->Right);
+
     } else if (auto *leftID = dynamic_cast<TypeBase *>(left.get()),
                *rightID = dynamic_cast<TypeBase *>(right.get());
                leftID && rightID) {
+
       if (leftID->Name == rightID->Name)
         ;
+
     } else {
       panic("type checking error!!!");
     }
