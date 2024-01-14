@@ -733,8 +733,8 @@ namespace yy {
 #line 800 "/home/muqiuhan/Workspace/swallow/src/parser/include/bison_parser.cpp"
           break;
 
-          case 7: // Fn: FN LID OPAREN LowercaseParams CPAREN EQUAL
-                  // OCURLY Add CCURLY
+          case 7: // Fn: FN LID OPAREN LowercaseParams CPAREN EQUAL OCURLY Add
+                  // CCURLY
 #line 74 "/home/muqiuhan/Workspace/swallow/src/parser/parser.y"
           {
             yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Fn(
@@ -943,8 +943,7 @@ namespace yy {
 #line 926 "/home/muqiuhan/Workspace/swallow/src/parser/include/bison_parser.cpp"
           break;
 
-          case 28: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add
-                   // CCURLY
+          case 28: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY
 #line 124 "/home/muqiuhan/Workspace/swallow/src/parser/parser.y"
           {
             yylhs.value.as<Branch::Ptr>() = Branch::Ptr(
@@ -973,8 +972,7 @@ namespace yy {
 #line 944 "/home/muqiuhan/Workspace/swallow/src/parser/include/bison_parser.cpp"
           break;
 
-          case 31: // Data: DATA UID EQUAL OBRACKET Constructors
-                   // CBRACKET
+          case 31: // Data: DATA UID EQUAL OBRACKET Constructors CBRACKET
 #line 135 "/home/muqiuhan/Workspace/swallow/src/parser/parser.y"
           {
             yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Data(
@@ -1065,8 +1063,7 @@ namespace yy {
         }
       }
 
-      // Else will try to reuse lookahead token after shifting the error
-      // token.
+      // Else will try to reuse lookahead token after shifting the error token.
       goto yyerrlab1;
 
     /*---------------------------------------------------.
