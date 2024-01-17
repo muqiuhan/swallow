@@ -1,9 +1,11 @@
+#include "compiler.h"
 #include "ast.h"
 #include "parser.h"
 
 using namespace swallow;
 
-auto main(int argc, char **argv) -> int {
+auto main(int argc, char ** argv) -> int
+{
 #if 0
   auto details = diagnostics::Details{
     "This is a test text\nMaybe you could have guessed that.",
@@ -27,7 +29,11 @@ auto main(int argc, char **argv) -> int {
 
   report.print(std::cout);
 #endif
-  auto &program = parser::parse();
+  compiler::CompileUnit::FILE = new compiler::CompileUnit(argv[1]);
+
+  auto & program = compiler::parser::parse();
   type::typecheck(program);
+
+  delete compiler::CompileUnit::FILE;
   return 0;
 }

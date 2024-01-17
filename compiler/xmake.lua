@@ -10,13 +10,9 @@ target("swc")
     set_languages("c++20")
     
     add_files("*.cpp", "**/*.cpp")
-    add_includedirs("ast", "type", "lexer", "parser", "diagnostics", "utils")
+    add_includedirs(".", "ast", "type", "lexer", "parser", "diagnostics", "utils")
 
     before_build(function (target)
       os.run("flex -o $(scriptdir)/lexer/flex_lexer.cpp $(scriptdir)/lexer/lexer.l")
       os.run("bison -o $(scriptdir)/parser/bison_parser.cpp -d $(scriptdir)/parser/parser.y")
-    end)
-
-    after_build(function (_)
-        os.run("xmake format")
     end)

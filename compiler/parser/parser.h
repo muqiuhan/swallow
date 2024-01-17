@@ -30,15 +30,16 @@
 #ifndef SWALLOW_PARSER_H
 #define SWALLOW_PARSER_H
 
-#include "../ast/ast.h"
+#include "ast/ast.h"
 #include "bison_parser.hpp"
+#include "compiler.h"
+#include "diagnostics.h"
 
-extern std::vector<swallow::ast::Definition::Ptr> Program;
+namespace swallow::compiler::parser
+{
 
-namespace swallow::parser {
+  std::vector<swallow::ast::Definition::Ptr> & parse() noexcept;
 
-std::vector<swallow::ast::Definition::Ptr> &parse() noexcept;
-
-} // namespace swallow::parser
+} // namespace swallow::compiler::parser
 
 #endif

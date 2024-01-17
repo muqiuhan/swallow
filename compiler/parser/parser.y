@@ -3,6 +3,7 @@
 #include <iostream>
 #include "ast.h"
 #include "bison_parser.hpp"
+#include "reporter.h"
 
 std::vector<swallow::ast::Definition::Ptr> Program;
 extern yy::parser::symbol_type yylex();
@@ -36,10 +37,12 @@ extern yy::parser::symbol_type yylex();
 %token EQUAL
 %token <std::string> LID
 %token <std::string> UID
+%token END 0 "end of file"
 
 %language "c++"
 %define api.value.type variant
 %define api.token.constructor
+%locations
 
 %type <std::vector<std::string>> LowercaseParams UppercaseParams
 %type <std::vector<Definition::Ptr>> Program Definitions
@@ -71,7 +74,13 @@ Definition
 
 Fn
     : FN LID LowercaseParams EQUAL OCURLY Add CCURLY
-        { $$ = Definition::Ptr(new Fn(std::move($2), std::move($3), std::move($6))); }
+        { $$ = Definition::Ptr(new Fn(@$, std::move($2), std::move($3), std::move($6))); }
+    | error {
+        swallow::compiler::parser::ParserReporter::REPORTER->normal(
+            @$, "Syntax parsing error", "The function definition syntax error",
+            "FN LID LowercaseParams EQUAL OCURLY Add CCURLY"
+        );
+    }
     ;
 
 LowercaseParams
@@ -85,33 +94,33 @@ UppercaseParams
     ;
 
 Add
-    : Add PLUS Mul { $$ = AST::Ptr(new Binop(Binop::Operators::PLUS, std::move($1), std::move($3))); }
-    | Add MINUS Mul { $$ = AST::Ptr(new Binop(Binop::Operators::MINUS, std::move($1), std::move($3))); }
+    : Add PLUS Mul { $$ = AST::Ptr(new Binop(@$, Binop::Operators::PLUS, std::move($1), std::move($3))); }
+    | Add MINUS Mul { $$ = AST::Ptr(new Binop(@$, Binop::Operators::MINUS, std::move($1), std::move($3))); }
     | Mul { $$ = std::move($1); }
     ;
 
 Mul
-    : Mul TIMES Application { $$ = AST::Ptr(new Binop(Binop::Operators::TIMES, std::move($1), std::move($3))); }
-    | Mul DIVIDE Application { $$ = AST::Ptr(new Binop(Binop::Operators::DIVIDE, std::move($1), std::move($3))); }
+    : Mul TIMES Application { $$ = AST::Ptr(new Binop(@$, Binop::Operators::TIMES, std::move($1), std::move($3))); }
+    | Mul DIVIDE Application { $$ = AST::Ptr(new Binop(@$, Binop::Operators::DIVIDE, std::move($1), std::move($3))); }
     | Application { $$ = std::move($1); }
     ;
 
 Application
-    : Application ApplicationBase { $$ = AST::Ptr(new Application(std::move($1), std::move($2))); }
+    : Application ApplicationBase { $$ = AST::Ptr(new Application(@$, std::move($1), std::move($2))); }
     | ApplicationBase { $$ = std::move($1); }
     ;
 
 ApplicationBase
-    : INT { $$ = AST::Ptr(new Int($1)); }
-    | LID { $$ = AST::Ptr(new LID(std::move($1))); }
-    | UID { $$ = AST::Ptr(new UID(std::move($1))); }
+    : INT { $$ = AST::Ptr(new Int(@$, $1)); }
+    | LID { $$ = AST::Ptr(new LID(@$, std::move($1))); }
+    | UID { $$ = AST::Ptr(new UID(@$, std::move($1))); }
     | OPAREN Add CPAREN { $$ = std::move($2); }
     | Match { $$ = std::move($1); }
     ;
 
 Match
     : MATCH Add WITH OCURLY Branches CCURLY
-        { $$ = AST::Ptr(new Match(std::move($2), std::move($5))); }
+        { $$ = AST::Ptr(new Match(@$, std::move($2), std::move($5))); }
     ;
 
 Branches
@@ -121,18 +130,26 @@ Branches
 
 Branch
     : VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY
-        { $$ = Branch::Ptr(new Branch(std::move($2), std::move($5))); }
+        {
+            $$ = Branch::Ptr(new Branch(@$, std::move($2), std::move($5)));
+        }
+    | error {
+        swallow::compiler::parser::ParserReporter::REPORTER->normal(
+            @$, "Syntax parsing error", "Branch syntax error in match expression",
+            "VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY"
+        );
+    }
     ;
 
 Pattern
-    : LID { $$ = Pattern::Ptr(new PatternVariable(std::move($1))); }
+    : LID { $$ = Pattern::Ptr(new PatternVariable(@$, std::move($1))); }
     | UID LowercaseParams
-        { $$ = Pattern::Ptr(new PatternConstructor(std::move($1), std::move($2))); }
+        { $$ = Pattern::Ptr(new PatternConstructor(@$, std::move($1), std::move($2))); }
     ;
 
 Data
     : DATA UID EQUAL OBRACKET Constructors CBRACKET
-        { $$ = Definition::Ptr(new Data(std::move($2), std::move($5))); }
+        { $$ = Definition::Ptr(new Data(@$, std::move($2), std::move($5))); }
     ;
 
 Constructors
@@ -143,5 +160,5 @@ Constructors
 
 Constructor
     : UID UppercaseParams
-        { $$ = Constructor::Ptr(new Constructor(std::move($1), std::move($2))); }
+        { $$ = Constructor::Ptr(new Constructor(@$, std::move($1), std::move($2))); }
     ;

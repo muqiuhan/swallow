@@ -35,28 +35,34 @@
 #include <iostream>
 #include <source_location>
 
-namespace swallow::utils {
-template <class... Args> struct panic_format {
-  template <class T>
-  consteval panic_format(
+namespace swallow::utils
+{
+  template <class... Args> struct panic_format
+  {
+    template <class T>
+    consteval panic_format(
 
-      const T &s,
+      const T & s,
       std::source_location loc = std::source_location::current()) noexcept
-      : fmt{s}, loc{loc} {}
+      : fmt{ s }
+      , loc{ loc }
+    {}
 
-  std::format_string<Args...> fmt;
-  std::source_location loc;
-};
+    std::format_string<Args...> fmt;
+    std::source_location loc;
+  };
 
-template <class... Args>
-[[noreturn]] void panic(panic_format<std::type_identity_t<Args>...> fmt,
-                        Args &&...args) noexcept {
-  auto msg =
-      std::format("{}:{} panic: {}\n", fmt.loc.file_name(), fmt.loc.line(),
-                  std::format(fmt.fmt, std::forward<Args>(args)...));
-  std::cout << msg.c_str() << std::endl;
-  std::terminate();
-}
+  template <class... Args>
+  [[noreturn]] void panic(panic_format<std::type_identity_t<Args>...> fmt,
+                          Args &&... args) noexcept
+  {
+    auto msg = std::format("{}:{} panic: {}\n",
+                           fmt.loc.file_name(),
+                           fmt.loc.line(),
+                           std::format(fmt.fmt, std::forward<Args>(args)...));
+    std::cout << msg.c_str() << std::endl;
+    std::terminate();
+  }
 } // namespace swallow::utils
 
 #endif
