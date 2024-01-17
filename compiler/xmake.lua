@@ -16,3 +16,7 @@ target("swc")
       os.run("flex -o $(scriptdir)/lexer/flex_lexer.cpp $(scriptdir)/lexer/lexer.l")
       os.run("bison -o $(scriptdir)/parser/bison_parser.cpp -d $(scriptdir)/parser/parser.y")
     end)
+
+    after_build(function (_)
+        os.run("make fmt")
+    end)
