@@ -34,26 +34,20 @@
 #include <map>
 #include <string>
 
-namespace swallow::type
-{
-  class Environment
-  {
-  public:
-    std::map<std::string, Type::Ptr> Names;
-    Environment const * Parent = nullptr;
+namespace swallow::type {
+class Environment {
+public:
+  std::map<std::string, Type::Ptr> Names;
+  Environment const *Parent = nullptr;
 
-    explicit Environment(Environment const * Parent)
-      : Parent(Parent)
-    {}
+  explicit Environment(Environment const *Parent) : Parent(Parent) {}
 
-    Environment()
-      : Environment(nullptr)
-    {}
+  Environment() : Environment(nullptr) {}
 
-    Type::Ptr lookup(const std::string & name) const noexcept;
-    void bind(const std::string & name, Type::Ptr type) noexcept;
-    Environment scope() const noexcept;
-  };
+  Type::Ptr lookup(const std::string &name) const noexcept;
+  void bind(const std::string &name, Type::Ptr type) noexcept;
+  Environment scope() const noexcept;
+};
 
 } // namespace swallow::type
 
