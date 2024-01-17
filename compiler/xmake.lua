@@ -10,7 +10,7 @@ target("swc")
     set_languages("c++20")
     
     add_files("*.cpp", "**/*.cpp")
-    add_includedirs("ast", "type", "lexer", "parser", "diagnostics", "utils")
+    add_includedirs(".", "ast", "type", "lexer", "parser", "diagnostics", "utils")
 
     before_build(function (target)
       os.run("flex -o $(scriptdir)/lexer/flex_lexer.cpp $(scriptdir)/lexer/lexer.l")
@@ -18,5 +18,5 @@ target("swc")
     end)
 
     after_build(function (_)
-        os.run("xmake format")
+        os.run("make fmt")
     end)

@@ -31,212 +31,304 @@
 #define SWALLOW_AST_HPP
 
 #include "environment.h"
+#include "location.hh"
 #include "type.h"
 #include "type.hpp"
 #include <memory>
 #include <string>
 #include <vector>
 
-namespace swallow::ast {
-class AST {
-public:
-  using Ptr = std::unique_ptr<AST>;
-  virtual ~AST() = default;
+namespace swallow::ast
+{
+  class AST
+  {
+  public:
+    const yy::location Location;
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept = 0;
-};
+    using Ptr = std::unique_ptr<AST>;
 
-class Pattern {
-public:
-  using Ptr = std::unique_ptr<Pattern>;
+    explicit AST(const yy::location Location)
+      : Location(Location)
+    {}
+    virtual ~AST() = default;
 
-  virtual ~Pattern() = default;
+    virtual type::Type::Ptr
+    typecheck(type::Manager & typeManager,
+              const type::Environment & typeEnvironment) const noexcept = 0;
+  };
 
-  virtual void match(type::Type::Ptr type, type::Manager &typeManager,
-                     type::Environment &typeEnvironment) const noexcept = 0;
-};
+  class Pattern
+  {
+  public:
+    using Ptr = std::unique_ptr<Pattern>;
 
-class Branch {
-public:
-  using Ptr = std::unique_ptr<Branch>;
+    const yy::location Location;
 
-  const Pattern::Ptr Patt;
-  const AST::Ptr Expr;
+    explicit Pattern(const yy::location Location)
+      : Location(Location)
+    {}
+    virtual ~Pattern() = default;
 
-  Branch(Pattern::Ptr Patt, AST::Ptr Expr)
-      : Patt(std::move(Patt)), Expr(std::move(Expr)) {}
-};
+    virtual void match(type::Type::Ptr type,
+                       type::Manager & typeManager,
+                       type::Environment & typeEnvironment) const noexcept = 0;
+  };
 
-class Constructor {
-public:
-  using Ptr = std::unique_ptr<Constructor>;
+  class Branch
+  {
+  public:
+    using Ptr = std::unique_ptr<Branch>;
 
-  const std::string Name;
-  const std::vector<std::string> Types;
+    const yy::location Location;
+    const Pattern::Ptr Patt;
+    const AST::Ptr Expr;
 
-  Constructor(std::string Name, std::vector<std::string> Types)
-      : Name(std::move(Name)), Types(std::move(Types)) {}
-};
+    Branch(const yy::location Location, Pattern::Ptr Patt, AST::Ptr Expr)
+      : Patt(std::move(Patt))
+      , Expr(std::move(Expr))
+      , Location(Location)
+    {}
+  };
 
-class Definition {
-public:
-  using Ptr = std::unique_ptr<Definition>;
+  class Constructor
+  {
+  public:
+    using Ptr = std::unique_ptr<Constructor>;
 
-  virtual ~Definition() = default;
+    const std::string Name;
+    const std::vector<std::string> Types;
+    const yy::location Location;
 
-  virtual void
-  scanDefinitionType(type::Manager &typeManager,
-                     type::Environment &typeEnvironment) noexcept = 0;
-  virtual void
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept = 0;
-};
+    Constructor(const yy::location Location,
+                std::string Name,
+                std::vector<std::string> Types)
+      : Name(std::move(Name))
+      , Types(std::move(Types))
+      , Location(Location)
+    {}
+  };
 
-class Int final : public AST {
-  const int Value;
+  class Definition
+  {
+  public:
+    using Ptr = std::unique_ptr<Definition>;
 
-public:
-  explicit Int(const int V) : Value(V) {}
+    const yy::location Location;
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+    explicit Definition(const yy::location Location)
+      : Location(Location)
+    {}
+    virtual ~Definition() = default;
 
-class LID final : public AST {
-  const std::string ID;
+    virtual void
+    scanDefinitionType(type::Manager & typeManager,
+                       type::Environment & typeEnvironment) noexcept = 0;
+    virtual void
+    typecheck(type::Manager & typeManager,
+              const type::Environment & typeEnvironment) const noexcept = 0;
+  };
 
-public:
-  explicit LID(std::string ID) : ID(std::move(ID)) {}
+  class Int final : public AST
+  {
+    const int Value;
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+  public:
+    explicit Int(const yy::location Location, const int V)
+      : Value(V)
+      , AST(Location)
+    {}
 
-class UID final : public AST {
-  const std::string ID;
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 
-public:
-  explicit UID(std::string ID) : ID(std::move(ID)) {}
+  class LID final : public AST
+  {
+    const std::string ID;
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+  public:
+    explicit LID(const yy::location Location, std::string ID)
+      : ID(std::move(ID))
+      , AST(Location)
+    {}
 
-class Binop final : public AST {
-public:
-  enum class Operators { PLUS, MINUS, TIMES, DIVIDE };
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 
-private:
-  const Operators Operator;
-  const Ptr Left;
-  const Ptr Right;
+  class UID final : public AST
+  {
+    const std::string ID;
 
-public:
-  Binop(Operators Operator, Ptr Left, Ptr Right)
-      : Operator(Operator), Left(std::move(Left)), Right(std::move(Right)) {}
+  public:
+    explicit UID(const yy::location Location, std::string ID)
+      : ID(std::move(ID))
+      , AST(Location)
+    {}
 
-  static std::string operatorsToString(const Operators op) noexcept;
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+  class Binop final : public AST
+  {
+  public:
+    enum class Operators
+    {
+      PLUS,
+      MINUS,
+      TIMES,
+      DIVIDE
+    };
 
-class Application final : public AST {
-  const Ptr Left;
-  const Ptr Right;
+  private:
+    const Operators Operator;
+    const Ptr Left;
+    const Ptr Right;
 
-public:
-  Application(Ptr Left, Ptr Right)
-      : Left(std::move(Left)), Right(std::move(Right)) {}
+  public:
+    Binop(const yy::location Location, Operators Operator, Ptr Left, Ptr Right)
+      : Operator(Operator)
+      , Left(std::move(Left))
+      , Right(std::move(Right))
+      , AST(Location)
+    {}
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+    static std::string operatorsToString(const Operators op) noexcept;
 
-class Match final : public AST {
-  const Ptr With;
-  const std::vector<Branch::Ptr> Branches;
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 
-public:
-  Match(Ptr o, std::vector<Branch::Ptr> b)
-      : With(std::move(o)), Branches(std::move(b)) {}
+  class Application final : public AST
+  {
+    const Ptr Left;
+    const Ptr Right;
 
-  virtual type::Type::Ptr
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+  public:
+    Application(const yy::location Location, Ptr Left, Ptr Right)
+      : Left(std::move(Left))
+      , Right(std::move(Right))
+      , AST(Location)
+    {}
 
-class PatternVariable final : public Pattern {
-  const std::string Variable;
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 
-public:
-  explicit PatternVariable(std::string Variable)
-      : Variable(std::move(Variable)) {}
+  class Match final : public AST
+  {
+    const Ptr With;
+    const std::vector<Branch::Ptr> Branches;
 
-  void match(type::Type::Ptr type, type::Manager &typeManager,
-             type::Environment &typeEnvironment) const noexcept override;
-};
+  public:
+    Match(const yy::location Location, Ptr o, std::vector<Branch::Ptr> b)
+      : With(std::move(o))
+      , Branches(std::move(b))
+      , AST(Location)
+    {}
 
-class PatternConstructor final : public Pattern {
-public:
-  const std::string Constructor;
-  const std::vector<std::string> Params;
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 
-  PatternConstructor(std::string Constructor, std::vector<std::string> Params)
-      : Constructor(std::move(Constructor)), Params(std::move(Params)) {}
+  class PatternVariable final : public Pattern
+  {
+    const std::string Variable;
 
-  virtual void
-  match(type::Type::Ptr type, type::Manager &typeManager,
-        type::Environment &typeEnvironment) const noexcept override;
-};
+  public:
+    explicit PatternVariable(const yy::location Location, std::string Variable)
+      : Variable(std::move(Variable))
+      , Pattern(Location)
+    {}
 
-class Fn final : public Definition {
-public:
-  const std::string Name;
-  const std::vector<std::string> Params;
-  const AST::Ptr Body;
+    void match(type::Type::Ptr type,
+               type::Manager & typeManager,
+               type::Environment & typeEnvironment) const noexcept override;
+  };
 
-  std::vector<type::Type::Ptr> ParamTypes;
-  type::Type::Ptr ReturnType;
+  class PatternConstructor final : public Pattern
+  {
+  public:
+    const std::string Constructor;
+    const std::vector<std::string> Params;
 
-  Fn(std::string Name, std::vector<std::string> Params, AST::Ptr Body)
-      : Name(std::move(Name)), Params(std::move(Params)),
-        Body(std::move(Body)) {}
+    PatternConstructor(const yy::location Location,
+                       std::string Constructor,
+                       std::vector<std::string> Params)
+      : Constructor(std::move(Constructor))
+      , Params(std::move(Params))
+      , Pattern(Location)
+    {}
 
-  virtual void
-  scanDefinitionType(type::Manager &typeManager,
-                     type::Environment &typeEnvironment) noexcept override;
-  virtual void
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+    virtual void
+    match(type::Type::Ptr type,
+          type::Manager & typeManager,
+          type::Environment & typeEnvironment) const noexcept override;
+  };
 
-class Data final : public Definition {
-public:
-  const std::string Name;
-  const std::vector<Constructor::Ptr> Constructors;
+  class Fn final : public Definition
+  {
+  public:
+    const std::string Name;
+    const std::vector<std::string> Params;
+    const AST::Ptr Body;
 
-  Data(std::string Name, std::vector<Constructor::Ptr> Constructors)
-      : Name(std::move(Name)), Constructors(std::move(Constructors)) {}
+    std::vector<type::Type::Ptr> ParamTypes;
+    type::Type::Ptr ReturnType;
 
-  virtual void
-  scanDefinitionType(type::Manager &typeManager,
-                     type::Environment &typeEnvironment) noexcept override;
-  virtual void
-  typecheck(type::Manager &typeManager,
-            const type::Environment &typeEnvironment) const noexcept override;
-};
+    Fn(const yy::location Location,
+       std::string Name,
+       std::vector<std::string> Params,
+       AST::Ptr Body)
+      : Name(std::move(Name))
+      , Params(std::move(Params))
+      , Body(std::move(Body))
+      , Definition(Location)
+    {}
+
+    virtual void
+    scanDefinitionType(type::Manager & typeManager,
+                       type::Environment & typeEnvironment) noexcept override;
+    virtual void typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
+
+  class Data final : public Definition
+  {
+  public:
+    const std::string Name;
+    const std::vector<Constructor::Ptr> Constructors;
+
+    Data(const yy::location Location,
+         std::string Name,
+         std::vector<Constructor::Ptr> Constructors)
+      : Name(std::move(Name))
+      , Constructors(std::move(Constructors))
+      , Definition(Location)
+    {}
+
+    virtual void
+    scanDefinitionType(type::Manager & typeManager,
+                       type::Environment & typeEnvironment) noexcept override;
+    virtual void typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
+  };
 } // namespace swallow::ast
 
-namespace swallow::type {
-void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept;
+namespace swallow::type
+{
+
+  void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept;
+
 } // namespace swallow::type
 
 #endif

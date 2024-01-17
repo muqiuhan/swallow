@@ -39,13 +39,14 @@
 
 #include "bison_parser.hpp"
 #include "ast.h"
+#include "reporter.h"
 #include <iostream>
 #include <string>
 
 std::vector<swallow::ast::Definition::Ptr> Program;
 extern yy::parser::symbol_type yylex();
 
-#line 52 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 53 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
 
 #include "bison_parser.hpp"
 
@@ -70,6 +71,26 @@ extern yy::parser::symbol_type yylex();
 #endif
 #endif
 
+#define YYRHSLOC(Rhs, K) ((Rhs)[K].location)
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+#ifndef YYLLOC_DEFAULT
+#define YYLLOC_DEFAULT(Current, Rhs, N)                                        \
+  do                                                                           \
+    if (N)                                                                     \
+      {                                                                        \
+        (Current).begin = YYRHSLOC(Rhs, 1).begin;                              \
+        (Current).end = YYRHSLOC(Rhs, N).end;                                  \
+      }                                                                        \
+    else                                                                       \
+      {                                                                        \
+        (Current).begin = (Current).end = YYRHSLOC(Rhs, 0).end;                \
+      }                                                                        \
+  while (false)
+#endif
+
 // Enable debugging if requested.
 #if YYDEBUG
 
@@ -79,24 +100,28 @@ extern yy::parser::symbol_type yylex();
   (*yycdebug_)
 
 #define YY_SYMBOL_PRINT(Title, Symbol)                                         \
-  do {                                                                         \
-    if (yydebug_) {                                                            \
-      *yycdebug_ << Title << ' ';                                              \
-      yy_print_(*yycdebug_, Symbol);                                           \
-      *yycdebug_ << '\n';                                                      \
-    }                                                                          \
+  do                                                                           \
+    {                                                                          \
+      if (yydebug_)                                                            \
+        {                                                                      \
+          *yycdebug_ << Title << ' ';                                          \
+          yy_print_(*yycdebug_, Symbol);                                       \
+          *yycdebug_ << '\n';                                                  \
+        }                                                                      \
   } while (false)
 
 #define YY_REDUCE_PRINT(Rule)                                                  \
-  do {                                                                         \
-    if (yydebug_)                                                              \
-      yy_reduce_print_(Rule);                                                  \
+  do                                                                           \
+    {                                                                          \
+      if (yydebug_)                                                            \
+        yy_reduce_print_(Rule);                                                \
   } while (false)
 
 #define YY_STACK_PRINT()                                                       \
-  do {                                                                         \
-    if (yydebug_)                                                              \
-      yy_stack_print_();                                                       \
+  do                                                                           \
+    {                                                                          \
+      if (yydebug_)                                                            \
+        yy_stack_print_();                                                     \
   } while (false)
 
 #else // !YYDEBUG
@@ -118,1181 +143,1308 @@ extern yy::parser::symbol_type yylex();
 #define YYERROR goto yyerrorlab
 #define YYRECOVERING() (!!yyerrstatus_)
 
-namespace yy {
-#line 130 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-
-/// Build a parser object.
-parser::parser()
-#if YYDEBUG
-    : yydebug_(false), yycdebug_(&std::cerr)
-#else
-
-#endif
+namespace yy
 {
-}
+#line 150 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
 
-parser::~parser() {}
-
-parser::syntax_error::~syntax_error() YY_NOEXCEPT YY_NOTHROW {}
-
-/*---------.
-| symbol.  |
-`---------*/
-
-// by_state.
-parser::by_state::by_state() YY_NOEXCEPT : state(empty_state) {}
-
-parser::by_state::by_state(const by_state &that) YY_NOEXCEPT
-    : state(that.state) {}
-
-void parser::by_state::clear() YY_NOEXCEPT { state = empty_state; }
-
-void parser::by_state::move(by_state &that) {
-  state = that.state;
-  that.clear();
-}
-
-parser::by_state::by_state(state_type s) YY_NOEXCEPT : state(s) {}
-
-parser::symbol_kind_type parser::by_state::kind() const YY_NOEXCEPT {
-  if (state == empty_state)
-    return symbol_kind::S_YYEMPTY;
-  else
-    return YY_CAST(symbol_kind_type, yystos_[+state]);
-}
-
-parser::stack_symbol_type::stack_symbol_type() {}
-
-parser::stack_symbol_type::stack_symbol_type(YY_RVREF(stack_symbol_type) that)
-    : super_type(YY_MOVE(that.state)) {
-  switch (that.kind()) {
-  case symbol_kind::S_Add:             // Add
-  case symbol_kind::S_Mul:             // Mul
-  case symbol_kind::S_Application:     // Application
-  case symbol_kind::S_ApplicationBase: // ApplicationBase
-  case symbol_kind::S_Match:           // Match
-    value.YY_MOVE_OR_COPY<AST::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Branch: // Branch
-    value.YY_MOVE_OR_COPY<Branch::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Constructor: // Constructor
-    value.YY_MOVE_OR_COPY<Constructor::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Definition: // Definition
-  case symbol_kind::S_Fn:         // Fn
-  case symbol_kind::S_Data:       // Data
-    value.YY_MOVE_OR_COPY<Definition::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Pattern: // Pattern
-    value.YY_MOVE_OR_COPY<Pattern::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_INT: // INT
-    value.YY_MOVE_OR_COPY<int>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_LID: // LID
-  case symbol_kind::S_UID: // UID
-    value.YY_MOVE_OR_COPY<std::string>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Branches: // Branches
-    value.YY_MOVE_OR_COPY<std::vector<Branch::Ptr>>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Constructors: // Constructors
-    value.YY_MOVE_OR_COPY<std::vector<Constructor::Ptr>>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Program:     // Program
-  case symbol_kind::S_Definitions: // Definitions
-    value.YY_MOVE_OR_COPY<std::vector<Definition::Ptr>>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_LowercaseParams: // LowercaseParams
-  case symbol_kind::S_UppercaseParams: // UppercaseParams
-    value.YY_MOVE_OR_COPY<std::vector<std::string>>(YY_MOVE(that.value));
-    break;
-
-  default:
-    break;
-  }
-
-#if 201103L <= YY_CPLUSPLUS
-  // that is emptied.
-  that.state = empty_state;
-#endif
-}
-
-parser::stack_symbol_type::stack_symbol_type(state_type s,
-                                             YY_MOVE_REF(symbol_type) that)
-    : super_type(s) {
-  switch (that.kind()) {
-  case symbol_kind::S_Add:             // Add
-  case symbol_kind::S_Mul:             // Mul
-  case symbol_kind::S_Application:     // Application
-  case symbol_kind::S_ApplicationBase: // ApplicationBase
-  case symbol_kind::S_Match:           // Match
-    value.move<AST::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Branch: // Branch
-    value.move<Branch::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Constructor: // Constructor
-    value.move<Constructor::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Definition: // Definition
-  case symbol_kind::S_Fn:         // Fn
-  case symbol_kind::S_Data:       // Data
-    value.move<Definition::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Pattern: // Pattern
-    value.move<Pattern::Ptr>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_INT: // INT
-    value.move<int>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_LID: // LID
-  case symbol_kind::S_UID: // UID
-    value.move<std::string>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Branches: // Branches
-    value.move<std::vector<Branch::Ptr>>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Constructors: // Constructors
-    value.move<std::vector<Constructor::Ptr>>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_Program:     // Program
-  case symbol_kind::S_Definitions: // Definitions
-    value.move<std::vector<Definition::Ptr>>(YY_MOVE(that.value));
-    break;
-
-  case symbol_kind::S_LowercaseParams: // LowercaseParams
-  case symbol_kind::S_UppercaseParams: // UppercaseParams
-    value.move<std::vector<std::string>>(YY_MOVE(that.value));
-    break;
-
-  default:
-    break;
-  }
-
-  // that is emptied.
-  that.kind_ = symbol_kind::S_YYEMPTY;
-}
-
-#if YY_CPLUSPLUS < 201103L
-parser::stack_symbol_type &
-parser::stack_symbol_type::operator=(const stack_symbol_type &that) {
-  state = that.state;
-  switch (that.kind()) {
-  case symbol_kind::S_Add:             // Add
-  case symbol_kind::S_Mul:             // Mul
-  case symbol_kind::S_Application:     // Application
-  case symbol_kind::S_ApplicationBase: // ApplicationBase
-  case symbol_kind::S_Match:           // Match
-    value.copy<AST::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Branch: // Branch
-    value.copy<Branch::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Constructor: // Constructor
-    value.copy<Constructor::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Definition: // Definition
-  case symbol_kind::S_Fn:         // Fn
-  case symbol_kind::S_Data:       // Data
-    value.copy<Definition::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Pattern: // Pattern
-    value.copy<Pattern::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_INT: // INT
-    value.copy<int>(that.value);
-    break;
-
-  case symbol_kind::S_LID: // LID
-  case symbol_kind::S_UID: // UID
-    value.copy<std::string>(that.value);
-    break;
-
-  case symbol_kind::S_Branches: // Branches
-    value.copy<std::vector<Branch::Ptr>>(that.value);
-    break;
-
-  case symbol_kind::S_Constructors: // Constructors
-    value.copy<std::vector<Constructor::Ptr>>(that.value);
-    break;
-
-  case symbol_kind::S_Program:     // Program
-  case symbol_kind::S_Definitions: // Definitions
-    value.copy<std::vector<Definition::Ptr>>(that.value);
-    break;
-
-  case symbol_kind::S_LowercaseParams: // LowercaseParams
-  case symbol_kind::S_UppercaseParams: // UppercaseParams
-    value.copy<std::vector<std::string>>(that.value);
-    break;
-
-  default:
-    break;
-  }
-
-  return *this;
-}
-
-parser::stack_symbol_type &
-parser::stack_symbol_type::operator=(stack_symbol_type &that) {
-  state = that.state;
-  switch (that.kind()) {
-  case symbol_kind::S_Add:             // Add
-  case symbol_kind::S_Mul:             // Mul
-  case symbol_kind::S_Application:     // Application
-  case symbol_kind::S_ApplicationBase: // ApplicationBase
-  case symbol_kind::S_Match:           // Match
-    value.move<AST::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Branch: // Branch
-    value.move<Branch::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Constructor: // Constructor
-    value.move<Constructor::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Definition: // Definition
-  case symbol_kind::S_Fn:         // Fn
-  case symbol_kind::S_Data:       // Data
-    value.move<Definition::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_Pattern: // Pattern
-    value.move<Pattern::Ptr>(that.value);
-    break;
-
-  case symbol_kind::S_INT: // INT
-    value.move<int>(that.value);
-    break;
-
-  case symbol_kind::S_LID: // LID
-  case symbol_kind::S_UID: // UID
-    value.move<std::string>(that.value);
-    break;
-
-  case symbol_kind::S_Branches: // Branches
-    value.move<std::vector<Branch::Ptr>>(that.value);
-    break;
-
-  case symbol_kind::S_Constructors: // Constructors
-    value.move<std::vector<Constructor::Ptr>>(that.value);
-    break;
-
-  case symbol_kind::S_Program:     // Program
-  case symbol_kind::S_Definitions: // Definitions
-    value.move<std::vector<Definition::Ptr>>(that.value);
-    break;
-
-  case symbol_kind::S_LowercaseParams: // LowercaseParams
-  case symbol_kind::S_UppercaseParams: // UppercaseParams
-    value.move<std::vector<std::string>>(that.value);
-    break;
-
-  default:
-    break;
-  }
-
-  // that is emptied.
-  that.state = empty_state;
-  return *this;
-}
-#endif
-
-template <typename Base>
-void parser::yy_destroy_(const char *yymsg, basic_symbol<Base> &yysym) const {
-  if (yymsg)
-    YY_SYMBOL_PRINT(yymsg, yysym);
-}
-
+  /// Build a parser object.
+  parser::parser()
 #if YYDEBUG
-template <typename Base>
-void parser::yy_print_(std::ostream &yyo,
-                       const basic_symbol<Base> &yysym) const {
-  std::ostream &yyoutput = yyo;
-  YY_USE(yyoutput);
-  if (yysym.empty())
-    yyo << "empty symbol";
-  else {
-    symbol_kind_type yykind = yysym.kind();
-    yyo << (yykind < YYNTOKENS ? "token" : "nterm") << ' ' << yysym.name()
-        << " (";
-    YY_USE(yykind);
-    yyo << ')';
-  }
-}
-#endif
-
-void parser::yypush_(const char *m, YY_MOVE_REF(stack_symbol_type) sym) {
-  if (m)
-    YY_SYMBOL_PRINT(m, sym);
-  yystack_.push(YY_MOVE(sym));
-}
-
-void parser::yypush_(const char *m, state_type s,
-                     YY_MOVE_REF(symbol_type) sym) {
-#if 201103L <= YY_CPLUSPLUS
-  yypush_(m, stack_symbol_type(s, std::move(sym)));
+    : yydebug_(false)
+    , yycdebug_(&std::cerr)
 #else
-  stack_symbol_type ss(s, sym);
-  yypush_(m, ss);
+
 #endif
-}
+  {}
 
-void parser::yypop_(int n) YY_NOEXCEPT { yystack_.pop(n); }
+  parser::~parser() {}
 
-#if YYDEBUG
-std::ostream &parser::debug_stream() const { return *yycdebug_; }
+  parser::syntax_error::~syntax_error() YY_NOEXCEPT YY_NOTHROW {}
 
-void parser::set_debug_stream(std::ostream &o) { yycdebug_ = &o; }
+  /*---------.
+  | symbol.  |
+  `---------*/
 
-parser::debug_level_type parser::debug_level() const { return yydebug_; }
+  // by_state.
+  parser::by_state::by_state() YY_NOEXCEPT : state(empty_state) {}
 
-void parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
-#endif // YYDEBUG
+  parser::by_state::by_state(const by_state & that) YY_NOEXCEPT
+    : state(that.state)
+  {}
 
-parser::state_type parser::yy_lr_goto_state_(state_type yystate, int yysym) {
-  int yyr = yypgoto_[yysym - YYNTOKENS] + yystate;
-  if (0 <= yyr && yyr <= yylast_ && yycheck_[yyr] == yystate)
-    return yytable_[yyr];
-  else
-    return yydefgoto_[yysym - YYNTOKENS];
-}
+  void parser::by_state::clear() YY_NOEXCEPT { state = empty_state; }
 
-bool parser::yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT {
-  return yyvalue == yypact_ninf_;
-}
-
-bool parser::yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT {
-  return yyvalue == yytable_ninf_;
-}
-
-int parser::operator()() { return parse(); }
-
-int parser::parse() {
-  int yyn;
-  /// Length of the RHS of the rule being reduced.
-  int yylen = 0;
-
-  // Error handling.
-  int yynerrs_ = 0;
-  int yyerrstatus_ = 0;
-
-  /// The lookahead symbol.
-  symbol_type yyla;
-
-  /// The return value of parse ().
-  int yyresult;
-
-#if YY_EXCEPTIONS
-  try
-#endif // YY_EXCEPTIONS
+  void parser::by_state::move(by_state & that)
   {
-    YYCDEBUG << "Starting parse\n";
+    state = that.state;
+    that.clear();
+  }
 
-    /* Initialize the stack.  The initial state will be set in
-       yynewstate, since the latter expects the semantical and the
-       location values to have been already stored, initialize these
-       stacks with a primary value.  */
-    yystack_.clear();
-    yypush_(YY_NULLPTR, 0, YY_MOVE(yyla));
+  parser::by_state::by_state(state_type s) YY_NOEXCEPT : state(s) {}
 
-  /*-----------------------------------------------.
-  | yynewstate -- push a new symbol on the stack.  |
-  `-----------------------------------------------*/
-  yynewstate:
-    YYCDEBUG << "Entering state " << int(yystack_[0].state) << '\n';
-    YY_STACK_PRINT();
+  parser::symbol_kind_type parser::by_state::kind() const YY_NOEXCEPT
+  {
+    if (state == empty_state)
+      return symbol_kind::S_YYEMPTY;
+    else
+      return YY_CAST(symbol_kind_type, yystos_[+state]);
+  }
 
-    // Accept?
-    if (yystack_[0].state == yyfinal_)
-      YYACCEPT;
+  parser::stack_symbol_type::stack_symbol_type() {}
 
-    goto yybackup;
-
-  /*-----------.
-  | yybackup.  |
-  `-----------*/
-  yybackup:
-    // Try to take a decision without lookahead.
-    yyn = yypact_[+yystack_[0].state];
-    if (yy_pact_value_is_default_(yyn))
-      goto yydefault;
-
-    // Read a lookahead token.
-    if (yyla.empty()) {
-      YYCDEBUG << "Reading a token\n";
-#if YY_EXCEPTIONS
-      try
-#endif // YY_EXCEPTIONS
+  parser::stack_symbol_type::stack_symbol_type(YY_RVREF(stack_symbol_type) that)
+    : super_type(YY_MOVE(that.state), YY_MOVE(that.location))
+  {
+    switch (that.kind())
       {
-        symbol_type yylookahead(yylex());
-        yyla.move(yylookahead);
-      }
-#if YY_EXCEPTIONS
-      catch (const syntax_error &yyexc) {
-        YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
-        error(yyexc);
-        goto yyerrlab1;
-      }
-#endif // YY_EXCEPTIONS
-    }
-    YY_SYMBOL_PRINT("Next token is", yyla);
-
-    if (yyla.kind() == symbol_kind::S_YYerror) {
-      // The scanner already issued an error message, process directly
-      // to error recovery.  But do not keep the error token as
-      // lookahead, it is too special and may lead us to an endless
-      // loop in error recovery. */
-      yyla.kind_ = symbol_kind::S_YYUNDEF;
-      goto yyerrlab1;
-    }
-
-    /* If the proper action on seeing token YYLA.TYPE is to reduce or
-       to detect an error, take that action.  */
-    yyn += yyla.kind();
-    if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.kind()) {
-      goto yydefault;
-    }
-
-    // Reduce or error.
-    yyn = yytable_[yyn];
-    if (yyn <= 0) {
-      if (yy_table_value_is_error_(yyn))
-        goto yyerrlab;
-      yyn = -yyn;
-      goto yyreduce;
-    }
-
-    // Count tokens shifted since error; after three, turn off error status.
-    if (yyerrstatus_)
-      --yyerrstatus_;
-
-    // Shift the lookahead token.
-    yypush_("Shifting", state_type(yyn), YY_MOVE(yyla));
-    goto yynewstate;
-
-  /*-----------------------------------------------------------.
-  | yydefault -- do the default action for the current state.  |
-  `-----------------------------------------------------------*/
-  yydefault:
-    yyn = yydefact_[+yystack_[0].state];
-    if (yyn == 0)
-      goto yyerrlab;
-    goto yyreduce;
-
-  /*-----------------------------.
-  | yyreduce -- do a reduction.  |
-  `-----------------------------*/
-  yyreduce:
-    yylen = yyr2_[yyn];
-    {
-      stack_symbol_type yylhs;
-      yylhs.state = yy_lr_goto_state_(yystack_[yylen].state, yyr1_[yyn]);
-      /* Variants are always initialized to an empty instance of the
-         correct type. The default '$$ = $1' action is NOT applied
-         when using variants.  */
-      switch (yyr1_[yyn]) {
       case symbol_kind::S_Add:             // Add
       case symbol_kind::S_Mul:             // Mul
       case symbol_kind::S_Application:     // Application
       case symbol_kind::S_ApplicationBase: // ApplicationBase
       case symbol_kind::S_Match:           // Match
-        yylhs.value.emplace<AST::Ptr>();
+        value.YY_MOVE_OR_COPY<AST::Ptr>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Branch: // Branch
-        yylhs.value.emplace<Branch::Ptr>();
+        value.YY_MOVE_OR_COPY<Branch::Ptr>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Constructor: // Constructor
-        yylhs.value.emplace<Constructor::Ptr>();
+        value.YY_MOVE_OR_COPY<Constructor::Ptr>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Definition: // Definition
       case symbol_kind::S_Fn:         // Fn
       case symbol_kind::S_Data:       // Data
-        yylhs.value.emplace<Definition::Ptr>();
+        value.YY_MOVE_OR_COPY<Definition::Ptr>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Pattern: // Pattern
-        yylhs.value.emplace<Pattern::Ptr>();
+        value.YY_MOVE_OR_COPY<Pattern::Ptr>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_INT: // INT
-        yylhs.value.emplace<int>();
+        value.YY_MOVE_OR_COPY<int>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_LID: // LID
       case symbol_kind::S_UID: // UID
-        yylhs.value.emplace<std::string>();
+        value.YY_MOVE_OR_COPY<std::string>(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Branches: // Branches
-        yylhs.value.emplace<std::vector<Branch::Ptr>>();
+        value.YY_MOVE_OR_COPY<std::vector<Branch::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Constructors: // Constructors
-        yylhs.value.emplace<std::vector<Constructor::Ptr>>();
+        value.YY_MOVE_OR_COPY<std::vector<Constructor::Ptr> >(
+          YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Program:     // Program
       case symbol_kind::S_Definitions: // Definitions
-        yylhs.value.emplace<std::vector<Definition::Ptr>>();
+        value.YY_MOVE_OR_COPY<std::vector<Definition::Ptr> >(
+          YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_LowercaseParams: // LowercaseParams
       case symbol_kind::S_UppercaseParams: // UppercaseParams
-        yylhs.value.emplace<std::vector<std::string>>();
+        value.YY_MOVE_OR_COPY<std::vector<std::string> >(YY_MOVE(that.value));
         break;
 
       default:
         break;
       }
 
-      // Perform the reduction.
-      YY_REDUCE_PRINT(yyn);
-#if YY_EXCEPTIONS
-      try
-#endif // YY_EXCEPTIONS
+#if 201103L <= YY_CPLUSPLUS
+    // that is emptied.
+    that.state = empty_state;
+#endif
+  }
+
+  parser::stack_symbol_type::stack_symbol_type(state_type s,
+                                               YY_MOVE_REF(symbol_type) that)
+    : super_type(s, YY_MOVE(that.location))
+  {
+    switch (that.kind())
       {
-        switch (yyn) {
-        case 2: // Program: Definitions
-#line 59 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          Program =
-              std::move(yystack_[0].value.as<std::vector<Definition::Ptr>>());
-        }
-#line 776 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Add:             // Add
+      case symbol_kind::S_Mul:             // Mul
+      case symbol_kind::S_Application:     // Application
+      case symbol_kind::S_ApplicationBase: // ApplicationBase
+      case symbol_kind::S_Match:           // Match
+        value.move<AST::Ptr>(YY_MOVE(that.value));
         break;
 
-        case 3: // Definitions: Definitions Definition
-#line 63 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<Definition::Ptr>>() =
-              std::move(yystack_[1].value.as<std::vector<Definition::Ptr>>());
-          yylhs.value.as<std::vector<Definition::Ptr>>().push_back(
-              std::move(yystack_[0].value.as<Definition::Ptr>()));
-        }
-#line 782 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Branch: // Branch
+        value.move<Branch::Ptr>(YY_MOVE(that.value));
         break;
 
-        case 4: // Definitions: Definition
-#line 64 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<Definition::Ptr>>() =
-              std::vector<Definition::Ptr>();
-          yylhs.value.as<std::vector<Definition::Ptr>>().push_back(
-              std::move(yystack_[0].value.as<Definition::Ptr>()));
-        }
-#line 788 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Constructor: // Constructor
+        value.move<Constructor::Ptr>(YY_MOVE(that.value));
         break;
 
-        case 5: // Definition: Fn
-#line 68 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Definition::Ptr>() =
-              std::move(yystack_[0].value.as<Definition::Ptr>());
-        }
-#line 794 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Definition: // Definition
+      case symbol_kind::S_Fn:         // Fn
+      case symbol_kind::S_Data:       // Data
+        value.move<Definition::Ptr>(YY_MOVE(that.value));
         break;
 
-        case 6: // Definition: Data
-#line 69 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Definition::Ptr>() =
-              std::move(yystack_[0].value.as<Definition::Ptr>());
-        }
-#line 800 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Pattern: // Pattern
+        value.move<Pattern::Ptr>(YY_MOVE(that.value));
         break;
 
-        case 7: // Fn: FN LID LowercaseParams EQUAL OCURLY Add CCURLY
-#line 74 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Fn(
-              std::move(yystack_[5].value.as<std::string>()),
-              std::move(yystack_[4].value.as<std::vector<std::string>>()),
-              std::move(yystack_[1].value.as<AST::Ptr>())));
-        }
-#line 806 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_INT: // INT
+        value.move<int>(YY_MOVE(that.value));
         break;
 
-        case 8: // LowercaseParams: %empty
-#line 78 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<std::string>>() =
-              std::vector<std::string>();
-        }
-#line 812 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_LID: // LID
+      case symbol_kind::S_UID: // UID
+        value.move<std::string>(YY_MOVE(that.value));
         break;
 
-        case 9: // LowercaseParams: LowercaseParams LID
-#line 79 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<std::string>>() =
-              std::move(yystack_[1].value.as<std::vector<std::string>>());
-          yylhs.value.as<std::vector<std::string>>().push_back(
-              std::move(yystack_[0].value.as<std::string>()));
-        }
-#line 818 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Branches: // Branches
+        value.move<std::vector<Branch::Ptr> >(YY_MOVE(that.value));
         break;
 
-        case 10: // UppercaseParams: %empty
-#line 83 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<std::string>>() =
-              std::vector<std::string>();
-        }
-#line 824 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Constructors: // Constructors
+        value.move<std::vector<Constructor::Ptr> >(YY_MOVE(that.value));
         break;
 
-        case 11: // UppercaseParams: UppercaseParams UID
-#line 84 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<std::string>>() =
-              std::move(yystack_[1].value.as<std::vector<std::string>>());
-          yylhs.value.as<std::vector<std::string>>().push_back(
-              std::move(yystack_[0].value.as<std::string>()));
-        }
-#line 830 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_Program:     // Program
+      case symbol_kind::S_Definitions: // Definitions
+        value.move<std::vector<Definition::Ptr> >(YY_MOVE(that.value));
         break;
 
-        case 12: // Add: Add PLUS Mul
-#line 88 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new Binop(Binop::Operators::PLUS,
-                                 std::move(yystack_[2].value.as<AST::Ptr>()),
-                                 std::move(yystack_[0].value.as<AST::Ptr>())));
-        }
-#line 836 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      case symbol_kind::S_LowercaseParams: // LowercaseParams
+      case symbol_kind::S_UppercaseParams: // UppercaseParams
+        value.move<std::vector<std::string> >(YY_MOVE(that.value));
         break;
 
-        case 13: // Add: Add MINUS Mul
-#line 89 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new Binop(Binop::Operators::MINUS,
-                                 std::move(yystack_[2].value.as<AST::Ptr>()),
-                                 std::move(yystack_[0].value.as<AST::Ptr>())));
-        }
-#line 842 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+      default:
         break;
-
-        case 14: // Add: Mul
-#line 90 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              std::move(yystack_[0].value.as<AST::Ptr>());
-        }
-#line 848 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 15: // Mul: Mul TIMES Application
-#line 94 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new Binop(Binop::Operators::TIMES,
-                                 std::move(yystack_[2].value.as<AST::Ptr>()),
-                                 std::move(yystack_[0].value.as<AST::Ptr>())));
-        }
-#line 854 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 16: // Mul: Mul DIVIDE Application
-#line 95 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new Binop(Binop::Operators::DIVIDE,
-                                 std::move(yystack_[2].value.as<AST::Ptr>()),
-                                 std::move(yystack_[0].value.as<AST::Ptr>())));
-        }
-#line 860 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 17: // Mul: Application
-#line 96 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              std::move(yystack_[0].value.as<AST::Ptr>());
-        }
-#line 866 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 18: // Application: Application ApplicationBase
-#line 100 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() = AST::Ptr(
-              new Application(std::move(yystack_[1].value.as<AST::Ptr>()),
-                              std::move(yystack_[0].value.as<AST::Ptr>())));
-        }
-#line 872 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 19: // Application: ApplicationBase
-#line 101 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              std::move(yystack_[0].value.as<AST::Ptr>());
-        }
-#line 878 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 20: // ApplicationBase: INT
-#line 105 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new Int(yystack_[0].value.as<int>()));
-        }
-#line 884 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 21: // ApplicationBase: LID
-#line 106 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new LID(std::move(yystack_[0].value.as<std::string>())));
-        }
-#line 890 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 22: // ApplicationBase: UID
-#line 107 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              AST::Ptr(new UID(std::move(yystack_[0].value.as<std::string>())));
-        }
-#line 896 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 23: // ApplicationBase: OPAREN Add CPAREN
-#line 108 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              std::move(yystack_[1].value.as<AST::Ptr>());
-        }
-#line 902 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 24: // ApplicationBase: Match
-#line 109 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() =
-              std::move(yystack_[0].value.as<AST::Ptr>());
-        }
-#line 908 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 25: // Match: MATCH Add WITH OCURLY Branches CCURLY
-#line 114 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<AST::Ptr>() = AST::Ptr(new Match(
-              std::move(yystack_[4].value.as<AST::Ptr>()),
-              std::move(yystack_[1].value.as<std::vector<Branch::Ptr>>())));
-        }
-#line 914 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 26: // Branches: Branches Branch
-#line 118 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<Branch::Ptr>>() =
-              std::move(yystack_[1].value.as<std::vector<Branch::Ptr>>());
-          yystack_[1].value.as<std::vector<Branch::Ptr>>().push_back(
-              std::move(yystack_[0].value.as<Branch::Ptr>()));
-        }
-#line 920 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 27: // Branches: Branch
-#line 119 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<Branch::Ptr>>() =
-              std::vector<Branch::Ptr>();
-          yylhs.value.as<std::vector<Branch::Ptr>>().push_back(
-              std::move(yystack_[0].value.as<Branch::Ptr>()));
-        }
-#line 926 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 28: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY
-#line 124 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Branch::Ptr>() = Branch::Ptr(
-              new Branch(std::move(yystack_[4].value.as<Pattern::Ptr>()),
-                         std::move(yystack_[1].value.as<AST::Ptr>())));
-        }
-#line 932 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 29: // Pattern: LID
-#line 128 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Pattern::Ptr>() = Pattern::Ptr(new PatternVariable(
-              std::move(yystack_[0].value.as<std::string>())));
-        }
-#line 938 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 30: // Pattern: UID LowercaseParams
-#line 130 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Pattern::Ptr>() = Pattern::Ptr(new PatternConstructor(
-              std::move(yystack_[1].value.as<std::string>()),
-              std::move(yystack_[0].value.as<std::vector<std::string>>())));
-        }
-#line 944 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 31: // Data: DATA UID EQUAL OBRACKET Constructors CBRACKET
-#line 135 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Data(
-              std::move(yystack_[4].value.as<std::string>()),
-              std::move(
-                  yystack_[1].value.as<std::vector<Constructor::Ptr>>())));
-        }
-#line 950 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 32: // Constructors: Constructors COMMA Constructor
-#line 139 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<Constructor::Ptr>>() =
-              std::move(yystack_[2].value.as<std::vector<Constructor::Ptr>>());
-          yylhs.value.as<std::vector<Constructor::Ptr>>().push_back(
-              std::move(yystack_[0].value.as<Constructor::Ptr>()));
-        }
-#line 956 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 33: // Constructors: Constructor
-#line 141 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<std::vector<Constructor::Ptr>>() =
-              std::vector<Constructor::Ptr>();
-          yylhs.value.as<std::vector<Constructor::Ptr>>().push_back(
-              std::move(yystack_[0].value.as<Constructor::Ptr>()));
-        }
-#line 962 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-        case 34: // Constructor: UID UppercaseParams
-#line 146 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-        {
-          yylhs.value.as<Constructor::Ptr>() = Constructor::Ptr(new Constructor(
-              std::move(yystack_[1].value.as<std::string>()),
-              std::move(yystack_[0].value.as<std::vector<std::string>>())));
-        }
-#line 968 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-        break;
-
-#line 972 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-
-        default:
-          break;
-        }
-      }
-#if YY_EXCEPTIONS
-      catch (const syntax_error &yyexc) {
-        YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
-        error(yyexc);
-        YYERROR;
-      }
-#endif // YY_EXCEPTIONS
-      YY_SYMBOL_PRINT("-> $$ =", yylhs);
-      yypop_(yylen);
-      yylen = 0;
-
-      // Shift the result of the reduction.
-      yypush_(YY_NULLPTR, YY_MOVE(yylhs));
-    }
-    goto yynewstate;
-
-  /*--------------------------------------.
-  | yyerrlab -- here on detecting error.  |
-  `--------------------------------------*/
-  yyerrlab:
-    // If not already recovering from an error, report this error.
-    if (!yyerrstatus_) {
-      ++yynerrs_;
-      std::string msg = YY_("syntax error");
-      error(YY_MOVE(msg));
-    }
-
-    if (yyerrstatus_ == 3) {
-      /* If just tried and failed to reuse lookahead token after an
-         error, discard it.  */
-
-      // Return failure if at end of input.
-      if (yyla.kind() == symbol_kind::S_YYEOF)
-        YYABORT;
-      else if (!yyla.empty()) {
-        yy_destroy_("Error: discarding", yyla);
-        yyla.clear();
-      }
-    }
-
-    // Else will try to reuse lookahead token after shifting the error token.
-    goto yyerrlab1;
-
-  /*---------------------------------------------------.
-  | yyerrorlab -- error raised explicitly by YYERROR.  |
-  `---------------------------------------------------*/
-  yyerrorlab:
-    /* Pacify compilers when the user code never invokes YYERROR and
-       the label yyerrorlab therefore never appears in user code.  */
-    if (false)
-      YYERROR;
-
-    /* Do not reclaim the symbols of the rule whose action triggered
-       this YYERROR.  */
-    yypop_(yylen);
-    yylen = 0;
-    YY_STACK_PRINT();
-    goto yyerrlab1;
-
-  /*-------------------------------------------------------------.
-  | yyerrlab1 -- common code for both syntax error and YYERROR.  |
-  `-------------------------------------------------------------*/
-  yyerrlab1:
-    yyerrstatus_ = 3; // Each real token shifted decrements this.
-    // Pop stack until we find a state that shifts the error token.
-    for (;;) {
-      yyn = yypact_[+yystack_[0].state];
-      if (!yy_pact_value_is_default_(yyn)) {
-        yyn += symbol_kind::S_YYerror;
-        if (0 <= yyn && yyn <= yylast_ &&
-            yycheck_[yyn] == symbol_kind::S_YYerror) {
-          yyn = yytable_[yyn];
-          if (0 < yyn)
-            break;
-        }
       }
 
-      // Pop the current state because it cannot handle the error token.
-      if (yystack_.size() == 1)
-        YYABORT;
-
-      yy_destroy_("Error: popping", yystack_[0]);
-      yypop_();
-      YY_STACK_PRINT();
-    }
-    {
-      stack_symbol_type error_token;
-
-      // Shift the error token.
-      error_token.state = state_type(yyn);
-      yypush_("Shifting", YY_MOVE(error_token));
-    }
-    goto yynewstate;
-
-  /*-------------------------------------.
-  | yyacceptlab -- YYACCEPT comes here.  |
-  `-------------------------------------*/
-  yyacceptlab:
-    yyresult = 0;
-    goto yyreturn;
-
-  /*-----------------------------------.
-  | yyabortlab -- YYABORT comes here.  |
-  `-----------------------------------*/
-  yyabortlab:
-    yyresult = 1;
-    goto yyreturn;
-
-  /*-----------------------------------------------------.
-  | yyreturn -- parsing is finished, return the result.  |
-  `-----------------------------------------------------*/
-  yyreturn:
-    if (!yyla.empty())
-      yy_destroy_("Cleanup: discarding lookahead", yyla);
-
-    /* Do not reclaim the symbols of the rule whose action triggered
-       this YYABORT or YYACCEPT.  */
-    yypop_(yylen);
-    YY_STACK_PRINT();
-    while (1 < yystack_.size()) {
-      yy_destroy_("Cleanup: popping", yystack_[0]);
-      yypop_();
-    }
-
-    return yyresult;
+    // that is emptied.
+    that.kind_ = symbol_kind::S_YYEMPTY;
   }
-#if YY_EXCEPTIONS
-  catch (...) {
-    YYCDEBUG << "Exception caught: cleaning lookahead and stack\n";
-    // Do not try to display the values of the reclaimed symbols,
-    // as their printers might throw an exception.
-    if (!yyla.empty())
-      yy_destroy_(YY_NULLPTR, yyla);
 
-    while (1 < yystack_.size()) {
-      yy_destroy_(YY_NULLPTR, yystack_[0]);
-      yypop_();
-    }
-    throw;
+#if YY_CPLUSPLUS < 201103L
+  parser::stack_symbol_type &
+  parser::stack_symbol_type::operator=(const stack_symbol_type & that)
+  {
+    state = that.state;
+    switch (that.kind())
+      {
+      case symbol_kind::S_Add:             // Add
+      case symbol_kind::S_Mul:             // Mul
+      case symbol_kind::S_Application:     // Application
+      case symbol_kind::S_ApplicationBase: // ApplicationBase
+      case symbol_kind::S_Match:           // Match
+        value.copy<AST::Ptr>(that.value);
+        break;
+
+      case symbol_kind::S_Branch: // Branch
+        value.copy<Branch::Ptr>(that.value);
+        break;
+
+      case symbol_kind::S_Constructor: // Constructor
+        value.copy<Constructor::Ptr>(that.value);
+        break;
+
+      case symbol_kind::S_Definition: // Definition
+      case symbol_kind::S_Fn:         // Fn
+      case symbol_kind::S_Data:       // Data
+        value.copy<Definition::Ptr>(that.value);
+        break;
+
+      case symbol_kind::S_Pattern: // Pattern
+        value.copy<Pattern::Ptr>(that.value);
+        break;
+
+      case symbol_kind::S_INT: // INT
+        value.copy<int>(that.value);
+        break;
+
+      case symbol_kind::S_LID: // LID
+      case symbol_kind::S_UID: // UID
+        value.copy<std::string>(that.value);
+        break;
+
+      case symbol_kind::S_Branches: // Branches
+        value.copy<std::vector<Branch::Ptr> >(that.value);
+        break;
+
+      case symbol_kind::S_Constructors: // Constructors
+        value.copy<std::vector<Constructor::Ptr> >(that.value);
+        break;
+
+      case symbol_kind::S_Program:     // Program
+      case symbol_kind::S_Definitions: // Definitions
+        value.copy<std::vector<Definition::Ptr> >(that.value);
+        break;
+
+      case symbol_kind::S_LowercaseParams: // LowercaseParams
+      case symbol_kind::S_UppercaseParams: // UppercaseParams
+        value.copy<std::vector<std::string> >(that.value);
+        break;
+
+      default:
+        break;
+      }
+
+    location = that.location;
+    return *this;
   }
-#endif // YY_EXCEPTIONS
-}
 
-void parser::error(const syntax_error &yyexc) { error(yyexc.what()); }
+  parser::stack_symbol_type &
+  parser::stack_symbol_type::operator=(stack_symbol_type & that)
+  {
+    state = that.state;
+    switch (that.kind())
+      {
+      case symbol_kind::S_Add:             // Add
+      case symbol_kind::S_Mul:             // Mul
+      case symbol_kind::S_Application:     // Application
+      case symbol_kind::S_ApplicationBase: // ApplicationBase
+      case symbol_kind::S_Match:           // Match
+        value.move<AST::Ptr>(that.value);
+        break;
 
-#if YYDEBUG || 0
-const char *parser::symbol_name(symbol_kind_type yysymbol) {
-  return yytname_[yysymbol];
-}
-#endif // #if YYDEBUG || 0
+      case symbol_kind::S_Branch: // Branch
+        value.move<Branch::Ptr>(that.value);
+        break;
 
-const signed char parser::yypact_ninf_ = -27;
+      case symbol_kind::S_Constructor: // Constructor
+        value.move<Constructor::Ptr>(that.value);
+        break;
 
-const signed char parser::yytable_ninf_ = -1;
+      case symbol_kind::S_Definition: // Definition
+      case symbol_kind::S_Fn:         // Fn
+      case symbol_kind::S_Data:       // Data
+        value.move<Definition::Ptr>(that.value);
+        break;
 
-const signed char parser::yypact_[] = {
-    23, -19, -15, 18,  23,  -27, -27, -27, -27, -10, -27, -27, 12,
-    10, 26,  -27, 25,  -4,  -27, 19,  -27, -27, -4,  -4,  -27, -27,
-    8,  24,  -4,  -27, -27, 27,  -27, 25,  22,  2,   -4,  -4,  -27,
-    -4, -4,  -27, -27, -27, 34,  -27, 24,  24,  -4,  -4,  9,   17,
-    -5, -27, -27, -27, 29,  -27, -27, 30,  35,  -4,  11,  -27};
+      case symbol_kind::S_Pattern: // Pattern
+        value.move<Pattern::Ptr>(that.value);
+        break;
 
-const signed char parser::yydefact_[] = {
-    0,  0,  0,  0, 2,  4,  5,  6, 8,  0,  1,  3,  0,  0,  0,  9,
-    0,  0,  10, 0, 33, 20, 0,  0, 21, 22, 0,  14, 17, 19, 24, 34,
-    31, 0,  0,  0, 0,  0,  7,  0, 0,  18, 11, 32, 0,  23, 12, 13,
-    15, 16, 0,  0, 0,  27, 29, 8, 0,  25, 26, 30, 0,  0,  0,  28};
+      case symbol_kind::S_INT: // INT
+        value.move<int>(that.value);
+        break;
 
-const signed char parser::yypgoto_[] = {-27, -27, -27, 44,  -27, -3,
-                                        -27, -22, 6,   5,   -26, -27,
-                                        -27, 3,   -27, -27, -27, 21};
+      case symbol_kind::S_LID: // LID
+      case symbol_kind::S_UID: // UID
+        value.move<std::string>(that.value);
+        break;
 
-const signed char parser::yydefgoto_[] = {0,  3,  4,  5,  6,  12, 31, 26, 27,
-                                          28, 29, 30, 52, 53, 56, 7,  19, 20};
+      case symbol_kind::S_Branches: // Branches
+        value.move<std::vector<Branch::Ptr> >(that.value);
+        break;
 
-const signed char parser::yytable_[] = {
-    34, 35, 41, 21, 8,  36, 22, 37, 57, 9,  23, 36, 13, 37, 36, 51, 37, 45, 10,
-    24, 25, 38, 41, 41, 63, 36, 16, 37, 39, 51, 40, 1,  2,  44, 14, 15, 32, 33,
-    17, 62, 54, 55, 46, 47, 48, 49, 50, 61, 11, 18, 60, 42, 59, 15, 43, 58};
+      case symbol_kind::S_Constructors: // Constructors
+        value.move<std::vector<Constructor::Ptr> >(that.value);
+        break;
 
-const signed char parser::yycheck_[] = {
-    22, 23, 28, 7,  23, 3,  10, 5,  13, 24, 14, 3,  22, 5,  3,  20, 5,  15, 0,
-    23, 24, 13, 48, 49, 13, 3,  16, 5,  4,  20, 6,  8,  9,  11, 22, 23, 17, 18,
-    12, 61, 23, 24, 36, 37, 39, 40, 12, 12, 4,  24, 21, 24, 55, 23, 33, 52};
+      case symbol_kind::S_Program:     // Program
+      case symbol_kind::S_Definitions: // Definitions
+        value.move<std::vector<Definition::Ptr> >(that.value);
+        break;
 
-const signed char parser::yystos_[] = {
-    0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 30, 22, 22, 23,
-    16, 12, 24, 41, 42, 7,  10, 14, 23, 24, 32, 33, 34, 35, 36, 31,
-    17, 18, 32, 32, 3,  5,  13, 4,  6,  35, 24, 42, 11, 15, 33, 33,
-    34, 34, 12, 20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13};
+      case symbol_kind::S_LowercaseParams: // LowercaseParams
+      case symbol_kind::S_UppercaseParams: // UppercaseParams
+        value.move<std::vector<std::string> >(that.value);
+        break;
 
-const signed char parser::yyr1_[] = {
-    0,  25, 26, 27, 27, 28, 28, 29, 30, 30, 31, 31, 32, 32, 32, 33, 33, 33,
-    34, 34, 35, 35, 35, 35, 35, 36, 37, 37, 38, 39, 39, 40, 41, 41, 42};
+      default:
+        break;
+      }
 
-const signed char parser::yyr2_[] = {0, 2, 1, 2, 1, 1, 1, 7, 0, 2, 0, 2,
-                                     3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1, 3,
-                                     1, 6, 2, 1, 6, 1, 2, 6, 3, 1, 2};
+    location = that.location;
+    // that is emptied.
+    that.state = empty_state;
+    return *this;
+  }
+#endif
+
+  template <typename Base>
+  void parser::yy_destroy_(const char * yymsg, basic_symbol<Base> & yysym) const
+  {
+    if (yymsg)
+      YY_SYMBOL_PRINT(yymsg, yysym);
+  }
 
 #if YYDEBUG
-// YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
-// First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
-const char *const parser::yytname_[] = {"\"end of file\"",
-                                        "error",
-                                        "\"invalid token\"",
-                                        "PLUS",
-                                        "TIMES",
-                                        "MINUS",
-                                        "DIVIDE",
-                                        "INT",
-                                        "FN",
-                                        "DATA",
-                                        "MATCH",
-                                        "WITH",
-                                        "OCURLY",
-                                        "CCURLY",
-                                        "OPAREN",
-                                        "CPAREN",
-                                        "OBRACKET",
-                                        "CBRACKET",
-                                        "COMMA",
-                                        "ARROW",
-                                        "VERTIAL",
-                                        "DOUBLEARROW",
-                                        "EQUAL",
-                                        "LID",
-                                        "UID",
-                                        "$accept",
-                                        "Program",
-                                        "Definitions",
-                                        "Definition",
-                                        "Fn",
-                                        "LowercaseParams",
-                                        "UppercaseParams",
-                                        "Add",
-                                        "Mul",
-                                        "Application",
-                                        "ApplicationBase",
-                                        "Match",
-                                        "Branches",
-                                        "Branch",
-                                        "Pattern",
-                                        "Data",
-                                        "Constructors",
-                                        "Constructor",
-                                        YY_NULLPTR};
+  template <typename Base>
+  void parser::yy_print_(std::ostream & yyo,
+                         const basic_symbol<Base> & yysym) const
+  {
+    std::ostream & yyoutput = yyo;
+    YY_USE(yyoutput);
+    if (yysym.empty())
+      yyo << "empty symbol";
+    else
+      {
+        symbol_kind_type yykind = yysym.kind();
+        yyo << (yykind < YYNTOKENS ? "token" : "nterm") << ' ' << yysym.name()
+            << " (" << yysym.location << ": ";
+        YY_USE(yykind);
+        yyo << ')';
+      }
+  }
+#endif
+
+  void parser::yypush_(const char * m, YY_MOVE_REF(stack_symbol_type) sym)
+  {
+    if (m)
+      YY_SYMBOL_PRINT(m, sym);
+    yystack_.push(YY_MOVE(sym));
+  }
+
+  void
+  parser::yypush_(const char * m, state_type s, YY_MOVE_REF(symbol_type) sym)
+  {
+#if 201103L <= YY_CPLUSPLUS
+    yypush_(m, stack_symbol_type(s, std::move(sym)));
+#else
+    stack_symbol_type ss(s, sym);
+    yypush_(m, ss);
+#endif
+  }
+
+  void parser::yypop_(int n) YY_NOEXCEPT { yystack_.pop(n); }
+
+#if YYDEBUG
+  std::ostream & parser::debug_stream() const { return *yycdebug_; }
+
+  void parser::set_debug_stream(std::ostream & o) { yycdebug_ = &o; }
+
+  parser::debug_level_type parser::debug_level() const { return yydebug_; }
+
+  void parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
+#endif // YYDEBUG
+
+  parser::state_type parser::yy_lr_goto_state_(state_type yystate, int yysym)
+  {
+    int yyr = yypgoto_[yysym - YYNTOKENS] + yystate;
+    if (0 <= yyr && yyr <= yylast_ && yycheck_[yyr] == yystate)
+      return yytable_[yyr];
+    else
+      return yydefgoto_[yysym - YYNTOKENS];
+  }
+
+  bool parser::yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT
+  {
+    return yyvalue == yypact_ninf_;
+  }
+
+  bool parser::yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT
+  {
+    return yyvalue == yytable_ninf_;
+  }
+
+  int parser::operator()() { return parse(); }
+
+  int parser::parse()
+  {
+    int yyn;
+    /// Length of the RHS of the rule being reduced.
+    int yylen = 0;
+
+    // Error handling.
+    int yynerrs_ = 0;
+    int yyerrstatus_ = 0;
+
+    /// The lookahead symbol.
+    symbol_type yyla;
+
+    /// The locations where the error started and ended.
+    stack_symbol_type yyerror_range[3];
+
+    /// The return value of parse ().
+    int yyresult;
+
+#if YY_EXCEPTIONS
+    try
+#endif // YY_EXCEPTIONS
+      {
+        YYCDEBUG << "Starting parse\n";
+
+        /* Initialize the stack.  The initial state will be set in
+           yynewstate, since the latter expects the semantical and the
+           location values to have been already stored, initialize these
+           stacks with a primary value.  */
+        yystack_.clear();
+        yypush_(YY_NULLPTR, 0, YY_MOVE(yyla));
+
+      /*-----------------------------------------------.
+      | yynewstate -- push a new symbol on the stack.  |
+      `-----------------------------------------------*/
+      yynewstate:
+        YYCDEBUG << "Entering state " << int(yystack_[0].state) << '\n';
+        YY_STACK_PRINT();
+
+        // Accept?
+        if (yystack_[0].state == yyfinal_)
+          YYACCEPT;
+
+        goto yybackup;
+
+      /*-----------.
+      | yybackup.  |
+      `-----------*/
+      yybackup:
+        // Try to take a decision without lookahead.
+        yyn = yypact_[+yystack_[0].state];
+        if (yy_pact_value_is_default_(yyn))
+          goto yydefault;
+
+        // Read a lookahead token.
+        if (yyla.empty())
+          {
+            YYCDEBUG << "Reading a token\n";
+#if YY_EXCEPTIONS
+            try
+#endif // YY_EXCEPTIONS
+              {
+                symbol_type yylookahead(yylex());
+                yyla.move(yylookahead);
+              }
+#if YY_EXCEPTIONS
+            catch (const syntax_error & yyexc)
+              {
+                YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
+                error(yyexc);
+                goto yyerrlab1;
+              }
+#endif // YY_EXCEPTIONS
+          }
+        YY_SYMBOL_PRINT("Next token is", yyla);
+
+        if (yyla.kind() == symbol_kind::S_YYerror)
+          {
+            // The scanner already issued an error message, process directly
+            // to error recovery.  But do not keep the error token as
+            // lookahead, it is too special and may lead us to an endless
+            // loop in error recovery. */
+            yyla.kind_ = symbol_kind::S_YYUNDEF;
+            goto yyerrlab1;
+          }
+
+        /* If the proper action on seeing token YYLA.TYPE is to reduce or
+           to detect an error, take that action.  */
+        yyn += yyla.kind();
+        if (yyn < 0 || yylast_ < yyn || yycheck_[yyn] != yyla.kind())
+          {
+            goto yydefault;
+          }
+
+        // Reduce or error.
+        yyn = yytable_[yyn];
+        if (yyn <= 0)
+          {
+            if (yy_table_value_is_error_(yyn))
+              goto yyerrlab;
+            yyn = -yyn;
+            goto yyreduce;
+          }
+
+        // Count tokens shifted since error; after three, turn off error status.
+        if (yyerrstatus_)
+          --yyerrstatus_;
+
+        // Shift the lookahead token.
+        yypush_("Shifting", state_type(yyn), YY_MOVE(yyla));
+        goto yynewstate;
+
+      /*-----------------------------------------------------------.
+      | yydefault -- do the default action for the current state.  |
+      `-----------------------------------------------------------*/
+      yydefault:
+        yyn = yydefact_[+yystack_[0].state];
+        if (yyn == 0)
+          goto yyerrlab;
+        goto yyreduce;
+
+      /*-----------------------------.
+      | yyreduce -- do a reduction.  |
+      `-----------------------------*/
+      yyreduce:
+        yylen = yyr2_[yyn];
+        {
+          stack_symbol_type yylhs;
+          yylhs.state = yy_lr_goto_state_(yystack_[yylen].state, yyr1_[yyn]);
+          /* Variants are always initialized to an empty instance of the
+             correct type. The default '$$ = $1' action is NOT applied
+             when using variants.  */
+          switch (yyr1_[yyn])
+            {
+            case symbol_kind::S_Add:             // Add
+            case symbol_kind::S_Mul:             // Mul
+            case symbol_kind::S_Application:     // Application
+            case symbol_kind::S_ApplicationBase: // ApplicationBase
+            case symbol_kind::S_Match:           // Match
+              yylhs.value.emplace<AST::Ptr>();
+              break;
+
+            case symbol_kind::S_Branch: // Branch
+              yylhs.value.emplace<Branch::Ptr>();
+              break;
+
+            case symbol_kind::S_Constructor: // Constructor
+              yylhs.value.emplace<Constructor::Ptr>();
+              break;
+
+            case symbol_kind::S_Definition: // Definition
+            case symbol_kind::S_Fn:         // Fn
+            case symbol_kind::S_Data:       // Data
+              yylhs.value.emplace<Definition::Ptr>();
+              break;
+
+            case symbol_kind::S_Pattern: // Pattern
+              yylhs.value.emplace<Pattern::Ptr>();
+              break;
+
+            case symbol_kind::S_INT: // INT
+              yylhs.value.emplace<int>();
+              break;
+
+            case symbol_kind::S_LID: // LID
+            case symbol_kind::S_UID: // UID
+              yylhs.value.emplace<std::string>();
+              break;
+
+            case symbol_kind::S_Branches: // Branches
+              yylhs.value.emplace<std::vector<Branch::Ptr> >();
+              break;
+
+            case symbol_kind::S_Constructors: // Constructors
+              yylhs.value.emplace<std::vector<Constructor::Ptr> >();
+              break;
+
+            case symbol_kind::S_Program:     // Program
+            case symbol_kind::S_Definitions: // Definitions
+              yylhs.value.emplace<std::vector<Definition::Ptr> >();
+              break;
+
+            case symbol_kind::S_LowercaseParams: // LowercaseParams
+            case symbol_kind::S_UppercaseParams: // UppercaseParams
+              yylhs.value.emplace<std::vector<std::string> >();
+              break;
+
+            default:
+              break;
+            }
+
+          // Default location.
+          {
+            stack_type::slice range(yystack_, yylen);
+            YYLLOC_DEFAULT(yylhs.location, range, yylen);
+            yyerror_range[1].location = yylhs.location;
+          }
+
+          // Perform the reduction.
+          YY_REDUCE_PRINT(yyn);
+#if YY_EXCEPTIONS
+          try
+#endif // YY_EXCEPTIONS
+            {
+              switch (yyn)
+                {
+                  case 2: // Program: Definitions
+#line 62 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    Program = std::move(
+                      yystack_[0].value.as<std::vector<Definition::Ptr> >());
+                  }
+#line 808 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 3: // Definitions: Definitions Definition
+#line 66 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<Definition::Ptr> >() = std::move(
+                      yystack_[1].value.as<std::vector<Definition::Ptr> >());
+                    yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
+                      std::move(yystack_[0].value.as<Definition::Ptr>()));
+                  }
+#line 814 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 4: // Definitions: Definition
+#line 67 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<Definition::Ptr> >() =
+                      std::vector<Definition::Ptr>();
+                    yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
+                      std::move(yystack_[0].value.as<Definition::Ptr>()));
+                  }
+#line 820 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 5: // Definition: Fn
+#line 71 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Definition::Ptr>() =
+                      std::move(yystack_[0].value.as<Definition::Ptr>());
+                  }
+#line 826 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 6: // Definition: Data
+#line 72 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Definition::Ptr>() =
+                      std::move(yystack_[0].value.as<Definition::Ptr>());
+                  }
+#line 832 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 7: // Fn: FN LID LowercaseParams EQUAL OCURLY Add CCURLY
+#line 77 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Fn(
+                      yylhs.location,
+                      std::move(yystack_[5].value.as<std::string>()),
+                      std::move(
+                        yystack_[4].value.as<std::vector<std::string> >()),
+                      std::move(yystack_[1].value.as<AST::Ptr>())));
+                  }
+#line 838 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 8: // Fn: error
+#line 78 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    swallow::compiler::parser::ParserReporter::REPORTER->normal(
+                      yylhs.location,
+                      "Syntax parsing error",
+                      "The function definition syntax error",
+                      "FN LID LowercaseParams EQUAL OCURLY Add CCURLY");
+                  }
+#line 849 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 9: // LowercaseParams: %empty
+#line 87 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<std::string> >() =
+                      std::vector<std::string>();
+                  }
+#line 855 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 10: // LowercaseParams: LowercaseParams LID
+#line 88 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<std::string> >() = std::move(
+                      yystack_[1].value.as<std::vector<std::string> >());
+                    yylhs.value.as<std::vector<std::string> >().push_back(
+                      std::move(yystack_[0].value.as<std::string>()));
+                  }
+#line 861 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 11: // UppercaseParams: %empty
+#line 92 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<std::string> >() =
+                      std::vector<std::string>();
+                  }
+#line 867 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 12: // UppercaseParams: UppercaseParams UID
+#line 93 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<std::string> >() = std::move(
+                      yystack_[1].value.as<std::vector<std::string> >());
+                    yylhs.value.as<std::vector<std::string> >().push_back(
+                      std::move(yystack_[0].value.as<std::string>()));
+                  }
+#line 873 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 13: // Add: Add PLUS Mul
+#line 97 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new Binop(yylhs.location,
+                                Binop::Operators::PLUS,
+                                std::move(yystack_[2].value.as<AST::Ptr>()),
+                                std::move(yystack_[0].value.as<AST::Ptr>())));
+                  }
+#line 879 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 14: // Add: Add MINUS Mul
+#line 98 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new Binop(yylhs.location,
+                                Binop::Operators::MINUS,
+                                std::move(yystack_[2].value.as<AST::Ptr>()),
+                                std::move(yystack_[0].value.as<AST::Ptr>())));
+                  }
+#line 885 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 15: // Add: Mul
+#line 99 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() =
+                      std::move(yystack_[0].value.as<AST::Ptr>());
+                  }
+#line 891 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 16: // Mul: Mul TIMES Application
+#line 103 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new Binop(yylhs.location,
+                                Binop::Operators::TIMES,
+                                std::move(yystack_[2].value.as<AST::Ptr>()),
+                                std::move(yystack_[0].value.as<AST::Ptr>())));
+                  }
+#line 897 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 17: // Mul: Mul DIVIDE Application
+#line 104 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new Binop(yylhs.location,
+                                Binop::Operators::DIVIDE,
+                                std::move(yystack_[2].value.as<AST::Ptr>()),
+                                std::move(yystack_[0].value.as<AST::Ptr>())));
+                  }
+#line 903 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 18: // Mul: Application
+#line 105 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() =
+                      std::move(yystack_[0].value.as<AST::Ptr>());
+                  }
+#line 909 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 19: // Application: Application ApplicationBase
+#line 109 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(new Application(
+                      yylhs.location,
+                      std::move(yystack_[1].value.as<AST::Ptr>()),
+                      std::move(yystack_[0].value.as<AST::Ptr>())));
+                  }
+#line 915 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 20: // Application: ApplicationBase
+#line 110 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() =
+                      std::move(yystack_[0].value.as<AST::Ptr>());
+                  }
+#line 921 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 21: // ApplicationBase: INT
+#line 114 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new Int(yylhs.location, yystack_[0].value.as<int>()));
+                  }
+#line 927 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 22: // ApplicationBase: LID
+#line 115 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new LID(yylhs.location,
+                              std::move(yystack_[0].value.as<std::string>())));
+                  }
+#line 933 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 23: // ApplicationBase: UID
+#line 116 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
+                      new UID(yylhs.location,
+                              std::move(yystack_[0].value.as<std::string>())));
+                  }
+#line 939 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 24: // ApplicationBase: OPAREN Add CPAREN
+#line 117 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() =
+                      std::move(yystack_[1].value.as<AST::Ptr>());
+                  }
+#line 945 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 25: // ApplicationBase: Match
+#line 118 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() =
+                      std::move(yystack_[0].value.as<AST::Ptr>());
+                  }
+#line 951 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 26: // Match: MATCH Add WITH OCURLY Branches CCURLY
+#line 123 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<AST::Ptr>() = AST::Ptr(new Match(
+                      yylhs.location,
+                      std::move(yystack_[4].value.as<AST::Ptr>()),
+                      std::move(
+                        yystack_[1].value.as<std::vector<Branch::Ptr> >())));
+                  }
+#line 957 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 27: // Branches: Branches Branch
+#line 127 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<Branch::Ptr> >() = std::move(
+                      yystack_[1].value.as<std::vector<Branch::Ptr> >());
+                    yystack_[1].value.as<std::vector<Branch::Ptr> >().push_back(
+                      std::move(yystack_[0].value.as<Branch::Ptr>()));
+                  }
+#line 963 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 28: // Branches: Branch
+#line 128 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<Branch::Ptr> >() =
+                      std::vector<Branch::Ptr>();
+                    yylhs.value.as<std::vector<Branch::Ptr> >().push_back(
+                      std::move(yystack_[0].value.as<Branch::Ptr>()));
+                  }
+#line 969 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 29: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add
+                           // CCURLY
+#line 133 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Branch::Ptr>() = Branch::Ptr(new Branch(
+                      yylhs.location,
+                      std::move(yystack_[4].value.as<Pattern::Ptr>()),
+                      std::move(yystack_[1].value.as<AST::Ptr>())));
+                  }
+#line 977 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 30: // Branch: error
+#line 136 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    swallow::compiler::parser::ParserReporter::REPORTER->normal(
+                      yylhs.location,
+                      "Syntax parsing error",
+                      "Branch syntax error in match expression",
+                      "VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY");
+                  }
+#line 988 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 31: // Pattern: LID
+#line 145 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Pattern::Ptr>() =
+                      Pattern::Ptr(new PatternVariable(
+                        yylhs.location,
+                        std::move(yystack_[0].value.as<std::string>())));
+                  }
+#line 994 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 32: // Pattern: UID LowercaseParams
+#line 147 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Pattern::Ptr>() =
+                      Pattern::Ptr(new PatternConstructor(
+                        yylhs.location,
+                        std::move(yystack_[1].value.as<std::string>()),
+                        std::move(
+                          yystack_[0].value.as<std::vector<std::string> >())));
+                  }
+#line 1000 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 33: // Data: DATA UID EQUAL OBRACKET Constructors
+                           // CBRACKET
+#line 152 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Definition::Ptr>() =
+                      Definition::Ptr(new Data(
+                        yylhs.location,
+                        std::move(yystack_[4].value.as<std::string>()),
+                        std::move(
+                          yystack_[1]
+                            .value.as<std::vector<Constructor::Ptr> >())));
+                  }
+#line 1006 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 34: // Constructors: Constructors COMMA Constructor
+#line 156 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<Constructor::Ptr> >() =
+                      std::move(
+                        yystack_[2].value.as<std::vector<Constructor::Ptr> >());
+                    yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
+                      std::move(yystack_[0].value.as<Constructor::Ptr>()));
+                  }
+#line 1012 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 35: // Constructors: Constructor
+#line 158 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<std::vector<Constructor::Ptr> >() =
+                      std::vector<Constructor::Ptr>();
+                    yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
+                      std::move(yystack_[0].value.as<Constructor::Ptr>()));
+                  }
+#line 1018 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 36: // Constructor: UID UppercaseParams
+#line 163 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Constructor::Ptr>() =
+                      Constructor::Ptr(new Constructor(
+                        yylhs.location,
+                        std::move(yystack_[1].value.as<std::string>()),
+                        std::move(
+                          yystack_[0].value.as<std::vector<std::string> >())));
+                  }
+#line 1024 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+#line 1028 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+
+                default:
+                  break;
+                }
+            }
+#if YY_EXCEPTIONS
+          catch (const syntax_error & yyexc)
+            {
+              YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
+              error(yyexc);
+              YYERROR;
+            }
+#endif // YY_EXCEPTIONS
+          YY_SYMBOL_PRINT("-> $$ =", yylhs);
+          yypop_(yylen);
+          yylen = 0;
+
+          // Shift the result of the reduction.
+          yypush_(YY_NULLPTR, YY_MOVE(yylhs));
+        }
+        goto yynewstate;
+
+      /*--------------------------------------.
+      | yyerrlab -- here on detecting error.  |
+      `--------------------------------------*/
+      yyerrlab:
+        // If not already recovering from an error, report this error.
+        if (!yyerrstatus_)
+          {
+            ++yynerrs_;
+            std::string msg = YY_("syntax error");
+            error(yyla.location, YY_MOVE(msg));
+          }
+
+        yyerror_range[1].location = yyla.location;
+        if (yyerrstatus_ == 3)
+          {
+            /* If just tried and failed to reuse lookahead token after an
+               error, discard it.  */
+
+            // Return failure if at end of input.
+            if (yyla.kind() == symbol_kind::S_YYEOF)
+              YYABORT;
+            else if (!yyla.empty())
+              {
+                yy_destroy_("Error: discarding", yyla);
+                yyla.clear();
+              }
+          }
+
+        // Else will try to reuse lookahead token after shifting the error
+        // token.
+        goto yyerrlab1;
+
+      /*---------------------------------------------------.
+      | yyerrorlab -- error raised explicitly by YYERROR.  |
+      `---------------------------------------------------*/
+      yyerrorlab:
+        /* Pacify compilers when the user code never invokes YYERROR and
+           the label yyerrorlab therefore never appears in user code.  */
+        if (false)
+          YYERROR;
+
+        /* Do not reclaim the symbols of the rule whose action triggered
+           this YYERROR.  */
+        yypop_(yylen);
+        yylen = 0;
+        YY_STACK_PRINT();
+        goto yyerrlab1;
+
+      /*-------------------------------------------------------------.
+      | yyerrlab1 -- common code for both syntax error and YYERROR.  |
+      `-------------------------------------------------------------*/
+      yyerrlab1:
+        yyerrstatus_ = 3; // Each real token shifted decrements this.
+        // Pop stack until we find a state that shifts the error token.
+        for (;;)
+          {
+            yyn = yypact_[+yystack_[0].state];
+            if (!yy_pact_value_is_default_(yyn))
+              {
+                yyn += symbol_kind::S_YYerror;
+                if (0 <= yyn && yyn <= yylast_
+                    && yycheck_[yyn] == symbol_kind::S_YYerror)
+                  {
+                    yyn = yytable_[yyn];
+                    if (0 < yyn)
+                      break;
+                  }
+              }
+
+            // Pop the current state because it cannot handle the error token.
+            if (yystack_.size() == 1)
+              YYABORT;
+
+            yyerror_range[1].location = yystack_[0].location;
+            yy_destroy_("Error: popping", yystack_[0]);
+            yypop_();
+            YY_STACK_PRINT();
+          }
+        {
+          stack_symbol_type error_token;
+
+          yyerror_range[2].location = yyla.location;
+          YYLLOC_DEFAULT(error_token.location, yyerror_range, 2);
+
+          // Shift the error token.
+          error_token.state = state_type(yyn);
+          yypush_("Shifting", YY_MOVE(error_token));
+        }
+        goto yynewstate;
+
+      /*-------------------------------------.
+      | yyacceptlab -- YYACCEPT comes here.  |
+      `-------------------------------------*/
+      yyacceptlab:
+        yyresult = 0;
+        goto yyreturn;
+
+      /*-----------------------------------.
+      | yyabortlab -- YYABORT comes here.  |
+      `-----------------------------------*/
+      yyabortlab:
+        yyresult = 1;
+        goto yyreturn;
+
+      /*-----------------------------------------------------.
+      | yyreturn -- parsing is finished, return the result.  |
+      `-----------------------------------------------------*/
+      yyreturn:
+        if (!yyla.empty())
+          yy_destroy_("Cleanup: discarding lookahead", yyla);
+
+        /* Do not reclaim the symbols of the rule whose action triggered
+           this YYABORT or YYACCEPT.  */
+        yypop_(yylen);
+        YY_STACK_PRINT();
+        while (1 < yystack_.size())
+          {
+            yy_destroy_("Cleanup: popping", yystack_[0]);
+            yypop_();
+          }
+
+        return yyresult;
+      }
+#if YY_EXCEPTIONS
+    catch (...)
+      {
+        YYCDEBUG << "Exception caught: cleaning lookahead and stack\n";
+        // Do not try to display the values of the reclaimed symbols,
+        // as their printers might throw an exception.
+        if (!yyla.empty())
+          yy_destroy_(YY_NULLPTR, yyla);
+
+        while (1 < yystack_.size())
+          {
+            yy_destroy_(YY_NULLPTR, yystack_[0]);
+            yypop_();
+          }
+        throw;
+      }
+#endif // YY_EXCEPTIONS
+  }
+
+  void parser::error(const syntax_error & yyexc)
+  {
+    error(yyexc.location, yyexc.what());
+  }
+
+#if YYDEBUG || 0
+  const char * parser::symbol_name(symbol_kind_type yysymbol)
+  {
+    return yytname_[yysymbol];
+  }
+#endif // #if YYDEBUG || 0
+
+  const signed char parser::yypact_ninf_ = -28;
+
+  const signed char parser::yytable_ninf_ = -3;
+
+  const signed char parser::yypact_[] = {
+    35,  -28, -20, -5,  39,  33,  -28, -28, -28, -28, 13,  -28, -28, -14,
+    34,  37,  -28, 27,  -3,  -28, 14,  -28, -28, -3,  -3,  -28, -28, 24,
+    9,   -3,  -28, -28, 30,  -28, 27,  7,   11,  -3,  -3,  -28, -3,  -3,
+    -28, -28, -28, 43,  -28, 9,   9,   -3,  -3,  5,   -28, 22,  4,   -28,
+    -28, -28, 36,  -28, -28, 38,  44,  -3,  25,  -28
+  };
+
+  const signed char parser::yydefact_[] = {
+    0, 8,  0,  0, 0,  0,  4, 5, 6,  9,  0,  1,  3,  0,  0,  0,  10,
+    0, 0,  11, 0, 35, 21, 0, 0, 22, 23, 0,  15, 18, 20, 25, 36, 33,
+    0, 0,  0,  0, 0,  7,  0, 0, 19, 12, 34, 0,  24, 13, 14, 16, 17,
+    0, 30, 0,  0, 28, 31, 9, 0, 26, 27, 32, 0,  0,  0,  29
+  };
+
+  const signed char parser::yypgoto_[] = { -28, -28, -28, 53,  -28, 2,
+                                           -28, -23, 10,  12,  -27, -28,
+                                           -28, 6,   -28, -28, -28, 28 };
+
+  const signed char parser::yydefgoto_[] = {
+    0, 4, 5, 6, 7, 13, 32, 27, 28, 29, 30, 31, 54, 55, 58, 8, 20, 21
+  };
+
+  const signed char parser::yytable_[] = {
+    35, 36, 42, 9,  22, 52, 52, 23, 15, 16, 37, 24, 38, 40, 37, 41,
+    38, 59, 45, 10, 25, 26, 42, 42, 53, 53, 46, 37, 37, 38, 38, 33,
+    34, -2, 1,  14, 1,  39, 65, 11, 64, 2,  3,  2,  3,  56, 57, 47,
+    48, 18, 17, 19, 49, 50, 43, 51, 63, 62, 12, 61, 60, 16, 44
+  };
+
+  const signed char parser::yycheck_[] = {
+    23, 24, 29, 23, 7,  1,  1,  10, 22, 23, 3,  14, 5,  4,  3,  6,
+    5,  13, 11, 24, 23, 24, 49, 50, 20, 20, 15, 3,  3,  5,  5,  17,
+    18, 0,  1,  22, 1,  13, 13, 0,  63, 8,  9,  8,  9,  23, 24, 37,
+    38, 12, 16, 24, 40, 41, 24, 12, 12, 21, 5,  57, 54, 23, 34
+  };
+
+  const signed char parser::yystos_[] = {
+    0,  1,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 30, 22, 22, 23,
+    16, 12, 24, 41, 42, 7,  10, 14, 23, 24, 32, 33, 34, 35, 36, 31, 17,
+    18, 32, 32, 3,  5,  13, 4,  6,  35, 24, 42, 11, 15, 33, 33, 34, 34,
+    12, 1,  20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13
+  };
+
+  const signed char parser::yyr1_[] = { 0,  25, 26, 27, 27, 28, 28, 29, 29, 30,
+                                        30, 31, 31, 32, 32, 32, 33, 33, 33, 34,
+                                        34, 35, 35, 35, 35, 35, 36, 37, 37, 38,
+                                        38, 39, 39, 40, 41, 41, 42 };
+
+  const signed char parser::yyr2_[] = { 0, 2, 1, 2, 1, 1, 1, 7, 1, 0, 2, 0, 2,
+                                        3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1, 3, 1,
+                                        6, 2, 1, 6, 1, 1, 2, 6, 3, 1, 2 };
+
+#if YYDEBUG
+  // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
+  // First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
+  const char * const parser::yytname_[] = { "\"end of file\"",
+                                            "error",
+                                            "\"invalid token\"",
+                                            "PLUS",
+                                            "TIMES",
+                                            "MINUS",
+                                            "DIVIDE",
+                                            "INT",
+                                            "FN",
+                                            "DATA",
+                                            "MATCH",
+                                            "WITH",
+                                            "OCURLY",
+                                            "CCURLY",
+                                            "OPAREN",
+                                            "CPAREN",
+                                            "OBRACKET",
+                                            "CBRACKET",
+                                            "COMMA",
+                                            "ARROW",
+                                            "VERTIAL",
+                                            "DOUBLEARROW",
+                                            "EQUAL",
+                                            "LID",
+                                            "UID",
+                                            "$accept",
+                                            "Program",
+                                            "Definitions",
+                                            "Definition",
+                                            "Fn",
+                                            "LowercaseParams",
+                                            "UppercaseParams",
+                                            "Add",
+                                            "Mul",
+                                            "Application",
+                                            "ApplicationBase",
+                                            "Match",
+                                            "Branches",
+                                            "Branch",
+                                            "Pattern",
+                                            "Data",
+                                            "Constructors",
+                                            "Constructor",
+                                            YY_NULLPTR };
 #endif
 
 #if YYDEBUG
-const unsigned char parser::yyrline_[] = {
-    0,   59,  59,  63,  64,  68,  69,  73,  78,  79,  83,  84,
-    88,  89,  90,  94,  95,  96,  100, 101, 105, 106, 107, 108,
-    109, 113, 118, 119, 123, 128, 129, 134, 139, 140, 145};
+  const unsigned char parser::yyrline_[] = {
+    0,   62,  62,  66,  67,  71,  72,  76,  78,  87,  88,  92,  93,
+    97,  98,  99,  103, 104, 105, 109, 110, 114, 115, 116, 117, 118,
+    122, 127, 128, 132, 136, 145, 146, 151, 156, 157, 162
+  };
 
-void parser::yy_stack_print_() const {
-  *yycdebug_ << "Stack now";
-  for (stack_type::const_iterator i = yystack_.begin(), i_end = yystack_.end();
-       i != i_end; ++i)
-    *yycdebug_ << ' ' << int(i->state);
-  *yycdebug_ << '\n';
-}
+  void parser::yy_stack_print_() const
+  {
+    *yycdebug_ << "Stack now";
+    for (stack_type::const_iterator i = yystack_.begin(),
+                                    i_end = yystack_.end();
+         i != i_end;
+         ++i)
+      *yycdebug_ << ' ' << int(i->state);
+    *yycdebug_ << '\n';
+  }
 
-void parser::yy_reduce_print_(int yyrule) const {
-  int yylno = yyrline_[yyrule];
-  int yynrhs = yyr2_[yyrule];
-  // Print the symbols being reduced, and their result.
-  *yycdebug_ << "Reducing stack by rule " << yyrule - 1 << " (line " << yylno
-             << "):\n";
-  // The symbols being reduced.
-  for (int yyi = 0; yyi < yynrhs; yyi++)
-    YY_SYMBOL_PRINT("   $" << yyi + 1 << " =", yystack_[(yynrhs) - (yyi + 1)]);
-}
+  void parser::yy_reduce_print_(int yyrule) const
+  {
+    int yylno = yyrline_[yyrule];
+    int yynrhs = yyr2_[yyrule];
+    // Print the symbols being reduced, and their result.
+    *yycdebug_ << "Reducing stack by rule " << yyrule - 1 << " (line " << yylno
+               << "):\n";
+    // The symbols being reduced.
+    for (int yyi = 0; yyi < yynrhs; yyi++)
+      YY_SYMBOL_PRINT("   $" << yyi + 1 << " =",
+                      yystack_[(yynrhs) - (yyi + 1)]);
+  }
 #endif // YYDEBUG
 
 } // namespace yy
-#line 1312 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1374 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"

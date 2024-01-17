@@ -30,22 +30,25 @@
 #include "environment.h"
 #include "panic/panic.hpp"
 
-namespace swallow::type {
+namespace swallow::type
+{
 
-Type::Ptr Environment::lookup(const std::string &name) const noexcept {
-  if (const auto it = Names.find(name); it != Names.end())
-    return it->second;
+  Type::Ptr Environment::lookup(const std::string & name) const noexcept
+  {
+    if (const auto it = Names.find(name); it != Names.end())
+      return it->second;
 
-  if (Parent)
-    return Parent->lookup(name);
+    if (Parent)
+      return Parent->lookup(name);
 
-  utils::panic("lookup failed: {}", name);
-}
+    utils::panic("lookup failed: {}", name);
+  }
 
-void Environment::bind(const std::string &name, Type::Ptr type) noexcept {
-  Names[name] = type;
-}
+  void Environment::bind(const std::string & name, Type::Ptr type) noexcept
+  {
+    Names[name] = type;
+  }
 
-Environment Environment::scope() const noexcept { return Environment(this); }
+  Environment Environment::scope() const noexcept { return Environment(this); }
 
 } // namespace swallow::type

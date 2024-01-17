@@ -28,21 +28,42 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "parser.h"
+#include "bison_parser.hpp"
+#include "compiler.h"
+#include "panic/panic.hpp"
+#include "reporter.h"
+#include <cstdio>
 
-namespace yy {
+namespace yy
+{
 
-void parser::error(const std::string &msg) {
-  std::cout << "An error occured: " << msg << std::endl;
-}
+  void parser::error(const location_type & loc, const std::string & msg) {}
 
 } // namespace yy
 
-namespace swallow::parser {
+extern std::vector<swallow::ast::Definition::Ptr> Program;
 
-std::vector<swallow::ast::Definition::Ptr> &parse() noexcept {
-  yy::parser parser;
-  parser.parse();
-  return Program;
-}
+extern FILE *yyin, *yyout;
 
-} // namespace swallow::parser
+namespace swallow::compiler::parser
+{
+
+  std::vector<swallow::ast::Definition::Ptr> & parse() noexcept
+  {
+    FILE * file =
+      std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
+
+    if (!file)
+      utils::panic("Cannot open file {}",
+                   compiler::CompileUnit::FILE->FilePath);
+
+    ParserReporter::REPORTER = new ParserReporter();
+    yyin = file;
+    yy::parser().parse();
+    delete ParserReporter::REPORTER;
+
+    fclose(file);
+    return Program;
+  }
+
+} // namespace swallow::compiler::parser
