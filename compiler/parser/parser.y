@@ -127,7 +127,7 @@ Branch
 Pattern
     : LID { $$ = Pattern::Ptr(new PatternVariable(std::move($1))); }
     | UID LowercaseParams
-        { $$ = Pattern::Ptr(new PatternConstr(std::move($1), std::move($2))); }
+        { $$ = Pattern::Ptr(new PatternConstructor(std::move($1), std::move($2))); }
     ;
 
 Data

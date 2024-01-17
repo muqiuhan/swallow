@@ -30,31 +30,29 @@
 #ifndef SWALLOW_TYPE_ENVIRONMENT_H
 #define SWALLOW_TYPE_ENVIRONMENT_H
 
-#include "optional/optional.hpp"
 #include "type.h"
 #include <map>
 #include <string>
 
 namespace swallow::type
 {
-
-  class TypeEnvironment
+  class Environment
   {
   public:
     std::map<std::string, Type::Ptr> Names;
-    TypeEnvironment const * Parent = nullptr;
+    Environment const * Parent = nullptr;
 
-    explicit TypeEnvironment(TypeEnvironment const * Parent)
+    explicit Environment(Environment const * Parent)
       : Parent(Parent)
     {}
 
-    TypeEnvironment()
-      : TypeEnvironment(nullptr)
+    Environment()
+      : Environment(nullptr)
     {}
 
-    std::optional<Type::Ptr> lookup(const std::string & name) const noexcept;
+    Type::Ptr lookup(const std::string & name) const noexcept;
     void bind(const std::string & name, Type::Ptr type) noexcept;
-    TypeEnvironment scope() const noexcept;
+    Environment scope() const noexcept;
   };
 
 } // namespace swallow::type

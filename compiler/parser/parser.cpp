@@ -42,11 +42,11 @@ namespace yy
 namespace swallow::parser
 {
 
-  void parse() noexcept
+  std::vector<swallow::ast::Definition::Ptr> & parse() noexcept
   {
     yy::parser parser;
     parser.parse();
-    std::cout << "Find " << Program.size() << " definitions :)" << std::endl;
+    return Program;
   }
 
 } // namespace swallow::parser

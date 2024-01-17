@@ -45,39 +45,39 @@ namespace swallow::type
     virtual ~Type() = default;
   };
 
-  class TypeVar final : public Type
+  class Variable final : public Type
   {
   public:
     const std::string Name;
 
-    explicit TypeVar(std::string Name)
+    explicit Variable(std::string Name)
       : Name(std::move(Name))
     {}
   };
 
-  class TypeBase final : public Type
+  class Base final : public Type
   {
   public:
     const std::string Name;
 
-    explicit TypeBase(std::string Name)
+    explicit Base(std::string Name)
       : Name(std::move(Name))
     {}
   };
 
-  class TypeArrow final : public Type
+  class Arrow final : public Type
   {
   public:
     const Ptr Left;
     const Ptr Right;
 
-    TypeArrow(Ptr Left, Ptr Right)
+    Arrow(Ptr Left, Ptr Right)
       : Left(std::move(Left))
       , Right(std::move(Right))
     {}
   };
 
-  class TypeManager
+  class Manager
   {
     int32_t LastID = 0;
     std::map<std::string, Type::Ptr> Types;
@@ -91,7 +91,7 @@ namespace swallow::type
     void unify(Type::Ptr left, Type::Ptr right) noexcept;
 
     /** Get to the bottom of a chain of equations. */
-    Type::Ptr resolve(Type::Ptr type, TypeVar *& var) noexcept;
+    Type::Ptr resolve(Type::Ptr type, Variable *& var) noexcept;
 
     /** Map a type variable of some name to a type. */
     void bind(const std::string & name, const Type::Ptr & type) noexcept;
