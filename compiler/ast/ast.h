@@ -204,7 +204,7 @@ public:
   const AST::Ptr Body;
 
   std::vector<type::Type::Ptr> ParamTypes;
-  type::Type::Ptr returnType;
+  type::Type::Ptr ReturnType;
 
   Fn(std::string Name, std::vector<std::string> Params, AST::Ptr Body)
       : Name(std::move(Name)), Params(std::move(Params)),

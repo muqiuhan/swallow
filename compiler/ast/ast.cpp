@@ -158,10 +158,8 @@ void PatternConstructor::match(
 
 void Fn::scanDefinitionType(type::Manager &typeManager,
                             type::Environment &typeEnvironment) noexcept {
-  std::cout << std::format("scaning function '{}' definition", Name)
-            << std::endl;
-  const type::Type::Ptr returnType = typeManager.newType();
-  type::Type::Ptr fullType = returnType;
+  ReturnType = typeManager.newType();
+  type::Type::Ptr fullType = ReturnType;
   std::for_each(Params.rbegin(), Params.rend(), [&](const std::string &param) {
     type::Type::Ptr paramType = typeManager.newType();
     fullType = type::Type::Ptr(new type::Arrow(paramType, fullType));
@@ -174,7 +172,6 @@ void Fn::scanDefinitionType(type::Manager &typeManager,
 
 void Fn::typecheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept {
-  std::cout << std::format("checking function '{}' type", Name) << std::endl;
   type::Environment newEnvironment = typeEnvironment.scope();
 
   auto paramIterator = Params.begin();
@@ -185,12 +182,11 @@ void Fn::typecheck(type::Manager &typeManager,
     typeIterator++;
   }
 
-  typeManager.unify(returnType, Body->typecheck(typeManager, newEnvironment));
+  typeManager.unify(ReturnType, Body->typecheck(typeManager, newEnvironment));
 }
 
 void Data::scanDefinitionType(type::Manager &typeManager,
                               type::Environment &typeEnvironment) noexcept {
-  std::cout << std::format("scaning data '{}' definition", Name) << std::endl;
   auto fullType = type::Type::Ptr(new type::Base(Name));
   for (const auto &constructor : Constructors) {
     for (const auto &typeName : constructor->Types)
@@ -202,15 +198,12 @@ void Data::scanDefinitionType(type::Manager &typeManager,
 }
 
 void Data::typecheck(type::Manager &typeManager,
-                     const type::Environment &typeEnvironment) const noexcept {
-  std::cout << std::format("checking data '{}' type", Name) << std::endl;
-}
+                     const type::Environment &typeEnvironment) const noexcept {}
 
 } // namespace swallow::ast
 
 namespace swallow::type {
 void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept {
-  std::cout << "Type checking..." << std::endl;
   type::Manager typeManager;
   type::Environment typeEnvironment;
 
@@ -218,17 +211,14 @@ void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept {
   auto binopType = type::Type::Ptr(new type::Arrow(
       intType, type::Type::Ptr(new type::Arrow(intType, intType))));
 
-  std::cout << "Bind binary operators..." << std::endl;
   typeEnvironment.bind("+", binopType);
   typeEnvironment.bind("-", binopType);
   typeEnvironment.bind("*", binopType);
   typeEnvironment.bind("/", binopType);
 
-  std::cout << "scan definitions type..." << std::endl;
   for (const auto &definition : program)
     definition->scanDefinitionType(typeManager, typeEnvironment);
 
-  std::cout << "type checking..." << std::endl;
   for (const auto &definition : program)
     definition->typecheck(typeManager, typeEnvironment);
 }
