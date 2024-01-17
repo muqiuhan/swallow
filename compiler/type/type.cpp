@@ -41,7 +41,7 @@ namespace swallow::type
     int32_t currentID = LastID++;
     std::string name;
 
-    while (LastID != -1)
+    while (currentID != -1)
       {
         name += static_cast<char>(('a' + (currentID % 26)));
         currentID = currentID / 26 - 1;
