@@ -35,10 +35,9 @@
 
 extern std::vector<swallow::ast::Definition::Ptr> Program;
 
-namespace swallow::parser
-{
+namespace swallow::parser {
 
-  std::vector<swallow::ast::Definition::Ptr> & parse() noexcept;
+std::vector<swallow::ast::Definition::Ptr> &parse() noexcept;
 
 } // namespace swallow::parser
 
