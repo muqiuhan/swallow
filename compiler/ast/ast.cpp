@@ -175,7 +175,7 @@ namespace swallow::ast
   void Fn::scanDefinitionType(type::Manager & typeManager,
                               type::Environment & typeEnvironment) noexcept
   {
-    std::cout << std::format("scan function '{}' definition", Name)
+    std::cout << std::format("scaning function '{}' definition", Name)
               << std::endl;
     const type::Type::Ptr returnType = typeManager.newType();
     type::Type::Ptr fullType = returnType;
@@ -195,6 +195,7 @@ namespace swallow::ast
   void Fn::typecheck(type::Manager & typeManager,
                      const type::Environment & typeEnvironment) const noexcept
   {
+    std::cout << std::format("checking function '{}' type", Name) << std::endl;
     type::Environment newEnvironment = typeEnvironment.scope();
 
     auto paramIterator = Params.begin();
@@ -212,7 +213,7 @@ namespace swallow::ast
   void Data::scanDefinitionType(type::Manager & typeManager,
                                 type::Environment & typeEnvironment) noexcept
   {
-    std::cout << std::format("scan data '{}' definition", Name) << std::endl;
+    std::cout << std::format("scaning data '{}' definition", Name) << std::endl;
     auto fullType = type::Type::Ptr(new type::Base(Name));
     for (const auto & constructor : Constructors)
       {
@@ -227,7 +228,9 @@ namespace swallow::ast
 
   void Data::typecheck(type::Manager & typeManager,
                        const type::Environment & typeEnvironment) const noexcept
-  {}
+  {
+    std::cout << std::format("checking data '{}' type", Name) << std::endl;
+  }
 
 } // namespace swallow::ast
 

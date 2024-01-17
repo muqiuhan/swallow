@@ -31,6 +31,7 @@
 #define SWALLOW_TYPE_H
 
 #include <cstdint>
+#include <iostream>
 #include <map>
 #include <memory>
 #include <string>

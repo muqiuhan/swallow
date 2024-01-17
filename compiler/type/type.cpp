@@ -31,6 +31,9 @@
 #include "../utils/panic/panic.hpp"
 #include <algorithm>
 #include <cstdint>
+#include <format>
+#include <iterator>
+#include <ostream>
 
 using namespace swallow::utils;
 
@@ -53,12 +56,12 @@ namespace swallow::type
 
   Type::Ptr Manager::newType() noexcept
   {
-    return Variable::Ptr(new Variable(newTypeName()));
+    return Type::Ptr(new Variable(newTypeName()));
   }
 
   Type::Ptr Manager::newArrowType() noexcept
   {
-    return Arrow::Ptr(new Arrow(newType(), newType()));
+    return Type::Ptr(new Arrow(newType(), newType()));
   }
 
   Type::Ptr Manager::resolve(Type::Ptr type, Variable *& var) noexcept
@@ -77,14 +80,13 @@ namespace swallow::type
 
         type = it->second;
       }
-
     return type;
   }
 
   void Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
   {
-    Variable * leftVar = nullptr;
-    Variable * rightVar = nullptr;
+    Variable * leftVar;
+    Variable * rightVar;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
@@ -114,6 +116,7 @@ namespace swallow::type
 
   void Manager::bind(const std::string & name, const Type::Ptr & type) noexcept
   {
+    // BUG: other->Name == nullptr
     if (auto * other = dynamic_cast<const Variable *>(type.get());
         other->Name == name)
       return;
