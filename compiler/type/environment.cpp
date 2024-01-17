@@ -28,31 +28,27 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "environment.h"
-#include <optional>
+#include "panic/panic.hpp"
 
 namespace swallow::type
 {
 
-  std::optional<Type::Ptr>
-  TypeEnvironment::lookup(const std::string & name) const noexcept
+  Type::Ptr Environment::lookup(const std::string & name) const noexcept
   {
     if (const auto it = Names.find(name); it != Names.end())
-      return std::optional(it->second);
+      return it->second;
 
     if (Parent)
-      return std::optional(Parent->lookup(name));
+      return Parent->lookup(name);
 
-    return std::nullopt;
+    utils::panic("lookup failed: {}", name);
   }
 
-  void TypeEnvironment::bind(const std::string & name, Type::Ptr type) noexcept
+  void Environment::bind(const std::string & name, Type::Ptr type) noexcept
   {
     Names[name] = type;
   }
 
-  TypeEnvironment TypeEnvironment::scope() const noexcept
-  {
-    return TypeEnvironment(this);
-  }
+  Environment Environment::scope() const noexcept { return Environment(this); }
 
 } // namespace swallow::type

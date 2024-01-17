@@ -31,17 +31,20 @@
 #include "../utils/panic/panic.hpp"
 #include <algorithm>
 #include <cstdint>
+#include <format>
+#include <iterator>
+#include <ostream>
 
 using namespace swallow::utils;
 
 namespace swallow::type
 {
-  std::string TypeManager::newTypeName() noexcept
+  std::string Manager::newTypeName() noexcept
   {
     int32_t currentID = LastID++;
     std::string name;
 
-    while (LastID != -1)
+    while (currentID != -1)
       {
         name += static_cast<char>(('a' + (currentID % 26)));
         currentID = currentID / 26 - 1;
@@ -51,22 +54,22 @@ namespace swallow::type
     return name;
   }
 
-  Type::Ptr TypeManager::newType() noexcept
+  Type::Ptr Manager::newType() noexcept
   {
-    return std::make_shared<TypeVar>(TypeVar(newTypeName()));
+    return Type::Ptr(new Variable(newTypeName()));
   }
 
-  Type::Ptr TypeManager::newArrowType() noexcept
+  Type::Ptr Manager::newArrowType() noexcept
   {
-    return std::make_shared<TypeArrow>(TypeArrow(newType(), newType()));
+    return Type::Ptr(new Arrow(newType(), newType()));
   }
 
-  Type::Ptr TypeManager::resolve(Type::Ptr type, TypeVar *& var) noexcept
+  Type::Ptr Manager::resolve(Type::Ptr type, Variable *& var) noexcept
   {
-    TypeVar * cast;
+    Variable * cast;
     var = nullptr;
 
-    while ((cast = dynamic_cast<TypeVar *>(type.get())))
+    while ((cast = dynamic_cast<Variable *>(type.get())))
       {
         const auto it = Types.find(cast->Name);
         if (it == Types.end())
@@ -77,14 +80,13 @@ namespace swallow::type
 
         type = it->second;
       }
-
     return type;
   }
 
-  void TypeManager::unify(Type::Ptr left, Type::Ptr right) noexcept
+  void Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
   {
-    TypeVar * leftVar = nullptr;
-    TypeVar * rightVar = nullptr;
+    Variable * leftVar;
+    Variable * rightVar;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
@@ -94,28 +96,28 @@ namespace swallow::type
     else if (rightVar)
       bind(rightVar->Name, left);
 
-    else if (auto * leftArrow = dynamic_cast<TypeArrow *>(left.get()),
-             *rightArrow = dynamic_cast<TypeArrow *>(right.get());
+    else if (auto * leftArrow = dynamic_cast<Arrow *>(left.get()),
+             *rightArrow = dynamic_cast<Arrow *>(right.get());
              leftArrow && rightArrow)
       {
         unify(leftArrow->Left, rightArrow->Left);
         unify(leftArrow->Right, rightArrow->Right);
       }
-    else if (auto * leftID = dynamic_cast<TypeBase *>(left.get()),
-             *rightID = dynamic_cast<TypeBase *>(right.get());
+    else if (auto * leftID = dynamic_cast<Base *>(left.get()),
+             *rightID = dynamic_cast<Base *>(right.get());
              leftID && rightID)
       {
         if (leftID->Name == rightID->Name)
           return;
       }
     else
-      panic("type checking error!!!");
+      panic("type checking failed: unification failed");
   }
 
-  void TypeManager::bind(const std::string & name,
-                         const Type::Ptr & type) noexcept
+  void Manager::bind(const std::string & name, const Type::Ptr & type) noexcept
   {
-    if (auto * other = dynamic_cast<const TypeVar *>(type.get());
+    // BUG: other->Name == nullptr
+    if (auto * other = dynamic_cast<const Variable *>(type.get());
         other->Name == name)
       return;
     Types[name] = type;

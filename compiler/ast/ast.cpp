@@ -28,7 +28,11 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ast.h"
+#include "environment.h"
 #include "panic/panic.hpp"
+#include "type.h"
+#include <algorithm>
+#include <vector>
 
 using namespace swallow::utils;
 
@@ -52,9 +56,209 @@ namespace swallow::ast
     panic("Unknown operator");
   }
 
-  // Type::Ptr Int::typecheck(TypeManager &typeManager,
-  //                          const TypeEnvironment &typeEnvironment) const {
-  //   return Type::Ptr(new TypeBase("Int"));
-  // }
+  type::Type::Ptr
+  Int::typecheck(type::Manager & typeManager,
+                 const type::Environment & typeEnvironment) const noexcept
+  {
+    return type::Type::Ptr(new type::Base("Int"));
+  }
+
+  type::Type::Ptr
+  LID::typecheck(type::Manager & typeManager,
+                 const type::Environment & typeEnvironment) const noexcept
+  {
+    return typeEnvironment.lookup(ID);
+  }
+
+  type::Type::Ptr
+  UID::typecheck(type::Manager & typeManager,
+                 const type::Environment & typeEnvironment) const noexcept
+  {
+    return typeEnvironment.lookup(ID);
+  }
+
+  type::Type::Ptr
+  Binop::typecheck(type::Manager & typeManager,
+                   const type::Environment & typeEnvironment) const noexcept
+  {
+    const std::string operatorName = operatorsToString(Operator);
+
+    type::Type::Ptr leftType = Left->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr rightType = Right->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr functionType = typeEnvironment.lookup(operatorName);
+
+    if (!functionType)
+      panic("Typecheck failed: cannot find the operator declaration `{}`",
+            operatorName);
+
+    type::Type::Ptr returnType = typeManager.newType();
+    type::Type::Ptr arrowOne =
+      type::Type::Ptr(new type::Arrow(rightType, returnType));
+    type::Type::Ptr arrowTwo =
+      type::Type::Ptr(new type::Arrow(leftType, arrowOne));
+
+    typeManager.unify(arrowTwo, functionType);
+    return returnType;
+  }
+
+  type::Type::Ptr Application::typecheck(
+    type::Manager & typeManager,
+    const type::Environment & typeEnvironment) const noexcept
+  {
+    type::Type::Ptr leftType = Left->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr rightType = Right->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr returnType = typeManager.newType();
+    type::Type::Ptr arrowType =
+      type::Type::Ptr(new type::Arrow(rightType, returnType));
+
+    typeManager.unify(arrowType, leftType);
+    return returnType;
+  }
+
+  type::Type::Ptr
+  Match::typecheck(type::Manager & typeManager,
+                   const type::Environment & typeEnvironment) const noexcept
+  {
+    type::Type::Ptr matchType = With->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr branchType = typeManager.newType();
+
+    for (auto & branch : Branches)
+      {
+        type::Environment newEnvironment = typeEnvironment.scope();
+        branch->Patt->match(matchType, typeManager, newEnvironment);
+
+        type::Type::Ptr currentBranchType =
+          branch->Expr->typecheck(typeManager, newEnvironment);
+        typeManager.unify(branchType, currentBranchType);
+      }
+
+    return branchType;
+  }
+
+  void
+  PatternVariable::match(type::Type::Ptr type,
+                         type::Manager & typeManager,
+                         type::Environment & typeEnvironment) const noexcept
+  {
+    typeManager.bind(Variable, type);
+  }
+
+  void
+  PatternConstructor::match(type::Type::Ptr type,
+                            type::Manager & typeManager,
+                            type::Environment & typeEnvironment) const noexcept
+  {
+    type::Type::Ptr constructorType = typeEnvironment.lookup(Constructor);
+
+    if (!constructorType)
+      panic("type checking failed: no declartion of constructor '{}'",
+            Constructor);
+
+    std::for_each(Params.begin(), Params.end(), [&](const std::string & param) {
+      type::Arrow * arrow = dynamic_cast<type::Arrow *>(constructorType.get());
+
+      if (!arrow)
+        panic("type checking failed: constructor '{}' must be a function type",
+              Constructor);
+
+      typeEnvironment.bind(param, arrow->Left);
+      constructorType = arrow->Right;
+    });
+
+    typeManager.unify(type, constructorType);
+    if (const auto resultType =
+          dynamic_cast<type::Base *>(constructorType.get());
+        !resultType)
+      panic("type checking failed: return value is not unique");
+  }
+
+  void Fn::scanDefinitionType(type::Manager & typeManager,
+                              type::Environment & typeEnvironment) noexcept
+  {
+    std::cout << std::format("scaning function '{}' definition", Name)
+              << std::endl;
+    const type::Type::Ptr returnType = typeManager.newType();
+    type::Type::Ptr fullType = returnType;
+    std::for_each(Params.rbegin(),
+                  Params.rend(),
+                  [&](const std::string & param) {
+                    type::Type::Ptr paramType = typeManager.newType();
+                    fullType =
+                      type::Type::Ptr(new type::Arrow(paramType, fullType));
+
+                    ParamTypes.push_back(paramType);
+                  });
+
+    typeEnvironment.bind(Name, fullType);
+  }
+
+  void Fn::typecheck(type::Manager & typeManager,
+                     const type::Environment & typeEnvironment) const noexcept
+  {
+    std::cout << std::format("checking function '{}' type", Name) << std::endl;
+    type::Environment newEnvironment = typeEnvironment.scope();
+
+    auto paramIterator = Params.begin();
+    auto typeIterator = ParamTypes.rbegin();
+    while (paramIterator != Params.end() && typeIterator != ParamTypes.rend())
+      {
+        newEnvironment.bind(*paramIterator, *typeIterator);
+        paramIterator++;
+        typeIterator++;
+      }
+
+    typeManager.unify(returnType, Body->typecheck(typeManager, newEnvironment));
+  }
+
+  void Data::scanDefinitionType(type::Manager & typeManager,
+                                type::Environment & typeEnvironment) noexcept
+  {
+    std::cout << std::format("scaning data '{}' definition", Name) << std::endl;
+    auto fullType = type::Type::Ptr(new type::Base(Name));
+    for (const auto & constructor : Constructors)
+      {
+        for (const auto & typeName : constructor->Types)
+          fullType = type::Type::Ptr(
+            new type::Arrow(type::Type::Ptr(new type::Base(typeName)),
+                            fullType));
+
+        typeEnvironment.bind(constructor->Name, fullType);
+      }
+  }
+
+  void Data::typecheck(type::Manager & typeManager,
+                       const type::Environment & typeEnvironment) const noexcept
+  {
+    std::cout << std::format("checking data '{}' type", Name) << std::endl;
+  }
 
 } // namespace swallow::ast
+
+namespace swallow::type
+{
+  void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept
+  {
+    std::cout << "Type checking..." << std::endl;
+    type::Manager typeManager;
+    type::Environment typeEnvironment;
+
+    auto intType = type::Type::Ptr(new type::Base("Int"));
+    auto binopType = type::Type::Ptr(
+      new type::Arrow(intType,
+                      type::Type::Ptr(new type::Arrow(intType, intType))));
+
+    std::cout << "Bind binary operators..." << std::endl;
+    typeEnvironment.bind("+", binopType);
+    typeEnvironment.bind("-", binopType);
+    typeEnvironment.bind("*", binopType);
+    typeEnvironment.bind("/", binopType);
+
+    std::cout << "scan definitions type..." << std::endl;
+    for (const auto & definition : program)
+      definition->scanDefinitionType(typeManager, typeEnvironment);
+
+    std::cout << "type checking..." << std::endl;
+    for (const auto & definition : program)
+      definition->typecheck(typeManager, typeEnvironment);
+  }
+} // namespace swallow::type

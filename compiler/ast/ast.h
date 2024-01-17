@@ -30,12 +30,12 @@
 #ifndef SWALLOW_AST_HPP
 #define SWALLOW_AST_HPP
 
+#include "environment.h"
+#include "type.h"
 #include "type.hpp"
 #include <memory>
 #include <string>
 #include <vector>
-
-using namespace swallow::type;
 
 namespace swallow::ast
 {
@@ -45,9 +45,9 @@ namespace swallow::ast
     using Ptr = std::unique_ptr<AST>;
     virtual ~AST() = default;
 
-    // virtual Type::Ptr typecheck(TypeManager &typeManager,
-    //                             const TypeEnvironment &typeEnvironment)
-    //                             const;
+    virtual type::Type::Ptr
+    typecheck(type::Manager & typeManager,
+              const type::Environment & typeEnvironment) const noexcept = 0;
   };
 
   class Pattern
@@ -56,6 +56,10 @@ namespace swallow::ast
     using Ptr = std::unique_ptr<Pattern>;
 
     virtual ~Pattern() = default;
+
+    virtual void match(type::Type::Ptr type,
+                       type::Manager & typeManager,
+                       type::Environment & typeEnvironment) const noexcept = 0;
   };
 
   class Branch
@@ -63,11 +67,9 @@ namespace swallow::ast
   public:
     using Ptr = std::unique_ptr<Branch>;
 
-  private:
     const Pattern::Ptr Patt;
     const AST::Ptr Expr;
 
-  public:
     Branch(Pattern::Ptr Patt, AST::Ptr Expr)
       : Patt(std::move(Patt))
       , Expr(std::move(Expr))
@@ -79,11 +81,9 @@ namespace swallow::ast
   public:
     using Ptr = std::unique_ptr<Constructor>;
 
-  private:
     const std::string Name;
     const std::vector<std::string> Types;
 
-  public:
     Constructor(std::string Name, std::vector<std::string> Types)
       : Name(std::move(Name))
       , Types(std::move(Types))
@@ -96,6 +96,13 @@ namespace swallow::ast
     using Ptr = std::unique_ptr<Definition>;
 
     virtual ~Definition() = default;
+
+    virtual void
+    scanDefinitionType(type::Manager & typeManager,
+                       type::Environment & typeEnvironment) noexcept = 0;
+    virtual void
+    typecheck(type::Manager & typeManager,
+              const type::Environment & typeEnvironment) const noexcept = 0;
   };
 
   class Int final : public AST
@@ -107,9 +114,9 @@ namespace swallow::ast
       : Value(V)
     {}
 
-    // virtual Type::Ptr typecheck(TypeManager &typeManager,
-    //                             const TypeEnvironment &typeEnvironment)
-    //                             const;
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class LID final : public AST
@@ -120,6 +127,10 @@ namespace swallow::ast
     explicit LID(std::string ID)
       : ID(std::move(ID))
     {}
+
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class UID final : public AST
@@ -130,6 +141,10 @@ namespace swallow::ast
     explicit UID(std::string ID)
       : ID(std::move(ID))
     {}
+
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class Binop final : public AST
@@ -156,18 +171,26 @@ namespace swallow::ast
     {}
 
     static std::string operatorsToString(const Operators op) noexcept;
+
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class Application final : public AST
   {
-    const Ptr left;
-    const Ptr right;
+    const Ptr Left;
+    const Ptr Right;
 
   public:
     Application(Ptr Left, Ptr Right)
-      : left(std::move(Left))
-      , right(std::move(Right))
+      : Left(std::move(Left))
+      , Right(std::move(Right))
     {}
+
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class Match final : public AST
@@ -180,6 +203,10 @@ namespace swallow::ast
       : With(std::move(o))
       , Branches(std::move(b))
     {}
+
+    virtual type::Type::Ptr typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class PatternVariable final : public Pattern
@@ -190,45 +217,76 @@ namespace swallow::ast
     explicit PatternVariable(std::string Variable)
       : Variable(std::move(Variable))
     {}
+
+    void match(type::Type::Ptr type,
+               type::Manager & typeManager,
+               type::Environment & typeEnvironment) const noexcept override;
   };
 
-  class PatternConstr final : public Pattern
+  class PatternConstructor final : public Pattern
   {
-    const std::string Constr;
+  public:
+    const std::string Constructor;
     const std::vector<std::string> Params;
 
-  public:
-    PatternConstr(std::string Constr, std::vector<std::string> Params)
-      : Constr(std::move(Constr))
+    PatternConstructor(std::string Constructor, std::vector<std::string> Params)
+      : Constructor(std::move(Constructor))
       , Params(std::move(Params))
     {}
+
+    virtual void
+    match(type::Type::Ptr type,
+          type::Manager & typeManager,
+          type::Environment & typeEnvironment) const noexcept override;
   };
 
   class Fn final : public Definition
   {
+  public:
     const std::string Name;
     const std::vector<std::string> Params;
     const AST::Ptr Body;
 
-  public:
+    std::vector<type::Type::Ptr> ParamTypes;
+    type::Type::Ptr returnType;
+
     Fn(std::string Name, std::vector<std::string> Params, AST::Ptr Body)
       : Name(std::move(Name))
       , Params(std::move(Params))
       , Body(std::move(Body))
     {}
+
+    virtual void
+    scanDefinitionType(type::Manager & typeManager,
+                       type::Environment & typeEnvironment) noexcept override;
+    virtual void typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 
   class Data final : public Definition
   {
+  public:
     const std::string Name;
     const std::vector<Constructor::Ptr> Constructors;
 
-  public:
     Data(std::string Name, std::vector<Constructor::Ptr> Constructors)
       : Name(std::move(Name))
       , Constructors(std::move(Constructors))
     {}
+
+    virtual void
+    scanDefinitionType(type::Manager & typeManager,
+                       type::Environment & typeEnvironment) noexcept override;
+    virtual void typecheck(
+      type::Manager & typeManager,
+      const type::Environment & typeEnvironment) const noexcept override;
   };
 } // namespace swallow::ast
+
+namespace swallow::type
+{
+  void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept;
+} // namespace swallow::type
 
 #endif

@@ -212,23 +212,23 @@ namespace yy
         break;
 
       case symbol_kind::S_Branches: // Branches
-        value.YY_MOVE_OR_COPY<std::vector<Branch::Ptr>>(YY_MOVE(that.value));
+        value.YY_MOVE_OR_COPY<std::vector<Branch::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Constructors: // Constructors
-        value.YY_MOVE_OR_COPY<std::vector<Constructor::Ptr>>(
+        value.YY_MOVE_OR_COPY<std::vector<Constructor::Ptr> >(
           YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Program:     // Program
       case symbol_kind::S_Definitions: // Definitions
-        value.YY_MOVE_OR_COPY<std::vector<Definition::Ptr>>(
+        value.YY_MOVE_OR_COPY<std::vector<Definition::Ptr> >(
           YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_LowercaseParams: // LowercaseParams
       case symbol_kind::S_UppercaseParams: // UppercaseParams
-        value.YY_MOVE_OR_COPY<std::vector<std::string>>(YY_MOVE(that.value));
+        value.YY_MOVE_OR_COPY<std::vector<std::string> >(YY_MOVE(that.value));
         break;
 
       default:
@@ -283,21 +283,21 @@ namespace yy
         break;
 
       case symbol_kind::S_Branches: // Branches
-        value.move<std::vector<Branch::Ptr>>(YY_MOVE(that.value));
+        value.move<std::vector<Branch::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Constructors: // Constructors
-        value.move<std::vector<Constructor::Ptr>>(YY_MOVE(that.value));
+        value.move<std::vector<Constructor::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Program:     // Program
       case symbol_kind::S_Definitions: // Definitions
-        value.move<std::vector<Definition::Ptr>>(YY_MOVE(that.value));
+        value.move<std::vector<Definition::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_LowercaseParams: // LowercaseParams
       case symbol_kind::S_UppercaseParams: // UppercaseParams
-        value.move<std::vector<std::string>>(YY_MOVE(that.value));
+        value.move<std::vector<std::string> >(YY_MOVE(that.value));
         break;
 
       default:
@@ -351,21 +351,21 @@ namespace yy
         break;
 
       case symbol_kind::S_Branches: // Branches
-        value.copy<std::vector<Branch::Ptr>>(that.value);
+        value.copy<std::vector<Branch::Ptr> >(that.value);
         break;
 
       case symbol_kind::S_Constructors: // Constructors
-        value.copy<std::vector<Constructor::Ptr>>(that.value);
+        value.copy<std::vector<Constructor::Ptr> >(that.value);
         break;
 
       case symbol_kind::S_Program:     // Program
       case symbol_kind::S_Definitions: // Definitions
-        value.copy<std::vector<Definition::Ptr>>(that.value);
+        value.copy<std::vector<Definition::Ptr> >(that.value);
         break;
 
       case symbol_kind::S_LowercaseParams: // LowercaseParams
       case symbol_kind::S_UppercaseParams: // UppercaseParams
-        value.copy<std::vector<std::string>>(that.value);
+        value.copy<std::vector<std::string> >(that.value);
         break;
 
       default:
@@ -417,21 +417,21 @@ namespace yy
         break;
 
       case symbol_kind::S_Branches: // Branches
-        value.move<std::vector<Branch::Ptr>>(that.value);
+        value.move<std::vector<Branch::Ptr> >(that.value);
         break;
 
       case symbol_kind::S_Constructors: // Constructors
-        value.move<std::vector<Constructor::Ptr>>(that.value);
+        value.move<std::vector<Constructor::Ptr> >(that.value);
         break;
 
       case symbol_kind::S_Program:     // Program
       case symbol_kind::S_Definitions: // Definitions
-        value.move<std::vector<Definition::Ptr>>(that.value);
+        value.move<std::vector<Definition::Ptr> >(that.value);
         break;
 
       case symbol_kind::S_LowercaseParams: // LowercaseParams
       case symbol_kind::S_UppercaseParams: // UppercaseParams
-        value.move<std::vector<std::string>>(that.value);
+        value.move<std::vector<std::string> >(that.value);
         break;
 
       default:
@@ -689,21 +689,21 @@ namespace yy
               break;
 
             case symbol_kind::S_Branches: // Branches
-              yylhs.value.emplace<std::vector<Branch::Ptr>>();
+              yylhs.value.emplace<std::vector<Branch::Ptr> >();
               break;
 
             case symbol_kind::S_Constructors: // Constructors
-              yylhs.value.emplace<std::vector<Constructor::Ptr>>();
+              yylhs.value.emplace<std::vector<Constructor::Ptr> >();
               break;
 
             case symbol_kind::S_Program:     // Program
             case symbol_kind::S_Definitions: // Definitions
-              yylhs.value.emplace<std::vector<Definition::Ptr>>();
+              yylhs.value.emplace<std::vector<Definition::Ptr> >();
               break;
 
             case symbol_kind::S_LowercaseParams: // LowercaseParams
             case symbol_kind::S_UppercaseParams: // UppercaseParams
-              yylhs.value.emplace<std::vector<std::string>>();
+              yylhs.value.emplace<std::vector<std::string> >();
               break;
 
             default:
@@ -722,7 +722,7 @@ namespace yy
 #line 59 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     Program = std::move(
-                      yystack_[0].value.as<std::vector<Definition::Ptr>>());
+                      yystack_[0].value.as<std::vector<Definition::Ptr> >());
                   }
 #line 776 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
@@ -730,9 +730,9 @@ namespace yy
                   case 3: // Definitions: Definitions Definition
 #line 63 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Definition::Ptr>>() = std::move(
-                      yystack_[1].value.as<std::vector<Definition::Ptr>>());
-                    yylhs.value.as<std::vector<Definition::Ptr>>().push_back(
+                    yylhs.value.as<std::vector<Definition::Ptr> >() = std::move(
+                      yystack_[1].value.as<std::vector<Definition::Ptr> >());
+                    yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Definition::Ptr>()));
                   }
 #line 782 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -741,9 +741,9 @@ namespace yy
                   case 4: // Definitions: Definition
 #line 64 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Definition::Ptr>>() =
+                    yylhs.value.as<std::vector<Definition::Ptr> >() =
                       std::vector<Definition::Ptr>();
-                    yylhs.value.as<std::vector<Definition::Ptr>>().push_back(
+                    yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Definition::Ptr>()));
                   }
 #line 788 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -767,14 +767,13 @@ namespace yy
 #line 800 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-                  case 7: // Fn: FN LID OPAREN LowercaseParams CPAREN EQUAL
-                          // OCURLY Add CCURLY
+                  case 7: // Fn: FN LID LowercaseParams EQUAL OCURLY Add CCURLY
 #line 74 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Fn(
-                      std::move(yystack_[7].value.as<std::string>()),
+                      std::move(yystack_[5].value.as<std::string>()),
                       std::move(
-                        yystack_[5].value.as<std::vector<std::string>>()),
+                        yystack_[4].value.as<std::vector<std::string> >()),
                       std::move(yystack_[1].value.as<AST::Ptr>())));
                   }
 #line 806 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -783,7 +782,7 @@ namespace yy
                   case 8: // LowercaseParams: %empty
 #line 78 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<std::string>>() =
+                    yylhs.value.as<std::vector<std::string> >() =
                       std::vector<std::string>();
                   }
 #line 812 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -792,9 +791,9 @@ namespace yy
                   case 9: // LowercaseParams: LowercaseParams LID
 #line 79 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<std::string>>() = std::move(
-                      yystack_[1].value.as<std::vector<std::string>>());
-                    yylhs.value.as<std::vector<std::string>>().push_back(
+                    yylhs.value.as<std::vector<std::string> >() = std::move(
+                      yystack_[1].value.as<std::vector<std::string> >());
+                    yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
 #line 818 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -803,7 +802,7 @@ namespace yy
                   case 10: // UppercaseParams: %empty
 #line 83 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<std::string>>() =
+                    yylhs.value.as<std::vector<std::string> >() =
                       std::vector<std::string>();
                   }
 #line 824 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -812,9 +811,9 @@ namespace yy
                   case 11: // UppercaseParams: UppercaseParams UID
 #line 84 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<std::string>>() = std::move(
-                      yystack_[1].value.as<std::vector<std::string>>());
-                    yylhs.value.as<std::vector<std::string>>().push_back(
+                    yylhs.value.as<std::vector<std::string> >() = std::move(
+                      yystack_[1].value.as<std::vector<std::string> >());
+                    yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
 #line 830 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -952,7 +951,7 @@ namespace yy
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Match(
                       std::move(yystack_[4].value.as<AST::Ptr>()),
                       std::move(
-                        yystack_[1].value.as<std::vector<Branch::Ptr>>())));
+                        yystack_[1].value.as<std::vector<Branch::Ptr> >())));
                   }
 #line 914 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
@@ -960,9 +959,9 @@ namespace yy
                   case 26: // Branches: Branches Branch
 #line 118 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Branch::Ptr>>() = std::move(
-                      yystack_[1].value.as<std::vector<Branch::Ptr>>());
-                    yystack_[1].value.as<std::vector<Branch::Ptr>>().push_back(
+                    yylhs.value.as<std::vector<Branch::Ptr> >() = std::move(
+                      yystack_[1].value.as<std::vector<Branch::Ptr> >());
+                    yystack_[1].value.as<std::vector<Branch::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Branch::Ptr>()));
                   }
 #line 920 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -971,9 +970,9 @@ namespace yy
                   case 27: // Branches: Branch
 #line 119 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Branch::Ptr>>() =
+                    yylhs.value.as<std::vector<Branch::Ptr> >() =
                       std::vector<Branch::Ptr>();
-                    yylhs.value.as<std::vector<Branch::Ptr>>().push_back(
+                    yylhs.value.as<std::vector<Branch::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Branch::Ptr>()));
                   }
 #line 926 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -1004,10 +1003,10 @@ namespace yy
 #line 130 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Pattern::Ptr>() =
-                      Pattern::Ptr(new PatternConstr(
+                      Pattern::Ptr(new PatternConstructor(
                         std::move(yystack_[1].value.as<std::string>()),
                         std::move(
-                          yystack_[0].value.as<std::vector<std::string>>())));
+                          yystack_[0].value.as<std::vector<std::string> >())));
                   }
 #line 944 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
@@ -1021,7 +1020,7 @@ namespace yy
                         std::move(yystack_[4].value.as<std::string>()),
                         std::move(
                           yystack_[1]
-                            .value.as<std::vector<Constructor::Ptr>>())));
+                            .value.as<std::vector<Constructor::Ptr> >())));
                   }
 #line 950 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
@@ -1029,9 +1028,10 @@ namespace yy
                   case 32: // Constructors: Constructors COMMA Constructor
 #line 139 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Constructor::Ptr>>() = std::move(
-                      yystack_[2].value.as<std::vector<Constructor::Ptr>>());
-                    yylhs.value.as<std::vector<Constructor::Ptr>>().push_back(
+                    yylhs.value.as<std::vector<Constructor::Ptr> >() =
+                      std::move(
+                        yystack_[2].value.as<std::vector<Constructor::Ptr> >());
+                    yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
 #line 956 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -1040,9 +1040,9 @@ namespace yy
                   case 33: // Constructors: Constructor
 #line 141 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Constructor::Ptr>>() =
+                    yylhs.value.as<std::vector<Constructor::Ptr> >() =
                       std::vector<Constructor::Ptr>();
-                    yylhs.value.as<std::vector<Constructor::Ptr>>().push_back(
+                    yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
 #line 962 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
@@ -1055,7 +1055,7 @@ namespace yy
                       Constructor::Ptr(new Constructor(
                         std::move(yystack_[1].value.as<std::string>()),
                         std::move(
-                          yystack_[0].value.as<std::vector<std::string>>())));
+                          yystack_[0].value.as<std::vector<std::string> >())));
                   }
 #line 968 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
@@ -1229,52 +1229,50 @@ namespace yy
   }
 #endif // #if YYDEBUG || 0
 
-  const signed char parser::yypact_ninf_ = -30;
+  const signed char parser::yypact_ninf_ = -27;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char parser::yypact_[] = {
-    6,   -20, -16, 33,  6,   -30, -30, -30, 22,  24,  -30, -30, -30, 27,
-    2,   20,  25,  -30, -30, 13,  -30, 36,  26,  -30, 20,  -5,  -30, -30,
-    -30, -5,  -5,  -30, -30, 7,   23,  -5,  -30, -30, 21,  1,   -5,  -5,
-    -30, -5,  -5,  -30, 37,  -30, 23,  23,  -5,  -5,  31,  14,  15,  -30,
-    -30, -30, 32,  -30, -30, 29,  42,  -5,  8,   -30
+    23, -19, -15, 18,  23,  -27, -27, -27, -27, -10, -27, -27, 12,
+    10, 26,  -27, 25,  -4,  -27, 19,  -27, -27, -4,  -4,  -27, -27,
+    8,  24,  -4,  -27, -27, 27,  -27, 25,  22,  2,   -4,  -4,  -27,
+    -4, -4,  -27, -27, -27, 34,  -27, 24,  24,  -4,  -4,  9,   17,
+    -5, -27, -27, -27, 29,  -27, -27, 30,  35,  -4,  11,  -27
   };
 
   const signed char parser::yydefact_[] = {
-    0,  0,  0,  0,  2,  4,  5,  6, 0,  0,  1,  3,  8, 0,  0,  0,  0,
-    9,  10, 0,  33, 0,  34, 31, 0, 0,  11, 32, 20, 0, 0,  21, 22, 0,
-    14, 17, 19, 24, 0,  0,  0,  0, 7,  0,  0,  18, 0, 23, 12, 13, 15,
-    16, 0,  0,  0,  27, 29, 8,  0, 25, 26, 30, 0,  0, 0,  28
+    0,  0,  0,  0, 2,  4,  5,  6, 8,  0,  1,  3,  0,  0,  0,  9,
+    0,  0,  10, 0, 33, 20, 0,  0, 21, 22, 0,  14, 17, 19, 24, 34,
+    31, 0,  0,  0, 0,  0,  7,  0, 0,  18, 11, 32, 0,  23, 12, 13,
+    15, 16, 0,  0, 0,  27, 29, 8, 0,  25, 26, 30, 0,  0,  0,  28
   };
 
-  const signed char parser::yypgoto_[] = { -30, -30, -30, 41,  -30, 0,
-                                           -30, -29, -1,  -2,  -28, -30,
-                                           -30, 4,   -30, -30, -30, 35 };
+  const signed char parser::yypgoto_[] = { -27, -27, -27, 44,  -27, -3,
+                                           -27, -22, 6,   5,   -26, -27,
+                                           -27, 3,   -27, -27, -27, 21 };
 
   const signed char parser::yydefgoto_[] = {
-    0, 3, 4, 5, 6, 14, 22, 33, 34, 35, 36, 37, 54, 55, 58, 7, 19, 20
+    0, 3, 4, 5, 6, 12, 31, 26, 27, 28, 29, 30, 52, 53, 56, 7, 19, 20
   };
 
   const signed char parser::yytable_[] = {
-    38, 39, 28, 8,  40, 29, 41, 45, 9,  30, 40, 40, 41, 41, 1,
-    2,  47, 16, 31, 32, 42, 65, 45, 45, 40, 17, 41, 43, 59, 44,
-    23, 24, 46, 10, 64, 53, 12, 56, 57, 48, 49, 50, 51, 15, 18,
-    11, 13, 21, 25, 52, 26, 53, 17, 62, 63, 0,  0,  61, 60, 27
+    34, 35, 41, 21, 8,  36, 22, 37, 57, 9,  23, 36, 13, 37, 36, 51, 37, 45, 10,
+    24, 25, 38, 41, 41, 63, 36, 16, 37, 39, 51, 40, 1,  2,  44, 14, 15, 32, 33,
+    17, 62, 54, 55, 46, 47, 48, 49, 50, 61, 11, 18, 60, 42, 59, 15, 43, 58
   };
 
   const signed char parser::yycheck_[] = {
-    29, 30, 7,  23, 3,  10, 5,  35, 24, 14, 3,  3,  5,  5,  8,
-    9,  15, 15, 23, 24, 13, 13, 50, 51, 3,  23, 5,  4,  13, 6,
-    17, 18, 11, 0,  63, 20, 14, 23, 24, 40, 41, 43, 44, 16, 24,
-    4,  22, 22, 12, 12, 24, 20, 23, 21, 12, -1, -1, 57, 54, 24
+    22, 23, 28, 7,  23, 3,  10, 5,  13, 24, 14, 3,  22, 5,  3,  20, 5,  15, 0,
+    23, 24, 13, 48, 49, 13, 3,  16, 5,  4,  20, 6,  8,  9,  11, 22, 23, 17, 18,
+    12, 61, 23, 24, 36, 37, 39, 40, 12, 12, 4,  24, 21, 24, 55, 23, 33, 52
   };
 
   const signed char parser::yystos_[] = {
-    0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 14, 22, 30, 16, 15,
-    23, 24, 41, 42, 22, 31, 17, 18, 12, 24, 42, 7,  10, 14, 23, 24, 32,
-    33, 34, 35, 36, 32, 32, 3,  5,  13, 4,  6,  35, 11, 15, 33, 33, 34,
-    34, 12, 20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13
+    0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 30, 22, 22, 23,
+    16, 12, 24, 41, 42, 7,  10, 14, 23, 24, 32, 33, 34, 35, 36, 31,
+    17, 18, 32, 32, 3,  5,  13, 4,  6,  35, 24, 42, 11, 15, 33, 33,
+    34, 34, 12, 20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13
   };
 
   const signed char parser::yyr1_[] = { 0,  25, 26, 27, 27, 28, 28, 29, 30,
@@ -1282,7 +1280,7 @@ namespace yy
                                         34, 34, 35, 35, 35, 35, 35, 36, 37,
                                         37, 38, 39, 39, 40, 41, 41, 42 };
 
-  const signed char parser::yyr2_[] = { 0, 2, 1, 2, 1, 1, 1, 9, 0, 2, 0, 2,
+  const signed char parser::yyr2_[] = { 0, 2, 1, 2, 1, 1, 1, 7, 0, 2, 0, 2,
                                         3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1, 3,
                                         1, 6, 2, 1, 6, 1, 2, 6, 3, 1, 2 };
 

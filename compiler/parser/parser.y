@@ -70,8 +70,8 @@ Definition
     ;
 
 Fn
-    : FN LID OPAREN LowercaseParams CPAREN EQUAL OCURLY Add CCURLY
-        { $$ = Definition::Ptr(new Fn(std::move($2), std::move($4), std::move($8))); }
+    : FN LID LowercaseParams EQUAL OCURLY Add CCURLY
+        { $$ = Definition::Ptr(new Fn(std::move($2), std::move($3), std::move($6))); }
     ;
 
 LowercaseParams
@@ -127,7 +127,7 @@ Branch
 Pattern
     : LID { $$ = Pattern::Ptr(new PatternVariable(std::move($1))); }
     | UID LowercaseParams
-        { $$ = Pattern::Ptr(new PatternConstr(std::move($1), std::move($2))); }
+        { $$ = Pattern::Ptr(new PatternConstructor(std::move($1), std::move($2))); }
     ;
 
 Data
