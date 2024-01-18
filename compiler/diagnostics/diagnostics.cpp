@@ -29,10 +29,10 @@
 
 #include "diagnostics.h"
 
+#include "optional/optional.hpp"
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <ranges>
 #include <regex>
 #include <utility>
 

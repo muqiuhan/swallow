@@ -30,6 +30,7 @@
 #include "parser.h"
 #include "bison_parser.hpp"
 #include "compiler.h"
+#include "location.hh"
 #include "panic/panic.hpp"
 #include "reporter.h"
 #include <cstdio>
@@ -37,7 +38,15 @@
 namespace yy
 {
 
-  void parser::error(const location_type & loc, const std::string & msg) {}
+  void parser::error(const location_type & loc, const std::string & msg)
+  {
+    swallow::compiler::diagnostics::Reporter::REPORTER->normal(
+      location{ loc.begin, loc.begin },
+      "Syntax error",
+      "There is a syntax problem here",
+      "No more information",
+      0x0001);
+  }
 
 } // namespace yy
 
