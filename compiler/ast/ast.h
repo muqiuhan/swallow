@@ -35,6 +35,7 @@
 #include "result/result.hpp"
 #include "type.h"
 #include "type.hpp"
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
@@ -56,6 +57,8 @@ namespace swallow::compiler::ast
     virtual utils::Result<type::Type::Ptr, utils::Void>
     typecheck(type::Manager & typeManager,
               const type::Environment & typeEnvironment) const noexcept = 0;
+
+    virtual void print(uint8_t indent, std::ostream & to) const noexcept = 0;
   };
 
   class Pattern
@@ -73,6 +76,8 @@ namespace swallow::compiler::ast
     virtual void match(type::Type::Ptr type,
                        type::Manager & typeManager,
                        type::Environment & typeEnvironment) const noexcept = 0;
+
+    virtual void print(std::ostream & to) const noexcept = 0;
   };
 
   class Branch
@@ -143,6 +148,8 @@ namespace swallow::compiler::ast
     utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
+
+    void print(uint8_t indent, std::ostream & to) const noexcept override;
   };
 
   class LID final : public AST
@@ -158,6 +165,8 @@ namespace swallow::compiler::ast
     utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
+
+    void print(uint8_t indent, std::ostream & to) const noexcept override;
   };
 
   class UID final : public AST
@@ -173,6 +182,8 @@ namespace swallow::compiler::ast
     utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
+
+    void print(uint8_t indent, std::ostream & to) const noexcept override;
   };
 
   class Binop final : public AST
@@ -205,6 +216,8 @@ namespace swallow::compiler::ast
     utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
+
+    void print(uint8_t indent, std::ostream & to) const noexcept override;
   };
 
   class Application final : public AST
@@ -222,6 +235,8 @@ namespace swallow::compiler::ast
     utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
+
+    void print(uint8_t indent, std::ostream & to) const noexcept override;
   };
 
   class Match final : public AST
@@ -239,6 +254,8 @@ namespace swallow::compiler::ast
     utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
+
+    void print(uint8_t indent, std::ostream & to) const noexcept override;
   };
 
   class PatternVariable final : public Pattern
@@ -254,6 +271,8 @@ namespace swallow::compiler::ast
     void match(type::Type::Ptr type,
                type::Manager & typeManager,
                type::Environment & typeEnvironment) const noexcept override;
+
+    void print(std::ostream & to) const noexcept override;
   };
 
   class PatternConstructor final : public Pattern
@@ -273,6 +292,8 @@ namespace swallow::compiler::ast
     void match(type::Type::Ptr type,
                type::Manager & typeManager,
                type::Environment & typeEnvironment) const noexcept override;
+
+    void print(std::ostream & to) const noexcept override;
   };
 
   class Fn final : public Definition
@@ -326,13 +347,13 @@ namespace swallow::compiler::ast
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
+
+  void dump(const std::vector<Definition> & Program) noexcept;
 } // namespace swallow::compiler::ast
 
 namespace swallow::compiler::type
 {
-
   void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept;
-
 } // namespace swallow::compiler::type
 
 #endif
