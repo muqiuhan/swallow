@@ -27,23 +27,44 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "compiler.h"
-#include "ast.h"
-#include "parser.h"
+#include "environment.h"
+#include "type.h"
+#include <ostream>
 
-#include "reporter.h"
-
-using namespace swallow::compiler;
-
-auto main(int argc, char ** argv) -> int
+namespace swallow::compiler::type
 {
-  CompileUnit::FILE = new CompileUnit(argv[1]);
-  diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
+  void Variable::dump(const Manager & typeManager,
+                      std::ostream & to) const noexcept
+  {
+    const auto it = typeManager.Types.find(Name);
+    if (it != typeManager.Types.end())
+      it->second->dump(typeManager, to);
+    else
+      to << Name;
+  }
 
-  auto & program = parser::parse();
-  type::typecheck(program);
+  void Arrow::dump(const Manager & typeManager,
+                   std::ostream & to) const noexcept
+  {
+    Left->dump(typeManager, to);
+    to << " => (";
+    Left->dump(typeManager, to);
+    to << ")";
+  }
 
-  delete CompileUnit::FILE;
-  delete diagnostics::Reporter::REPORTER;
-  return 0;
-}
+  void Base::dump(const Manager & typeManager, std::ostream & to) const noexcept
+  {
+    to << Name;
+  }
+
+  void Environment::dump(std::ostream & to,
+                         const Manager & typeManager) noexcept
+  {
+    for (const auto & [name, type] : Names)
+      {
+        to << name << ": ";
+        type->dump(typeManager, to);
+        to << std::endl;
+      }
+  }
+} // namespace swallow::compiler::type

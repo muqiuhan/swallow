@@ -49,7 +49,7 @@
 #define YY_NULLPTR 0
 #endif
 #else
-#define YY_NULLPTR ((void *)0)
+#define YY_NULLPTR ((void*) 0)
 #endif
 #endif
 
@@ -67,16 +67,14 @@ namespace yy
     typedef int counter_type;
 
     /// Construct a position.
-    explicit position(filename_type * f = YY_NULLPTR,
+    explicit position(filename_type* f = YY_NULLPTR,
                       counter_type l = 1,
                       counter_type c = 1)
-      : filename(f)
-      , line(l)
-      , column(c)
+      : filename(f), line(l), column(c)
     {}
 
     /// Initialization.
-    void initialize(filename_type * fn = YY_NULLPTR,
+    void initialize(filename_type* fn = YY_NULLPTR,
                     counter_type l = 1,
                     counter_type c = 1)
     {
@@ -102,7 +100,7 @@ namespace yy
     /** \} */
 
     /// File name to which this position refers.
-    filename_type * filename;
+    filename_type* filename;
     /// Current line number.
     counter_type line;
     /// Current column number.
@@ -111,14 +109,14 @@ namespace yy
   private:
     /// Compute max (min, lhs+rhs).
     static counter_type
-    add_(counter_type lhs, counter_type rhs, counter_type min)
+      add_(counter_type lhs, counter_type rhs, counter_type min)
     {
       return lhs + rhs < min ? min : lhs + rhs;
     }
   };
 
   /// Add \a width columns, in place.
-  inline position & operator+=(position & res, position::counter_type width)
+  inline position& operator+=(position& res, position::counter_type width)
   {
     res.columns(width);
     return res;
@@ -131,7 +129,7 @@ namespace yy
   }
 
   /// Subtract \a width columns, in place.
-  inline position & operator-=(position & res, position::counter_type width)
+  inline position& operator-=(position& res, position::counter_type width)
   {
     return res += -width;
   }
@@ -147,8 +145,8 @@ namespace yy
    ** \param pos a reference to the position to redirect
    */
   template <typename YYChar>
-  std::basic_ostream<YYChar> & operator<<(std::basic_ostream<YYChar> & ostr,
-                                          const position & pos)
+  std::basic_ostream<YYChar>& operator<<(std::basic_ostream<YYChar>& ostr,
+                                         const position& pos)
   {
     if (pos.filename)
       ostr << *pos.filename << ':';
@@ -165,25 +163,18 @@ namespace yy
     typedef position::counter_type counter_type;
 
     /// Construct a location from \a b to \a e.
-    location(const position & b, const position & e)
-      : begin(b)
-      , end(e)
-    {}
+    location(const position& b, const position& e) : begin(b), end(e) {}
 
     /// Construct a 0-width location in \a p.
-    explicit location(const position & p = position())
-      : begin(p)
-      , end(p)
-    {}
+    explicit location(const position& p = position()) : begin(p), end(p) {}
 
     /// Construct a 0-width location in \a f, \a l, \a c.
-    explicit location(filename_type * f, counter_type l = 1, counter_type c = 1)
-      : begin(f, l, c)
-      , end(f, l, c)
+    explicit location(filename_type* f, counter_type l = 1, counter_type c = 1)
+      : begin(f, l, c), end(f, l, c)
     {}
 
     /// Initialization.
-    void initialize(filename_type * f = YY_NULLPTR,
+    void initialize(filename_type* f = YY_NULLPTR,
                     counter_type l = 1,
                     counter_type c = 1)
     {
@@ -212,20 +203,20 @@ namespace yy
   };
 
   /// Join two locations, in place.
-  inline location & operator+=(location & res, const location & end)
+  inline location& operator+=(location& res, const location& end)
   {
     res.end = end.end;
     return res;
   }
 
   /// Join two locations.
-  inline location operator+(location res, const location & end)
+  inline location operator+(location res, const location& end)
   {
     return res += end;
   }
 
   /// Add \a width columns to the end position, in place.
-  inline location & operator+=(location & res, location::counter_type width)
+  inline location& operator+=(location& res, location::counter_type width)
   {
     res.columns(width);
     return res;
@@ -238,7 +229,7 @@ namespace yy
   }
 
   /// Subtract \a width columns to the end position, in place.
-  inline location & operator-=(location & res, location::counter_type width)
+  inline location& operator-=(location& res, location::counter_type width)
   {
     return res += -width;
   }
@@ -256,8 +247,8 @@ namespace yy
    ** Avoid duplicate information.
    */
   template <typename YYChar>
-  std::basic_ostream<YYChar> & operator<<(std::basic_ostream<YYChar> & ostr,
-                                          const location & loc)
+  std::basic_ostream<YYChar>& operator<<(std::basic_ostream<YYChar>& ostr,
+                                         const location& loc)
   {
     location::counter_type end_col =
       0 < loc.end.column ? loc.end.column - 1 : 0;

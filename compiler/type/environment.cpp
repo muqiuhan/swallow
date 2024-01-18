@@ -37,7 +37,7 @@ namespace swallow::compiler::type
 {
 
   Result<Type::Ptr, Void>
-  Environment::lookup(const std::string & name) const noexcept
+    Environment::lookup(const std::string & name) const noexcept
   {
     if (const auto it = Names.find(name); it != Names.end())
       return Ok(it->second);

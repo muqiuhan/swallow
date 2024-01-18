@@ -365,9 +365,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[37m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         FOREGROUND_BLUE | FOREGROUND_GREEN
-                                           | FOREGROUND_RED);
+        _internal::win_change_attributes(
+          stream, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED);
 #endif
       }
     return stream;
@@ -413,9 +412,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[92m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         FOREGROUND_GREEN
-                                           | FOREGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -429,9 +427,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[93m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         FOREGROUND_GREEN | FOREGROUND_RED
-                                           | FOREGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -445,9 +442,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[94m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         FOREGROUND_BLUE
-                                           | FOREGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -461,9 +457,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[95m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         FOREGROUND_BLUE | FOREGROUND_RED
-                                           | FOREGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -477,9 +472,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[96m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         FOREGROUND_BLUE | FOREGROUND_GREEN
-                                           | FOREGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -555,9 +549,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[43m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_GREEN | BACKGROUND_RED);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_GREEN | BACKGROUND_RED);
 #endif
       }
     return stream;
@@ -585,9 +578,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[45m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_BLUE | BACKGROUND_RED);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_BLUE | BACKGROUND_RED);
 #endif
       }
     return stream;
@@ -601,9 +593,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[46m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_GREEN | BACKGROUND_BLUE);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_GREEN | BACKGROUND_BLUE);
 #endif
       }
     return stream;
@@ -617,10 +608,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[47m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_GREEN | BACKGROUND_BLUE
-                                           | BACKGROUND_RED);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_RED);
 #endif
       }
 
@@ -653,9 +642,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[101m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_RED | BACKGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_RED | BACKGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -663,17 +651,15 @@ namespace termcolor
 
   template <typename CharT>
   std::basic_ostream<CharT> &
-  on_bright_green(std::basic_ostream<CharT> & stream)
+    on_bright_green(std::basic_ostream<CharT> & stream)
   {
     if (_internal::is_colorized(stream))
       {
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[102m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_GREEN
-                                           | BACKGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_GREEN | BACKGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -681,17 +667,15 @@ namespace termcolor
 
   template <typename CharT>
   std::basic_ostream<CharT> &
-  on_bright_yellow(std::basic_ostream<CharT> & stream)
+    on_bright_yellow(std::basic_ostream<CharT> & stream)
   {
     if (_internal::is_colorized(stream))
       {
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[103m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_GREEN | BACKGROUND_RED
-                                           | BACKGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -705,10 +689,8 @@ namespace termcolor
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[104m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_BLUE
-                                           | BACKGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_BLUE | BACKGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -716,17 +698,15 @@ namespace termcolor
 
   template <typename CharT>
   std::basic_ostream<CharT> &
-  on_bright_magenta(std::basic_ostream<CharT> & stream)
+    on_bright_magenta(std::basic_ostream<CharT> & stream)
   {
     if (_internal::is_colorized(stream))
       {
 #if defined(TERMCOLOR_USE_ANSI_ESCAPE_SEQUENCES)
         stream << "\033[105m";
 #elif defined(TERMCOLOR_USE_WINDOWS_API)
-        _internal::win_change_attributes(stream,
-                                         -1,
-                                         BACKGROUND_BLUE | BACKGROUND_RED
-                                           | BACKGROUND_INTENSITY);
+        _internal::win_change_attributes(
+          stream, -1, BACKGROUND_BLUE | BACKGROUND_RED | BACKGROUND_INTENSITY);
 #endif
       }
     return stream;
@@ -751,7 +731,7 @@ namespace termcolor
 
   template <typename CharT>
   std::basic_ostream<CharT> &
-  on_bright_white(std::basic_ostream<CharT> & stream)
+    on_bright_white(std::basic_ostream<CharT> & stream)
   {
     if (_internal::is_colorized(stream))
       {

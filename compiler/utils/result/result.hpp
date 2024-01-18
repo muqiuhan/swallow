@@ -48,12 +48,8 @@ namespace swallow::utils
     std::variant<Ok<T>, Err<E>> value;
 
     Result() {}
-    Result(const Ok<T> & val)
-      : value(val)
-    {}
-    Result(const Err<E> & val)
-      : value(val)
-    {}
+    Result(const Ok<T> & val) : value(val) {}
+    Result(const Err<E> & val) : value(val) {}
 
     friend std::ostream & operator<<(std::ostream & os, const Result & r)
     {
@@ -311,9 +307,7 @@ namespace swallow::utils
   template <typename T> struct Ok
   {
     T value;
-    Ok(T value)
-      : value(value)
-    {}
+    Ok(T value) : value(value) {}
 
     template <typename Function> Result<T, T> and_then(Function op)
     {
@@ -324,9 +318,7 @@ namespace swallow::utils
   template <typename E> struct Err
   {
     E value;
-    Err(E value)
-      : value(value)
-    {}
+    Err(E value) : value(value) {}
 
     template <typename Function> Result<E, E> and_then(Function op)
     {

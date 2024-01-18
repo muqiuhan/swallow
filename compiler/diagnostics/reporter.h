@@ -16,15 +16,15 @@ namespace swallow::compiler::diagnostics
     inline static Reporter * REPORTER = nullptr;
 
     explicit Reporter()
-      : Detail({ CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath })
+      : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
     {}
 
     [[noreturn]] utils::Err<utils::Void>
-    normal(const yy::parser::location_type & loc,
-           const std::string && msg,
-           const std::string && labelMsg,
-           const std::string && note,
-           const std::uint32_t && code);
+      normal(const yy::parser::location_type & loc,
+             const std::string && msg,
+             const std::string && labelMsg,
+             const std::string && note,
+             const std::uint32_t & code);
   };
 
 } // namespace swallow::compiler::diagnostics
