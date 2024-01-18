@@ -5,14 +5,14 @@
 #include "bison_parser.hpp"
 #include "reporter.h"
 
-std::vector<swallow::ast::Definition::Ptr> Program;
+std::vector<swallow::compiler::ast::Definition::Ptr> Program;
 extern yy::parser::symbol_type yylex();
 
 %}
 
 %code requires {
     #include "ast.h"
-    using namespace swallow::ast;
+    using namespace swallow::compiler::ast;
 }
 
 %token PLUS
@@ -76,9 +76,10 @@ Fn
     : FN LID LowercaseParams EQUAL OCURLY Add CCURLY
         { $$ = Definition::Ptr(new Fn(@$, std::move($2), std::move($3), std::move($6))); }
     | error {
-        swallow::compiler::parser::ParserReporter::REPORTER->normal(
+        swallow::compiler::diagnostics::Reporter::REPORTER->normal(
             @$, "Syntax parsing error", "The function definition syntax error",
-            "FN LID LowercaseParams EQUAL OCURLY Add CCURLY"
+            "FN LID LowercaseParams EQUAL OCURLY Add CCURLY",
+            0x0001
         );
     }
     ;
@@ -134,9 +135,10 @@ Branch
             $$ = Branch::Ptr(new Branch(@$, std::move($2), std::move($5)));
         }
     | error {
-        swallow::compiler::parser::ParserReporter::REPORTER->normal(
+        swallow::compiler::diagnostics::Reporter::REPORTER->normal(
             @$, "Syntax parsing error", "Branch syntax error in match expression",
-            "VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY"
+            "VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY",
+            0x0001
         );
     }
     ;

@@ -1,8 +1,8 @@
-data List = [ Nil, Cons Int List ]
+data List = [  Cons Int List ]
 
 let main argv = {
   match argv with {
-  | Nil => {  }
+  | Nil => { 0 }
   | Cons x xs => { 1 }
   }
 }

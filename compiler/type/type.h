@@ -30,13 +30,13 @@
 #ifndef SWALLOW_TYPE_H
 #define SWALLOW_TYPE_H
 
+#include "result/result.hpp"
 #include <cstdint>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <string>
 
-namespace swallow::type
+namespace swallow::compiler::type
 {
   class Type
   {
@@ -89,7 +89,8 @@ namespace swallow::type
     Type::Ptr newArrowType() noexcept;
 
     /** Find values for placeholder variables such that they can equal. */
-    void unify(Type::Ptr left, Type::Ptr right) noexcept;
+    utils::Result<utils::Void, utils::Void> unify(Type::Ptr left,
+                                                  Type::Ptr right) noexcept;
 
     /** Get to the bottom of a chain of equations. */
     Type::Ptr resolve(Type::Ptr type, Variable *& var) noexcept;
@@ -97,6 +98,6 @@ namespace swallow::type
     /** Map a type variable of some name to a type. */
     void bind(const std::string & name, const Type::Ptr & type) noexcept;
   };
-} // namespace swallow::type
+} // namespace swallow::compiler::type
 
 #endif

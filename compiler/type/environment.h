@@ -34,7 +34,7 @@
 #include <map>
 #include <string>
 
-namespace swallow::type
+namespace swallow::compiler::type
 {
   class Environment
   {
@@ -50,11 +50,12 @@ namespace swallow::type
       : Environment(nullptr)
     {}
 
-    Type::Ptr lookup(const std::string & name) const noexcept;
+    [[nodiscard]] utils::Result<Type::Ptr, utils::Void>
+    lookup(const std::string & name) const noexcept;
     void bind(const std::string & name, Type::Ptr type) noexcept;
-    Environment scope() const noexcept;
+    [[nodiscard]] Environment scope() const noexcept;
   };
 
-} // namespace swallow::type
+} // namespace swallow::compiler::type
 
 #endif /* SWALLOW_TYPE_ENVIRONMENT_H */

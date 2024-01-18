@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace swallow::diagnostics
+namespace swallow::compiler::diagnostics
 {
   std::string repeat_string(const std::string & input, size_t amount);
 }

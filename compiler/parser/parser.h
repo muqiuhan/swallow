@@ -32,13 +32,11 @@
 
 #include "ast/ast.h"
 #include "bison_parser.hpp"
-#include "compiler.h"
-#include "diagnostics.h"
 
 namespace swallow::compiler::parser
 {
 
-  std::vector<swallow::ast::Definition::Ptr> & parse() noexcept;
+  std::vector<swallow::compiler::ast::Definition::Ptr> & parse() noexcept;
 
 } // namespace swallow::compiler::parser
 

@@ -32,64 +32,109 @@
 #include "panic/panic.hpp"
 #include "type.h"
 #include <algorithm>
+#include <reporter.h>
+#include <utils.h>
 #include <vector>
 
 using namespace swallow::utils;
 
-namespace swallow::ast
+namespace swallow::compiler::ast
 {
 
-  std::string Binop::operatorsToString(const Operators op) noexcept
+  Result<std::string, Void>
+  Binop::operatorsToString(const Operators & op) noexcept
   {
     switch (op)
       {
       case Operators::PLUS:
-        return "+";
+        return Ok(std::string("+"));
       case Operators::MINUS:
-        return "-";
+        return Ok(std::string("-"));
       case Operators::TIMES:
-        return "*";
+        return Ok(std::string("*"));
       case Operators::DIVIDE:
-        return "/";
+        return Ok(std::string("/"));
       }
 
-    panic("Unknown operator");
+    return Err(Void());
   }
 
-  type::Type::Ptr
+  Result<type::Type::Ptr, Void>
   Int::typecheck(type::Manager & typeManager,
                  const type::Environment & typeEnvironment) const noexcept
   {
-    return type::Type::Ptr(new type::Base("Int"));
+    return Ok(type::Type::Ptr(new type::Base("Int")));
   }
 
-  type::Type::Ptr
+  Result<type::Type::Ptr, Void>
   LID::typecheck(type::Manager & typeManager,
                  const type::Environment & typeEnvironment) const noexcept
   {
-    return typeEnvironment.lookup(ID);
+    return typeEnvironment.lookup(ID).or_else([&](const auto & err) {
+      return diagnostics::Reporter::REPORTER->normal(
+        Location,
+        std::format("{} was not declared", ID),
+        "The definition of this identifier cannot be found in the context",
+        "Function or Variable is undefined",
+        0x0002);
+    });
   }
 
-  type::Type::Ptr
+  Result<type::Type::Ptr, Void>
   UID::typecheck(type::Manager & typeManager,
                  const type::Environment & typeEnvironment) const noexcept
   {
-    return typeEnvironment.lookup(ID);
+    return typeEnvironment.lookup(ID).or_else([&](const auto & err) {
+      return diagnostics::Reporter::REPORTER->normal(
+        Location,
+        std::format("{} was not declared", ID),
+        "The definition of this identifier cannot be found in the context",
+        "Type or Constructor is undefined",
+        0x0002);
+    });
   }
 
-  type::Type::Ptr
+  Result<type::Type::Ptr, Void>
   Binop::typecheck(type::Manager & typeManager,
                    const type::Environment & typeEnvironment) const noexcept
   {
-    const std::string operatorName = operatorsToString(Operator);
+    const std::string operatorName = operatorsToString(Operator).unwrap();
 
-    type::Type::Ptr leftType = Left->typecheck(typeManager, typeEnvironment);
-    type::Type::Ptr rightType = Right->typecheck(typeManager, typeEnvironment);
-    type::Type::Ptr functionType = typeEnvironment.lookup(operatorName);
+    type::Type::Ptr leftType =
+      Left->typecheck(typeManager, typeEnvironment)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            Left->Location,
+            "Type mismatch",
+            "This expression has type {}, expect {}",
+            "Type of operator {} is {}",
+            0x0003);
+        })
+        .unwrap();
 
-    if (!functionType)
-      panic("Typecheck failed: cannot find the operator declaration `{}`",
-            operatorName);
+    type::Type::Ptr rightType =
+      Right->typecheck(typeManager, typeEnvironment)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            Right->Location,
+            "Type mismatch",
+            "This expression has type {}, expect {}",
+            "Type of operator {} is {}",
+            0x0003);
+        })
+        .unwrap();
+
+    type::Type::Ptr functionType =
+      typeEnvironment.lookup(operatorName)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            Location,
+            std::format("{} was not declared", operatorName),
+            "The definition of this operator cannot be found in the context",
+            "Operator is undefined",
+            0x0004);
+        })
+        .unwrap();
 
     type::Type::Ptr returnType = typeManager.newType();
     type::Type::Ptr arrowOne =
@@ -97,29 +142,82 @@ namespace swallow::ast
     type::Type::Ptr arrowTwo =
       type::Type::Ptr(new type::Arrow(leftType, arrowOne));
 
-    typeManager.unify(arrowTwo, functionType);
-    return returnType;
+    typeManager.unify(arrowTwo, functionType)
+      .or_else([&](const auto & err) {
+        return diagnostics::Reporter::REPORTER->normal(
+          Location,
+          std::format("Type inference failed for {}", operatorName),
+          "The type of this expression cannot be unified",
+          "No more information",
+          0x0005);
+      })
+      .unwrap();
+
+    return Ok(returnType);
   }
 
-  type::Type::Ptr Application::typecheck(
+  Result<type::Type::Ptr, Void> Application::typecheck(
     type::Manager & typeManager,
     const type::Environment & typeEnvironment) const noexcept
   {
-    type::Type::Ptr leftType = Left->typecheck(typeManager, typeEnvironment);
-    type::Type::Ptr rightType = Right->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr leftType =
+      Left->typecheck(typeManager, typeEnvironment)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            Left->Location,
+            "Type mismatch",
+            "This expression has type {}, expect {}",
+            "No more information",
+            0x0003);
+        })
+        .unwrap();
+
+    type::Type::Ptr rightType =
+      Right->typecheck(typeManager, typeEnvironment)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            Right->Location,
+            "Type mismatch",
+            "This expression has type {}, expect {}",
+            "No more information",
+            0x0003);
+        })
+        .unwrap();
+
     type::Type::Ptr returnType = typeManager.newType();
     type::Type::Ptr arrowType =
       type::Type::Ptr(new type::Arrow(rightType, returnType));
 
-    typeManager.unify(arrowType, leftType);
-    return returnType;
+    typeManager.unify(arrowType, leftType)
+      .or_else([&](const auto & err) {
+        return diagnostics::Reporter::REPORTER->normal(
+          Location,
+          "Type inference failed",
+          "The type of this expression cannot be unified",
+          "No more information",
+          0x0005);
+      })
+      .unwrap();
+
+    return Ok(returnType);
   }
 
-  type::Type::Ptr
+  Result<type::Type::Ptr, Void>
   Match::typecheck(type::Manager & typeManager,
                    const type::Environment & typeEnvironment) const noexcept
   {
-    type::Type::Ptr matchType = With->typecheck(typeManager, typeEnvironment);
+    type::Type::Ptr matchType =
+      With->typecheck(typeManager, typeEnvironment)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            With->Location,
+            "Type mismatch",
+            "Cannot use pattern matching on this expression",
+            "No more information",
+            0x0003);
+        })
+        .unwrap();
+    ;
     type::Type::Ptr branchType = typeManager.newType();
 
     for (auto & branch : Branches)
@@ -128,11 +226,31 @@ namespace swallow::ast
         branch->Patt->match(matchType, typeManager, newEnvironment);
 
         type::Type::Ptr currentBranchType =
-          branch->Expr->typecheck(typeManager, newEnvironment);
-        typeManager.unify(branchType, currentBranchType);
+          branch->Expr->typecheck(typeManager, newEnvironment)
+            .or_else([&](const auto & err) {
+              return diagnostics::Reporter::REPORTER->normal(
+                branch->Location,
+                "Type mismatch",
+                "This expression has type {}, expect {}",
+                "The return type of all branches of the pattern match must be "
+                "the same",
+                0x0003);
+            })
+            .unwrap();
+
+        typeManager.unify(branchType, currentBranchType)
+          .or_else([&](const auto & err) {
+            return diagnostics::Reporter::REPORTER->normal(
+              Location,
+              "Type inference failed",
+              "The type of this expression cannot be unified",
+              "No more information",
+              0x0005);
+          })
+          .unwrap();
       }
 
-    return branchType;
+    return Ok(branchType);
   }
 
   void
@@ -148,28 +266,53 @@ namespace swallow::ast
                             type::Manager & typeManager,
                             type::Environment & typeEnvironment) const noexcept
   {
-    type::Type::Ptr constructorType = typeEnvironment.lookup(Constructor);
-
-    if (!constructorType)
-      panic("type checking failed: no declartion of constructor '{}'",
-            Constructor);
+    type::Type::Ptr constructorType =
+      typeEnvironment.lookup(Constructor)
+        .or_else([&](const auto & err) {
+          return diagnostics::Reporter::REPORTER->normal(
+            Location,
+            std::format("{} was not declared", Constructor),
+            "The definition of this constructor cannot be found in the context",
+            "Constructor is undefined",
+            0x0002);
+        })
+        .unwrap();
 
     std::for_each(Params.begin(), Params.end(), [&](const std::string & param) {
-      type::Arrow * arrow = dynamic_cast<type::Arrow *>(constructorType.get());
+      auto * arrow = dynamic_cast<type::Arrow *>(constructorType.get());
 
       if (!arrow)
-        panic("type checking failed: constructor '{}' must be a function type",
-              Constructor);
+        diagnostics::Reporter::REPORTER->normal(
+          Location,
+          "Type mismatch",
+          "This identifier is not a constructor",
+          "Constructor must be a function type",
+          0x0003);
 
       typeEnvironment.bind(param, arrow->Left);
       constructorType = arrow->Right;
     });
 
-    typeManager.unify(type, constructorType);
+    typeManager.unify(type, constructorType)
+      .or_else([&](const auto & err) {
+        return diagnostics::Reporter::REPORTER->normal(
+          Location,
+          "Type inference failed",
+          "The type of this expression cannot be unified",
+          "No more information",
+          0x0005);
+      })
+      .unwrap();
+
     if (const auto resultType =
           dynamic_cast<type::Base *>(constructorType.get());
         !resultType)
-      panic("type checking failed: return value is not unique");
+      diagnostics::Reporter::REPORTER->normal(
+        Location,
+        "Type inference failed",
+        "Unable to infer return value type",
+        "Constructor must be a function type",
+        0x0005);
   }
 
   void Fn::scanDefinitionType(type::Manager & typeManager,
@@ -204,7 +347,27 @@ namespace swallow::ast
         typeIterator++;
       }
 
-    typeManager.unify(ReturnType, Body->typecheck(typeManager, newEnvironment));
+    typeManager
+      .unify(ReturnType,
+             Body->typecheck(typeManager, newEnvironment)
+               .or_else([&](const auto & err) {
+                 return diagnostics::Reporter::REPORTER->normal(
+                   Location,
+                   "Type mismatch",
+                   "This function has type {}, expect {}",
+                   "Final type of function body does not match expected",
+                   0x0003);
+               })
+               .unwrap())
+      .or_else([&](const auto & err) {
+        return diagnostics::Reporter::REPORTER->normal(
+          Location,
+          "Type inference failed",
+          "The type of this expression cannot be unified",
+          "No more information",
+          0x0003);
+      })
+      .unwrap();
   }
 
   void Data::scanDefinitionType(type::Manager & typeManager,
@@ -226,19 +389,18 @@ namespace swallow::ast
                        const type::Environment & typeEnvironment) const noexcept
   {}
 
-} // namespace swallow::ast
+} // namespace swallow::compiler::ast
 
-namespace swallow::type
+namespace swallow::compiler::type
 {
   void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept
   {
-    type::Manager typeManager;
-    type::Environment typeEnvironment;
+    Manager typeManager;
+    Environment typeEnvironment;
 
-    auto intType = type::Type::Ptr(new type::Base("Int"));
-    auto binopType = type::Type::Ptr(
-      new type::Arrow(intType,
-                      type::Type::Ptr(new type::Arrow(intType, intType))));
+    auto intType = Type::Ptr(new Base("Int"));
+    auto binopType = Type::Ptr(
+      new Arrow(intType, Type::Ptr(new type::Arrow(intType, intType))));
 
     typeEnvironment.bind("+", binopType);
     typeEnvironment.bind("-", binopType);
@@ -251,4 +413,4 @@ namespace swallow::type
     for (const auto & definition : program)
       definition->typecheck(typeManager, typeEnvironment);
   }
-} // namespace swallow::type
+} // namespace swallow::compiler::type

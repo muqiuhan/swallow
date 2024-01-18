@@ -32,13 +32,14 @@
 
 #include "environment.h"
 #include "location.hh"
+#include "result/result.hpp"
 #include "type.h"
 #include "type.hpp"
 #include <memory>
 #include <string>
 #include <vector>
 
-namespace swallow::ast
+namespace swallow::compiler::ast
 {
   class AST
   {
@@ -52,7 +53,7 @@ namespace swallow::ast
     {}
     virtual ~AST() = default;
 
-    virtual type::Type::Ptr
+    virtual utils::Result<type::Type::Ptr, utils::Void>
     typecheck(type::Manager & typeManager,
               const type::Environment & typeEnvironment) const noexcept = 0;
   };
@@ -138,7 +139,7 @@ namespace swallow::ast
       , AST(Location)
     {}
 
-    virtual type::Type::Ptr typecheck(
+    utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -153,7 +154,7 @@ namespace swallow::ast
       , AST(Location)
     {}
 
-    virtual type::Type::Ptr typecheck(
+    utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -168,7 +169,7 @@ namespace swallow::ast
       , AST(Location)
     {}
 
-    virtual type::Type::Ptr typecheck(
+    utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -197,9 +198,10 @@ namespace swallow::ast
       , AST(Location)
     {}
 
-    static std::string operatorsToString(const Operators op) noexcept;
+    static utils::Result<std::string, utils::Void>
+    operatorsToString(const Operators & op) noexcept;
 
-    virtual type::Type::Ptr typecheck(
+    utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -216,7 +218,7 @@ namespace swallow::ast
       , AST(Location)
     {}
 
-    virtual type::Type::Ptr typecheck(
+    utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -233,7 +235,7 @@ namespace swallow::ast
       , AST(Location)
     {}
 
-    virtual type::Type::Ptr typecheck(
+    utils::Result<type::Type::Ptr, utils::Void> typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -267,10 +269,9 @@ namespace swallow::ast
       , Pattern(Location)
     {}
 
-    virtual void
-    match(type::Type::Ptr type,
-          type::Manager & typeManager,
-          type::Environment & typeEnvironment) const noexcept override;
+    void match(type::Type::Ptr type,
+               type::Manager & typeManager,
+               type::Environment & typeEnvironment) const noexcept override;
   };
 
   class Fn final : public Definition
@@ -293,10 +294,10 @@ namespace swallow::ast
       , Definition(Location)
     {}
 
-    virtual void
+    void
     scanDefinitionType(type::Manager & typeManager,
                        type::Environment & typeEnvironment) noexcept override;
-    virtual void typecheck(
+    void typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
@@ -315,20 +316,20 @@ namespace swallow::ast
       , Definition(Location)
     {}
 
-    virtual void
+    void
     scanDefinitionType(type::Manager & typeManager,
                        type::Environment & typeEnvironment) noexcept override;
-    virtual void typecheck(
+    void typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
   };
-} // namespace swallow::ast
+} // namespace swallow::compiler::ast
 
-namespace swallow::type
+namespace swallow::compiler::type
 {
 
   void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept;
 
-} // namespace swallow::type
+} // namespace swallow::compiler::type
 
 #endif

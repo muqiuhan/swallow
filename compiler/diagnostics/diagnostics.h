@@ -18,7 +18,7 @@
 
 #define assertm(exp, msg) assert(((void)msg, exp))
 
-namespace swallow::diagnostics
+namespace swallow::compiler::diagnostics
 {
 
   enum class ReportType
@@ -274,6 +274,6 @@ namespace swallow::diagnostics
     std::vector<Label> labels_;
   };
 
-} // namespace swallow::diagnostics
+} // namespace swallow::compiler::diagnostics
 
 #endif // PRETTY_ERRORS_LIBRARY_H

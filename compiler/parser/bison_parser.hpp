@@ -47,7 +47,7 @@
 #line 13 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
 
 #include "ast.h"
-using namespace swallow::ast;
+using namespace swallow::compiler::ast;
 
 #line 54 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
