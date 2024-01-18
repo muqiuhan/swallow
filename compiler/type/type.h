@@ -56,9 +56,7 @@ namespace swallow::compiler::type
   public:
     const std::string Name;
 
-    explicit Variable(std::string Name)
-      : Name(std::move(Name))
-    {}
+    explicit Variable(std::string Name) : Name(std::move(Name)) {}
 
     void dump(const Manager & typeManager,
               std::ostream & to) const noexcept override;
@@ -69,9 +67,7 @@ namespace swallow::compiler::type
   public:
     const std::string Name;
 
-    explicit Base(std::string Name)
-      : Name(std::move(Name))
-    {}
+    explicit Base(std::string Name) : Name(std::move(Name)) {}
 
     void dump(const Manager & typeManager,
               std::ostream & to) const noexcept override;
@@ -83,9 +79,7 @@ namespace swallow::compiler::type
     const Ptr Left;
     const Ptr Right;
 
-    Arrow(Ptr Left, Ptr Right)
-      : Left(std::move(Left))
-      , Right(std::move(Right))
+    Arrow(Ptr Left, Ptr Right) : Left(std::move(Left)), Right(std::move(Right))
     {}
 
     void dump(const Manager & typeManager,

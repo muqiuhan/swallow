@@ -60,9 +60,9 @@ namespace swallow::compiler::type
     return Type::Ptr(new Arrow(newType(), newType()));
   }
 
-  Type::Ptr Manager::resolve(Type::Ptr type, Variable *& var) noexcept
+  Type::Ptr Manager::resolve(Type::Ptr type, Variable *&var) noexcept
   {
-    Variable * cast;
+    Variable *cast;
     var = nullptr;
 
     while ((cast = dynamic_cast<Variable *>(type.get())))
@@ -81,8 +81,8 @@ namespace swallow::compiler::type
 
   Result<Void, Void> Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
   {
-    Variable * leftVar;
-    Variable * rightVar;
+    Variable *leftVar;
+    Variable *rightVar;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
@@ -99,17 +99,17 @@ namespace swallow::compiler::type
         return Ok(Void());
       }
 
-    else if (auto * leftArrow = dynamic_cast<Arrow *>(left.get()),
+    else if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
              *rightArrow = dynamic_cast<Arrow *>(right.get());
              leftArrow && rightArrow)
       {
         return unify(leftArrow->Left, rightArrow->Left)
-          .and_then([&](const auto & ok) {
+          .and_then([&](const auto &ok) {
             return unify(leftArrow->Right, rightArrow->Right);
           });
       }
 
-    else if (auto * leftID = dynamic_cast<Base *>(left.get()),
+    else if (auto *leftID = dynamic_cast<Base *>(left.get()),
              *rightID = dynamic_cast<Base *>(right.get());
              leftID && rightID)
       {
@@ -120,9 +120,9 @@ namespace swallow::compiler::type
     return Err(Void());
   }
 
-  void Manager::bind(const std::string & name, const Type::Ptr & type) noexcept
+  void Manager::bind(const std::string &name, const Type::Ptr &type) noexcept
   {
-    if (auto * other = dynamic_cast<const Variable *>(type.get());
+    if (auto *other = dynamic_cast<const Variable *>(type.get());
         other && other->Name == name)
       return;
     Types[name] = type;

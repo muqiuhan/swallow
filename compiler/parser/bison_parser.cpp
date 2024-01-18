@@ -150,8 +150,7 @@ namespace yy
   /// Build a parser object.
   parser::parser()
 #if YYDEBUG
-    : yydebug_(false)
-    , yycdebug_(&std::cerr)
+    : yydebug_(false), yycdebug_(&std::cerr)
 #else
 
 #endif
@@ -168,13 +167,13 @@ namespace yy
   // by_state.
   parser::by_state::by_state() YY_NOEXCEPT : state(empty_state) {}
 
-  parser::by_state::by_state(const by_state & that) YY_NOEXCEPT
+  parser::by_state::by_state(const by_state& that) YY_NOEXCEPT
     : state(that.state)
   {}
 
   void parser::by_state::clear() YY_NOEXCEPT { state = empty_state; }
 
-  void parser::by_state::move(by_state & that)
+  void parser::by_state::move(by_state& that)
   {
     state = that.state;
     that.clear();
@@ -330,8 +329,8 @@ namespace yy
   }
 
 #if YY_CPLUSPLUS < 201103L
-  parser::stack_symbol_type &
-  parser::stack_symbol_type::operator=(const stack_symbol_type & that)
+  parser::stack_symbol_type&
+    parser::stack_symbol_type::operator=(const stack_symbol_type& that)
   {
     state = that.state;
     switch (that.kind())
@@ -397,8 +396,8 @@ namespace yy
     return *this;
   }
 
-  parser::stack_symbol_type &
-  parser::stack_symbol_type::operator=(stack_symbol_type & that)
+  parser::stack_symbol_type&
+    parser::stack_symbol_type::operator=(stack_symbol_type& that)
   {
     state = that.state;
     switch (that.kind())
@@ -468,7 +467,7 @@ namespace yy
 #endif
 
   template <typename Base>
-  void parser::yy_destroy_(const char * yymsg, basic_symbol<Base> & yysym) const
+  void parser::yy_destroy_(const char* yymsg, basic_symbol<Base>& yysym) const
   {
     if (yymsg)
       YY_SYMBOL_PRINT(yymsg, yysym);
@@ -476,10 +475,10 @@ namespace yy
 
 #if YYDEBUG
   template <typename Base>
-  void parser::yy_print_(std::ostream & yyo,
-                         const basic_symbol<Base> & yysym) const
+  void parser::yy_print_(std::ostream& yyo,
+                         const basic_symbol<Base>& yysym) const
   {
-    std::ostream & yyoutput = yyo;
+    std::ostream& yyoutput = yyo;
     YY_USE(yyoutput);
     if (yysym.empty())
       yyo << "empty symbol";
@@ -494,7 +493,7 @@ namespace yy
   }
 #endif
 
-  void parser::yypush_(const char * m, YY_MOVE_REF(stack_symbol_type) sym)
+  void parser::yypush_(const char* m, YY_MOVE_REF(stack_symbol_type) sym)
   {
     if (m)
       YY_SYMBOL_PRINT(m, sym);
@@ -502,7 +501,7 @@ namespace yy
   }
 
   void
-  parser::yypush_(const char * m, state_type s, YY_MOVE_REF(symbol_type) sym)
+    parser::yypush_(const char* m, state_type s, YY_MOVE_REF(symbol_type) sym)
   {
 #if 201103L <= YY_CPLUSPLUS
     yypush_(m, stack_symbol_type(s, std::move(sym)));
@@ -515,9 +514,9 @@ namespace yy
   void parser::yypop_(int n) YY_NOEXCEPT { yystack_.pop(n); }
 
 #if YYDEBUG
-  std::ostream & parser::debug_stream() const { return *yycdebug_; }
+  std::ostream& parser::debug_stream() const { return *yycdebug_; }
 
-  void parser::set_debug_stream(std::ostream & o) { yycdebug_ = &o; }
+  void parser::set_debug_stream(std::ostream& o) { yycdebug_ = &o; }
 
   parser::debug_level_type parser::debug_level() const { return yydebug_; }
 
@@ -611,7 +610,7 @@ namespace yy
                 yyla.move(yylookahead);
               }
 #if YY_EXCEPTIONS
-            catch (const syntax_error & yyexc)
+            catch (const syntax_error& yyexc)
               {
                 YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
                 error(yyexc);
@@ -1124,7 +1123,7 @@ namespace yy
                 }
             }
 #if YY_EXCEPTIONS
-          catch (const syntax_error & yyexc)
+          catch (const syntax_error& yyexc)
             {
               YYCDEBUG << "Caught exception: " << yyexc.what() << '\n';
               error(yyexc);
@@ -1282,13 +1281,13 @@ namespace yy
 #endif // YY_EXCEPTIONS
   }
 
-  void parser::error(const syntax_error & yyexc)
+  void parser::error(const syntax_error& yyexc)
   {
     error(yyexc.location, yyexc.what());
   }
 
 #if YYDEBUG || 0
-  const char * parser::symbol_name(symbol_kind_type yysymbol)
+  const char* parser::symbol_name(symbol_kind_type yysymbol)
   {
     return yytname_[yysymbol];
   }
@@ -1303,109 +1302,101 @@ namespace yy
     -32, -1,  17,  27, 29, -32, 19,  -32, 33, -32, 26,  -32, 17, -5,
     -32, -32, -32, -5, -5, -32, -32, 7,   23, -5,  -32, -32, 21, 1,
     -5,  -5,  -32, -5, -5, -32, 34,  -32, 23, 23,  -5,  -5,  31, 16,
-    15,  -32, -32, 10, 32, -32, -32, 36,  43, -5,  8,   -32
-  };
+    15,  -32, -32, 10, 32, -32, -32, 36,  43, -5,  8,   -32};
 
   const signed char parser::yydefact_[] = {
     0,  0,  0,  0,  2,  4,  5,  6,  0,  0, 1,  3,  8,  0,  9, 0,  0,
     0,  0,  11, 0,  34, 0,  10, 35, 32, 0, 0,  12, 33, 21, 0, 0,  22,
     23, 0,  15, 18, 20, 25, 0,  0,  0,  0, 7,  0,  0,  19, 0, 24, 13,
-    14, 16, 17, 0,  0,  0,  28, 30, 8,  0, 26, 27, 31, 0,  0, 0,  29
-  };
+    14, 16, 17, 0,  0,  0,  28, 30, 8,  0, 26, 27, 31, 0,  0, 0,  29};
 
-  const signed char parser::yypgoto_[] = { -32, -32, -32, 52,  -32, -2,
-                                           -32, -31, 0,   2,   -30, -32,
-                                           -32, 3,   -32, -32, -32, 35 };
+  const signed char parser::yypgoto_[] = {-32, -32, -32, 52,  -32, -2,
+                                          -32, -31, 0,   2,   -30, -32,
+                                          -32, 3,   -32, -32, -32, 35};
 
-  const signed char parser::yydefgoto_[] = {
-    0, 3, 4, 5, 6, 15, 24, 35, 36, 37, 38, 39, 56, 57, 60, 7, 20, 21
-  };
+  const signed char parser::yydefgoto_[] = {0,  3,  4,  5,  6,  15, 24, 35, 36,
+                                            37, 38, 39, 56, 57, 60, 7,  20, 21};
 
   const signed char parser::yytable_[] = {
     40, 41, 30, 8,  42, 31, 43, 47, 9,  32, 42, 42, 43, 43, 17, 13,
     49, 18, 33, 34, 44, 67, 47, 47, 42, 10, 43, 45, 61, 46, 1,  2,
     48, 14, 66, 55, 25, 26, 12, 58, 59, 19, 50, 51, 16, 27, 54, 52,
-    53, 22, 28, 55, 23, 64, 18, 65, 11, 63, 0,  62, 0,  29
-  };
+    53, 22, 28, 55, 23, 64, 18, 65, 11, 63, 0,  62, 0,  29};
 
   const signed char parser::yycheck_[] = {
     31, 32, 7,  23, 3,  10, 5,  37, 24, 14, 3,  3,  5,  5,  15, 22,
     15, 18, 23, 24, 13, 13, 52, 53, 3,  0,  5,  4,  13, 6,  8,  9,
     11, 23, 65, 20, 17, 18, 14, 23, 24, 24, 42, 43, 16, 12, 12, 45,
-    46, 22, 24, 20, 23, 21, 18, 12, 4,  59, -1, 56, -1, 26
-  };
+    46, 22, 24, 20, 23, 21, 18, 12, 4,  59, -1, 56, -1, 26};
 
   const signed char parser::yystos_[] = {
     0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 14, 22, 23, 30, 16,
     15, 18, 24, 41, 42, 22, 23, 31, 17, 18, 12, 24, 42, 7,  10, 14, 23,
     24, 32, 33, 34, 35, 36, 32, 32, 3,  5,  13, 4,  6,  35, 11, 15, 33,
-    33, 34, 34, 12, 20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13
-  };
+    33, 34, 34, 12, 20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13};
 
-  const signed char parser::yyr1_[] = { 0,  25, 26, 27, 27, 28, 28, 29, 30,
-                                        30, 30, 31, 31, 32, 32, 32, 33, 33,
-                                        33, 34, 34, 35, 35, 35, 35, 35, 36,
-                                        37, 37, 38, 39, 39, 40, 41, 41, 42 };
+  const signed char parser::yyr1_[] = {
+    0,  25, 26, 27, 27, 28, 28, 29, 30, 30, 30, 31, 31, 32, 32, 32, 33, 33,
+    33, 34, 34, 35, 35, 35, 35, 35, 36, 37, 37, 38, 39, 39, 40, 41, 41, 42};
 
-  const signed char parser::yyr2_[] = { 0, 2, 1, 2, 1, 1, 1, 9, 0, 1, 3, 0,
-                                        2, 3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1,
-                                        3, 1, 6, 2, 1, 6, 1, 2, 6, 3, 1, 2 };
+  const signed char parser::yyr2_[] = {0, 2, 1, 2, 1, 1, 1, 9, 0, 1, 3, 0,
+                                       2, 3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1,
+                                       3, 1, 6, 2, 1, 6, 1, 2, 6, 3, 1, 2};
 
 #if YYDEBUG
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
   // First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
-  const char * const parser::yytname_[] = { "\"end of file\"",
-                                            "error",
-                                            "\"invalid token\"",
-                                            "PLUS",
-                                            "TIMES",
-                                            "MINUS",
-                                            "DIVIDE",
-                                            "INT",
-                                            "FN",
-                                            "DATA",
-                                            "MATCH",
-                                            "WITH",
-                                            "OCURLY",
-                                            "CCURLY",
-                                            "OPAREN",
-                                            "CPAREN",
-                                            "OBRACKET",
-                                            "CBRACKET",
-                                            "COMMA",
-                                            "ARROW",
-                                            "VERTIAL",
-                                            "DOUBLEARROW",
-                                            "EQUAL",
-                                            "LID",
-                                            "UID",
-                                            "$accept",
-                                            "Program",
-                                            "Definitions",
-                                            "Definition",
-                                            "Fn",
-                                            "LowercaseParams",
-                                            "UppercaseParams",
-                                            "Add",
-                                            "Mul",
-                                            "Application",
-                                            "ApplicationBase",
-                                            "Match",
-                                            "Branches",
-                                            "Branch",
-                                            "Pattern",
-                                            "Data",
-                                            "Constructors",
-                                            "Constructor",
-                                            YY_NULLPTR };
+  const char* const parser::yytname_[] = {"\"end of file\"",
+                                          "error",
+                                          "\"invalid token\"",
+                                          "PLUS",
+                                          "TIMES",
+                                          "MINUS",
+                                          "DIVIDE",
+                                          "INT",
+                                          "FN",
+                                          "DATA",
+                                          "MATCH",
+                                          "WITH",
+                                          "OCURLY",
+                                          "CCURLY",
+                                          "OPAREN",
+                                          "CPAREN",
+                                          "OBRACKET",
+                                          "CBRACKET",
+                                          "COMMA",
+                                          "ARROW",
+                                          "VERTIAL",
+                                          "DOUBLEARROW",
+                                          "EQUAL",
+                                          "LID",
+                                          "UID",
+                                          "$accept",
+                                          "Program",
+                                          "Definitions",
+                                          "Definition",
+                                          "Fn",
+                                          "LowercaseParams",
+                                          "UppercaseParams",
+                                          "Add",
+                                          "Mul",
+                                          "Application",
+                                          "ApplicationBase",
+                                          "Match",
+                                          "Branches",
+                                          "Branch",
+                                          "Pattern",
+                                          "Data",
+                                          "Constructors",
+                                          "Constructor",
+                                          YY_NULLPTR};
 #endif
 
 #if YYDEBUG
   const unsigned char parser::yyrline_[] = {
     0,   62,  62,  66,  67,  71,  72,  76,  82,  83,  84,  88,
     89,  93,  94,  95,  99,  100, 101, 105, 106, 110, 111, 112,
-    113, 114, 118, 123, 124, 128, 133, 134, 139, 144, 145, 150
-  };
+    113, 114, 118, 123, 124, 128, 133, 134, 139, 144, 145, 150};
 
   void parser::yy_stack_print_() const
   {

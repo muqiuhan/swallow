@@ -29,6 +29,7 @@
 
 #include "parser.h"
 #include "bison_parser.hpp"
+#include "code.hpp"
 #include "compiler.h"
 #include "location.hh"
 #include "panic/panic.hpp"
@@ -38,14 +39,14 @@
 namespace yy
 {
 
-  void parser::error(const location_type & loc, const std::string & msg)
+  void parser::error(const location_type &loc, const std::string &msg)
   {
     swallow::compiler::diagnostics::Reporter::REPORTER->normal(
-      location{ loc.begin, loc.begin },
+      location{loc.begin, loc.begin},
       "Syntax error",
       "There is a syntax problem here",
       "No more information",
-      0x0001);
+      swallow::compiler::diagnostics::Code::PARSING);
   }
 
 } // namespace yy
@@ -57,10 +58,9 @@ extern FILE *yyin, *yyout;
 namespace swallow::compiler::parser
 {
 
-  std::vector<ast::Definition::Ptr> & parse() noexcept
+  std::vector<ast::Definition::Ptr> &parse() noexcept
   {
-    FILE * file =
-      std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
+    FILE *file = std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
 
     if (!file)
       utils::panic("Cannot open file {}",

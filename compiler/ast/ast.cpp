@@ -42,7 +42,7 @@ using namespace swallow::utils;
 namespace swallow::compiler::ast
 {
   Result<std::string, Void>
-  Binop::operatorsToString(const Operators & op) noexcept
+    Binop::operatorsToString(const Operators &op) noexcept
   {
     switch (op)
       {
@@ -59,26 +59,26 @@ namespace swallow::compiler::ast
     return Err(Void());
   }
 
-  void dump(const std::vector<Definition::Ptr> & Program) noexcept
+  void dump(const std::vector<Definition::Ptr> &Program) noexcept
   {
-    for (const auto & definition : Program)
+    for (const auto &definition : Program)
       {
-        Fn * fn = dynamic_cast<Fn *>(definition.get());
+        Fn *fn = dynamic_cast<Fn *>(definition.get());
 
         if (!fn)
           continue;
-        for (const auto & param : fn->Params)
+        for (const auto &param : fn->Params)
           std::cout << " " << param;
 
         std::cout << ":" << std::endl;
-        fn->Body->print(1, std::cout);
+        fn->Body->dump(1, std::cout);
       }
   }
 } // namespace swallow::compiler::ast
 
 namespace swallow::compiler::type
 {
-  void typecheck(const std::vector<ast::Definition::Ptr> & program) noexcept
+  void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept
   {
     Manager typeManager;
     Environment typeEnvironment;
@@ -92,10 +92,10 @@ namespace swallow::compiler::type
     typeEnvironment.bind("*", binopType);
     typeEnvironment.bind("/", binopType);
 
-    for (const auto & definition : program)
+    for (const auto &definition : program)
       definition->scanDefinitionType(typeManager, typeEnvironment);
 
-    for (const auto & definition : program)
+    for (const auto &definition : program)
       definition->typecheck(typeManager, typeEnvironment);
   }
 } // namespace swallow::compiler::type
