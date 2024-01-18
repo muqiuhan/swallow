@@ -1,4 +1,4 @@
-data List = [ Nil, Cons Int List ]
+data List = [ Cons Int List ]
 
 let main argv = {
   match argv with {

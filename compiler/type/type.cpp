@@ -33,7 +33,7 @@
 
 using namespace swallow::utils;
 
-namespace swallow::type
+namespace swallow::compiler::type
 {
   std::string Manager::newTypeName() noexcept
   {
@@ -79,7 +79,7 @@ namespace swallow::type
     return type;
   }
 
-  void Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
+  Result<Void, Void> Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
   {
     Variable * leftVar;
     Variable * rightVar;
@@ -90,29 +90,33 @@ namespace swallow::type
     if (leftVar)
       {
         bind(leftVar->Name, right);
+        return Ok(Void());
       }
-    else if (rightVar)
+
+    if (rightVar)
       {
         bind(rightVar->Name, left);
+        return Ok(Void());
       }
-    else if (auto * leftArrow = dynamic_cast<Arrow *>(left.get()),
-             *rightArrow = dynamic_cast<Arrow *>(right.get());
-             leftArrow && rightArrow)
+
+    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
+        *rightArrow = dynamic_cast<Arrow *>(right.get());
+        leftArrow && rightArrow)
       {
         unify(leftArrow->Left, rightArrow->Left);
         unify(leftArrow->Right, rightArrow->Right);
+        return Ok(Void());
       }
-    else if (auto * leftID = dynamic_cast<Base *>(left.get()),
-             *rightID = dynamic_cast<Base *>(right.get());
-             leftID && rightID)
+
+    if (auto *leftID = dynamic_cast<Base *>(left.get()),
+        *rightID = dynamic_cast<Base *>(right.get());
+        leftID && rightID)
       {
         if (leftID->Name == rightID->Name)
-          return;
+          return Ok(Void());
       }
-    else
-      {
-        panic("type checking failed: unification failed");
-      }
+
+    return Err(Void());
   }
 
   void Manager::bind(const std::string & name, const Type::Ptr & type) noexcept
@@ -123,4 +127,4 @@ namespace swallow::type
     Types[name] = type;
   }
 
-} // namespace swallow::type
+} // namespace swallow::compiler::type

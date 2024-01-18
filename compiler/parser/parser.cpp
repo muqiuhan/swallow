@@ -41,14 +41,14 @@ namespace yy
 
 } // namespace yy
 
-extern std::vector<swallow::ast::Definition::Ptr> Program;
+extern std::vector<swallow::compiler::ast::Definition::Ptr> Program;
 
 extern FILE *yyin, *yyout;
 
 namespace swallow::compiler::parser
 {
 
-  std::vector<swallow::ast::Definition::Ptr> & parse() noexcept
+  std::vector<ast::Definition::Ptr> & parse() noexcept
   {
     FILE * file =
       std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
@@ -57,10 +57,8 @@ namespace swallow::compiler::parser
       utils::panic("Cannot open file {}",
                    compiler::CompileUnit::FILE->FilePath);
 
-    ParserReporter::REPORTER = new ParserReporter();
     yyin = file;
     yy::parser().parse();
-    delete ParserReporter::REPORTER;
 
     fclose(file);
     return Program;

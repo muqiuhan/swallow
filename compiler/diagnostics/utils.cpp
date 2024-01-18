@@ -29,7 +29,7 @@
 
 #include "utils.h"
 
-namespace swallow::diagnostics
+namespace swallow::compiler::diagnostics
 {
   std::string repeat_string(const std::string & input, size_t amount)
   {
@@ -39,4 +39,4 @@ namespace swallow::diagnostics
 
     return output;
   }
-} // namespace swallow::diagnostics
+} // namespace swallow::compiler::diagnostics

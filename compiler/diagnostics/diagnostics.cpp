@@ -38,7 +38,7 @@
 
 #include "utils.h"
 
-namespace swallow::diagnostics
+namespace swallow::compiler::diagnostics
 {
 
 #define DISPLAYED_LINE_PADDING 1
@@ -902,4 +902,4 @@ namespace swallow::diagnostics
              this->labels_,
              this->note_ };
   }
-} // namespace swallow::diagnostics
+} // namespace swallow::compiler::diagnostics
