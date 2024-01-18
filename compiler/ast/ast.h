@@ -124,6 +124,7 @@ namespace swallow::compiler::ast
     virtual void
     scanDefinitionType(type::Manager & typeManager,
                        type::Environment & typeEnvironment) noexcept = 0;
+
     virtual void
     typecheck(type::Manager & typeManager,
               const type::Environment & typeEnvironment) const noexcept = 0;
@@ -297,6 +298,7 @@ namespace swallow::compiler::ast
     void
     scanDefinitionType(type::Manager & typeManager,
                        type::Environment & typeEnvironment) noexcept override;
+
     void typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;
@@ -319,6 +321,7 @@ namespace swallow::compiler::ast
     void
     scanDefinitionType(type::Manager & typeManager,
                        type::Environment & typeEnvironment) noexcept override;
+
     void typecheck(
       type::Manager & typeManager,
       const type::Environment & typeEnvironment) const noexcept override;

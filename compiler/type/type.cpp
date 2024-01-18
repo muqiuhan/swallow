@@ -93,24 +93,25 @@ namespace swallow::compiler::type
         return Ok(Void());
       }
 
-    if (rightVar)
+    else if (rightVar)
       {
         bind(rightVar->Name, left);
         return Ok(Void());
       }
 
-    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
-        *rightArrow = dynamic_cast<Arrow *>(right.get());
-        leftArrow && rightArrow)
+    else if (auto * leftArrow = dynamic_cast<Arrow *>(left.get()),
+             *rightArrow = dynamic_cast<Arrow *>(right.get());
+             leftArrow && rightArrow)
       {
-        unify(leftArrow->Left, rightArrow->Left);
-        unify(leftArrow->Right, rightArrow->Right);
-        return Ok(Void());
+        return unify(leftArrow->Left, rightArrow->Left)
+          .and_then([&](const auto & ok) {
+            return unify(leftArrow->Right, rightArrow->Right);
+          });
       }
 
-    if (auto *leftID = dynamic_cast<Base *>(left.get()),
-        *rightID = dynamic_cast<Base *>(right.get());
-        leftID && rightID)
+    else if (auto * leftID = dynamic_cast<Base *>(left.get()),
+             *rightID = dynamic_cast<Base *>(right.get());
+             leftID && rightID)
       {
         if (leftID->Name == rightID->Name)
           return Ok(Void());
