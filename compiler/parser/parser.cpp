@@ -57,10 +57,8 @@ namespace swallow::compiler::parser
       utils::panic("Cannot open file {}",
                    compiler::CompileUnit::FILE->FilePath);
 
-    diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
     yyin = file;
     yy::parser().parse();
-    delete diagnostics::Reporter::REPORTER;
 
     fclose(file);
     return Program;

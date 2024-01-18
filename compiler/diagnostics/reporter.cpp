@@ -1,5 +1,6 @@
 #include "reporter.h"
 #include "panic/panic.hpp"
+#include <cstdlib>
 
 using namespace swallow::utils;
 
@@ -17,21 +18,17 @@ namespace swallow::compiler::diagnostics
       .with_type(ReportType::ERROR)
       .with_message(msg)
       .with_code(code)
-      .add_label(LabelBuilder()
-                   .with_message(labelMsg)
-                   .with_span({ &Detail, loc.begin.column, loc.end.column - 1 })
-                   .with_color(ColorType::RED)
-                   .build())
+      .add_label(
+        LabelBuilder()
+          .with_message(labelMsg)
+          .with_span({ &Detail, loc.begin.column - 1, loc.end.column - 1 })
+          .with_color(ColorType::RED)
+          .build())
       .with_note(note)
       .build()
       .print(std::cout);
 
-    utils::panic("Parse failed at ({}:{}) ({}:{})",
-                 loc.begin.line,
-                 loc.begin.column,
-                 loc.end.line,
-                 loc.end.column);
-
+    exit(EXIT_FAILURE);
     return { Void() };
   }
 

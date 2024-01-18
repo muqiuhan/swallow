@@ -330,43 +330,6 @@ namespace swallow::compiler::diagnostics
     for (auto index = 0u; index < this->line_spans_.size(); index++)
       {
         const auto & span = this->line_spans_.at(index);
-        /* clang-format off
-         03:52:27 muqiuhan@muqiuhan swallow ±|main ✗|→ lldb ./build/linux/x86_64/debug/swc -- example/list.sw
-(lldb) target create "./build/linux/x86_64/debug/swc"
-Current executable set to '/home/muqiuhan/Workspace/swallow/build/linux/x86_64/debug/swc' (x86_64).
-(lldb) settings set -- target.run-args  "example/list.sw"
-(lldb) r
-Process 11732 launched: '/home/muqiuhan/Workspace/swallow/build/linux/x86_64/debug/swc' (x86_64)
-Process 11732 stopped
-* thread #1, name = 'swc', stop reason = signal SIGSEGV: address not mapped to object (fault address: 0x1)
-    frame #0: 0x0000000000428922 swc`std::__shared_ptr<swallow::compiler::diagnostics::Span, (__gnu_cxx::_Lock_policy)2>::get(this=0x0000000000000001) const at shared_ptr_base.h:1666:16
-   1663	      /// Return the stored pointer.
-   1664	      element_type*
-   1665	      get() const noexcept
--> 1666	      { return _M_ptr; }
-   1667
-   1668	      /// Return true if the stored pointer is not null.
-   1669	      explicit operator bool() const noexcept
-(lldb) bt
-* thread #1, name = 'swc', stop reason = signal SIGSEGV: address not mapped to object (fault address: 0x1)
-  * frame #0: 0x0000000000428922 swc`std::__shared_ptr<swallow::compiler::diagnostics::Span, (__gnu_cxx::_Lock_policy)2>::get(this=0x0000000000000001) const at shared_ptr_base.h:1666:16
-    frame #1: 0x000000000042b93e swc`std::__shared_ptr_access<swallow::compiler::diagnostics::Span, (__gnu_cxx::_Lock_policy)2, false, false>::_M_get(this=0x0000000000000001) const at shared_ptr_base.h:1363:69
-    frame #2: 0x0000000000428c90 swc`std::__shared_ptr_access<swallow::compiler::diagnostics::Span, (__gnu_cxx::_Lock_policy)2, false, false>::operator->(this=0x0000000000000001) const at shared_ptr_base.h:1357:15
-    frame #3: 0x0000000000423e26 swc`swallow::compiler::diagnostics::Details::get_label_line(this=0x00000000004b84e0, label=0x00007fffffffca90) const at diagnostics.cpp:333:33
-    frame #4: 0x0000000000423924 swc`swallow::compiler::diagnostics::Label::Label(this=0x00007fffffffca90, message= Has Value=true , span=0x00007fffffffcb10, color_type=RED) at diagnostics.cpp:242:60
-    frame #5: 0x0000000000423b06 swc`swallow::compiler::diagnostics::LabelBuilder::build(this=0x00007fffffffcae0) at diagnostics.cpp:288:57
-    frame #6: 0x0000000000422290 swc`swallow::compiler::diagnostics::Reporter::normal(this=0x00000000004b84e0, loc=0x00000000004b9a38, msg="Nil was not declared", labelMsg="The definition of this constructor cannot be found in the context", note="Constructor is undefined", code=0x00007fffffffcbac) at reporter.cpp:24:26
-    frame #7: 0x000000000040bc8d swc`operator(__closure=0x00007fffffffcc78, err=0x00007fffffffcc9f) <swallow::utils::Void> at ast.cpp:272:57
-    frame #8: 0x000000000040bd18 swc`swallow::utils::Result<std::shared_ptr<swallow::compiler::type::Type>, swallow::utils::Void>::or_else<swallow::compiler::ast::PatternConstructor::match(this=0x00007fffffffcd50, op=(unnamed struct) @ 0x00007fffffffcc78) const::<lambda(const auto:60&)> >((unnamed struct)) const at result.hpp:167:18
-    frame #9: 0x00000000004093bc swc`swallow::compiler::ast::PatternConstructor::match(this=0x00000000004b9a30, type=std::__shared_ptr<swallow::compiler::type::Type, __gnu_cxx::_S_atomic>::element_type @ 0x00000000004b8ac0, typeManager=0x00007fffffffd1f0, typeEnvironment=0x00007fffffffced0) const at ast.cpp:271:17
-    frame #10: 0x0000000000408f56 swc`swallow::compiler::ast::Match::typecheck(this=0x00000000004b9b70, typeManager=0x00007fffffffd1f0, typeEnvironment=0x00007fffffffd080) const at ast.cpp:226:28
-    frame #11: 0x0000000000409a88 swc`swallow::compiler::ast::Fn::typecheck(this=0x00000000004b9cd0, typeManager=0x00007fffffffd1f0, typeEnvironment=0x00007fffffffd1b0) const at ast.cpp:352:29
-    frame #12: 0x000000000040a2be swc`swallow::compiler::type::typecheck(program=size=2) at ast.cpp:414:28
-    frame #13: 0x00000000004069bd swc`main(argc=2, argv=0x00007fffffffd588) at compiler.cpp:14:18
-    frame #14: 0x00007ffff78281b0 libc.so.6`__libc_start_call_main + 130
-    frame #15: 0x00007ffff7828279 libc.so.6`__libc_start_main@@GLIBC_2.34 + 139
-    frame #16: 0x0000000000406865 swc`_start at start.S:115
-         clang-format on*/
         if (span->is_inside_span(label.get_span()))
           return index;
       }
