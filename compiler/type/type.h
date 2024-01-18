@@ -38,12 +38,17 @@
 
 namespace swallow::compiler::type
 {
+  class Manager;
+
   class Type
   {
   public:
     using Ptr = std::shared_ptr<Type>;
 
     virtual ~Type() = default;
+
+    virtual void dump(const Manager & typeManager,
+                      std::ostream & to) const noexcept = 0;
   };
 
   class Variable final : public Type
@@ -54,6 +59,9 @@ namespace swallow::compiler::type
     explicit Variable(std::string Name)
       : Name(std::move(Name))
     {}
+
+    void dump(const Manager & typeManager,
+              std::ostream & to) const noexcept override;
   };
 
   class Base final : public Type
@@ -64,6 +72,9 @@ namespace swallow::compiler::type
     explicit Base(std::string Name)
       : Name(std::move(Name))
     {}
+
+    void dump(const Manager & typeManager,
+              std::ostream & to) const noexcept override;
   };
 
   class Arrow final : public Type
@@ -76,14 +87,17 @@ namespace swallow::compiler::type
       : Left(std::move(Left))
       , Right(std::move(Right))
     {}
+
+    void dump(const Manager & typeManager,
+              std::ostream & to) const noexcept override;
   };
 
   class Manager
   {
+  public:
     int32_t LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
-  public:
     std::string newTypeName() noexcept;
     Type::Ptr newType() noexcept;
     Type::Ptr newArrowType() noexcept;

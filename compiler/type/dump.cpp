@@ -27,38 +27,44 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_TYPE_ENVIRONMENT_H
-#define SWALLOW_TYPE_ENVIRONMENT_H
-
+#include "environment.h"
 #include "type.h"
-#include <map>
-#include <string>
+#include <ostream>
 
 namespace swallow::compiler::type
 {
-  class Environment
+  void Variable::dump(const Manager & typeManager,
+                      std::ostream & to) const noexcept
   {
-  public:
-    std::map<std::string, Type::Ptr> Names;
-    Environment const * Parent = nullptr;
+    const auto it = typeManager.Types.find(Name);
+    if (it != typeManager.Types.end())
+      it->second->dump(typeManager, to);
+    else
+      to << Name;
+  }
 
-    explicit Environment(Environment const * Parent)
-      : Parent(Parent)
-    {}
+  void Arrow::dump(const Manager & typeManager,
+                   std::ostream & to) const noexcept
+  {
+    Left->dump(typeManager, to);
+    to << " => (";
+    Left->dump(typeManager, to);
+    to << ")";
+  }
 
-    Environment()
-      : Environment(nullptr)
-    {}
+  void Base::dump(const Manager & typeManager, std::ostream & to) const noexcept
+  {
+    to << Name;
+  }
 
-    [[nodiscard]] utils::Result<Type::Ptr, utils::Void>
-    lookup(const std::string & name) const noexcept;
-
-    [[nodiscard]] Environment scope() const noexcept;
-
-    void bind(const std::string & name, Type::Ptr type) noexcept;
-    void dump(std::ostream & to, const Manager & typeManager) noexcept;
-  };
-
+  void Environment::dump(std::ostream & to,
+                         const Manager & typeManager) noexcept
+  {
+    for (const auto & [name, type] : Names)
+      {
+        to << name << ": ";
+        type->dump(typeManager, to);
+        to << std::endl;
+      }
+  }
 } // namespace swallow::compiler::type
-
-#endif /* SWALLOW_TYPE_ENVIRONMENT_H */
