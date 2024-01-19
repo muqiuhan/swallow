@@ -1,31 +1,66 @@
-*  Swallow
-*  A minimalist functional programming language
-*  Copyright (c) 2023 Muqiu Han
-*  
-*  This project is built using xmake: https://xmake.io/
-*  
-*  FAQ: https://github.com/muqiuhan/Swallow/blob/main/FAQ
-*  Issues: https://github.com/muqiuhan/Swallow/issues
-*  Contribution: https://github.com/muqiuhan/Swallow/pulls
+<div align="center">
 
+<img src="./resources/logo.png" height="150px">
 
-To build and run with xmake:
+# Swallow
 
-    setup: Install the xmake, flex and bison
-    To build:   xmake build
-    To run:     xmake run
-    To install: xmake install
+*A minimalist functional programming language*
 
+![](https://img.shields.io/badge/C++20-123456)
+[![build](https://github.com/X-FRI/swallow/actions/workflows/build.yaml/badge.svg)](https://github.com/X-FRI/swallow/actions/workflows/build.yaml)
 
-Features
-----------
-o- Typechecking
-o- Pattern match
-o- Garbage Collection
-o- Polymorphism
+</div>
 
-LICENSE
-----------
+- Copyright (c) 2023 Muqiu Han
+- This project is built using xmake: https://xmake.io/
+- FAQ: https://github.com/muqiuhan/Swallow/blob/main/FAQ
+- Issues: https://github.com/muqiuhan/Swallow/issues
+- Contribution: https://github.com/muqiuhan/Swallow/pulls
+
+---
+
+![](./resources/IllegalPattern.png)
+
+## Build & Install
+
+To build and run with [xmake](xmake.io):
+> Setup: Install the [xmake](xmake.io), [flex]() and [bison]()
+  
+- To build:   xmake build
+- To run:     xmake run
+- To install: xmake install
+
+## Introduction
+- Typechecking
+  ```
+  data Bool = [ True, False ]
+
+  let main(argv) = {
+    match argv with {
+    | True => { 0 }
+    | False => { True }
+    }
+  }
+  ```
+  ![./resources/BranchTypeChecking.png](./resources/BranchTypeChecking.png)
+
+- Pattern match
+  ```
+  data List = [ Nil, Cons Int List ]
+
+  let main(argv) = {
+    match argv with {
+    | Nil => { 0 }
+    | Cons x xs => { 0 }
+    }
+  }
+  ```
+
+- [WIP] Garbage Collection
+- [WIP] Polymorphism
+
+## [LICENSE](./LICENSE)
+```
 Copyright (c) 2023 Muqiu Han
 
 All rights reserved.
@@ -53,3 +88,4 @@ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```

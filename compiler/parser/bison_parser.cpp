@@ -35,18 +35,17 @@
 // private implementation details that can be changed or removed.
 
 // First part of user prologue.
-#line 1 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 6 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
 
 #include "bison_parser.hpp"
-#include "ast.h"
 #include "reporter.h"
 #include <iostream>
 #include <string>
 
-std::vector<swallow::compiler::ast::Definition::Ptr> Program;
+std::vector<Definition::Ptr> Program;
 extern yy::parser::symbol_type yylex();
 
-#line 53 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 52 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
 
 #include "bison_parser.hpp"
 
@@ -145,7 +144,7 @@ extern yy::parser::symbol_type yylex();
 
 namespace yy
 {
-#line 150 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 149 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
 
   /// Build a parser object.
   parser::parser()
@@ -751,57 +750,57 @@ namespace yy
               switch (yyn)
                 {
                   case 2: // Program: Definitions
-#line 62 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 61 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     Program = std::move(
                       yystack_[0].value.as<std::vector<Definition::Ptr> >());
                   }
-#line 808 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 807 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 3: // Definitions: Definitions Definition
-#line 66 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 65 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Definition::Ptr> >() = std::move(
                       yystack_[1].value.as<std::vector<Definition::Ptr> >());
                     yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Definition::Ptr>()));
                   }
-#line 814 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 813 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 4: // Definitions: Definition
-#line 67 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 66 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Definition::Ptr> >() =
                       std::vector<Definition::Ptr>();
                     yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Definition::Ptr>()));
                   }
-#line 820 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 819 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 5: // Definition: Fn
+#line 70 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Definition::Ptr>() =
+                      std::move(yystack_[0].value.as<Definition::Ptr>());
+                  }
+#line 825 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 6: // Definition: Data
 #line 71 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() =
                       std::move(yystack_[0].value.as<Definition::Ptr>());
                   }
-#line 826 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
-                  break;
-
-                  case 6: // Definition: Data
-#line 72 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
-                  {
-                    yylhs.value.as<Definition::Ptr>() =
-                      std::move(yystack_[0].value.as<Definition::Ptr>());
-                  }
-#line 832 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 831 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 7: // Fn: FN LID OPAREN LowercaseParams CPAREN EQUAL
                           // OCURLY Add CCURLY
-#line 77 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 76 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Fn(
                       yylhs.location,
@@ -810,60 +809,60 @@ namespace yy
                         yystack_[5].value.as<std::vector<std::string> >()),
                       std::move(yystack_[1].value.as<AST::Ptr>())));
                   }
-#line 838 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 837 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 8: // LowercaseParams: %empty
-#line 82 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 81 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >() =
                       std::vector<std::string>();
                   }
-#line 844 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 843 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 9: // LowercaseParams: LID
-#line 83 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 82 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
-#line 850 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 849 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 10: // LowercaseParams: LowercaseParams COMMA LID
-#line 84 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 83 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >() = std::move(
                       yystack_[2].value.as<std::vector<std::string> >());
                     yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
-#line 856 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 855 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 11: // UppercaseParams: %empty
-#line 88 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 87 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >() =
                       std::vector<std::string>();
                   }
-#line 862 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 861 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 12: // UppercaseParams: UppercaseParams UID
-#line 89 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 88 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >() = std::move(
                       yystack_[1].value.as<std::vector<std::string> >());
                     yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
-#line 868 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 867 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 13: // Add: Add PLUS Mul
-#line 93 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 92 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new Binop(yylhs.location,
@@ -871,11 +870,11 @@ namespace yy
                                 std::move(yystack_[2].value.as<AST::Ptr>()),
                                 std::move(yystack_[0].value.as<AST::Ptr>())));
                   }
-#line 874 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 873 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 14: // Add: Add MINUS Mul
-#line 94 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 93 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new Binop(yylhs.location,
@@ -883,20 +882,20 @@ namespace yy
                                 std::move(yystack_[2].value.as<AST::Ptr>()),
                                 std::move(yystack_[0].value.as<AST::Ptr>())));
                   }
-#line 880 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 879 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 15: // Add: Mul
-#line 95 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 94 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
                   }
-#line 886 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 885 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 16: // Mul: Mul TIMES Application
-#line 99 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 98 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new Binop(yylhs.location,
@@ -904,11 +903,11 @@ namespace yy
                                 std::move(yystack_[2].value.as<AST::Ptr>()),
                                 std::move(yystack_[0].value.as<AST::Ptr>())));
                   }
-#line 892 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 891 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 17: // Mul: Mul DIVIDE Application
-#line 100 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 99 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new Binop(yylhs.location,
@@ -916,87 +915,87 @@ namespace yy
                                 std::move(yystack_[2].value.as<AST::Ptr>()),
                                 std::move(yystack_[0].value.as<AST::Ptr>())));
                   }
-#line 898 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 897 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 18: // Mul: Application
-#line 101 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 100 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
                   }
-#line 904 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 903 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 19: // Application: Application ApplicationBase
-#line 105 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 104 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Application(
                       yylhs.location,
                       std::move(yystack_[1].value.as<AST::Ptr>()),
                       std::move(yystack_[0].value.as<AST::Ptr>())));
                   }
-#line 910 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 909 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 20: // Application: ApplicationBase
-#line 106 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 105 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
                   }
-#line 916 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 915 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 21: // ApplicationBase: INT
-#line 110 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 109 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new Int(yylhs.location, yystack_[0].value.as<int>()));
                   }
-#line 922 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 921 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 22: // ApplicationBase: LID
-#line 111 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 110 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new LID(yylhs.location,
                               std::move(yystack_[0].value.as<std::string>())));
                   }
-#line 928 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 927 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 23: // ApplicationBase: UID
-#line 112 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 111 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(
                       new UID(yylhs.location,
                               std::move(yystack_[0].value.as<std::string>())));
                   }
-#line 934 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 933 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 24: // ApplicationBase: OPAREN Add CPAREN
-#line 113 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 112 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[1].value.as<AST::Ptr>());
                   }
-#line 940 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 939 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 25: // ApplicationBase: Match
-#line 114 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 113 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
                   }
-#line 946 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 945 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 26: // Match: MATCH Add WITH OCURLY Branches CCURLY
-#line 119 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 118 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Match(
                       yylhs.location,
@@ -1004,56 +1003,56 @@ namespace yy
                       std::move(
                         yystack_[1].value.as<std::vector<Branch::Ptr> >())));
                   }
-#line 952 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 951 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 27: // Branches: Branches Branch
-#line 123 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 122 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Branch::Ptr> >() = std::move(
                       yystack_[1].value.as<std::vector<Branch::Ptr> >());
                     yylhs.value.as<std::vector<Branch::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Branch::Ptr>()));
                   }
-#line 958 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 957 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 28: // Branches: Branch
-#line 124 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 123 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Branch::Ptr> >() =
                       std::vector<Branch::Ptr>();
                     yylhs.value.as<std::vector<Branch::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Branch::Ptr>()));
                   }
-#line 964 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 963 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 29: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add
                            // CCURLY
-#line 129 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 128 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Branch::Ptr>() = Branch::Ptr(new Branch(
                       yylhs.location,
                       std::move(yystack_[4].value.as<Pattern::Ptr>()),
                       std::move(yystack_[1].value.as<AST::Ptr>())));
                   }
-#line 970 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 969 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 30: // Pattern: LID
-#line 133 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 132 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Pattern::Ptr>() =
                       Pattern::Ptr(new PatternVariable(
                         yylhs.location,
                         std::move(yystack_[0].value.as<std::string>())));
                   }
-#line 976 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 975 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 31: // Pattern: UID
-#line 134 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 133 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Pattern::Ptr>() =
                       Pattern::Ptr(new PatternConstructor(
@@ -1061,11 +1060,11 @@ namespace yy
                         std::move(yystack_[0].value.as<std::string>()),
                         std::vector<std::string>()));
                   }
-#line 982 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 981 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 32: // Pattern: UID OPAREN LowercaseParams CPAREN
-#line 136 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 135 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Pattern::Ptr>() =
                       Pattern::Ptr(new PatternConstructor(
@@ -1074,12 +1073,12 @@ namespace yy
                         std::move(
                           yystack_[1].value.as<std::vector<std::string> >())));
                   }
-#line 988 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 987 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 33: // Data: DATA UID EQUAL OBRACKET Constructors
                            // CBRACKET
-#line 141 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 140 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() =
                       Definition::Ptr(new Data(
@@ -1089,11 +1088,11 @@ namespace yy
                           yystack_[1]
                             .value.as<std::vector<Constructor::Ptr> >())));
                   }
-#line 994 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 993 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 34: // Constructors: Constructors COMMA Constructor
-#line 145 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 144 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Constructor::Ptr> >() =
                       std::move(
@@ -1101,22 +1100,22 @@ namespace yy
                     yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
-#line 1000 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 999 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 35: // Constructors: Constructor
-#line 147 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 146 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Constructor::Ptr> >() =
                       std::vector<Constructor::Ptr>();
                     yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
-#line 1006 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1005 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
                   case 36: // Constructor: UID UppercaseParams
-#line 152 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 151 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Constructor::Ptr>() =
                       Constructor::Ptr(new Constructor(
@@ -1125,10 +1124,10 @@ namespace yy
                         std::move(
                           yystack_[0].value.as<std::vector<std::string> >())));
                   }
-#line 1012 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1011 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-#line 1016 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1015 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
 
                 default:
                   break;
@@ -1406,9 +1405,9 @@ namespace yy
 
 #if YYDEBUG
   const unsigned char parser::yyrline_[] = {
-    0,   62,  62,  66,  67,  71,  72,  76,  82,  83,  84,  88,  89,
-    93,  94,  95,  99,  100, 101, 105, 106, 110, 111, 112, 113, 114,
-    118, 123, 124, 128, 133, 134, 135, 140, 145, 146, 151};
+    0,   61,  61,  65,  66,  70,  71,  75,  81,  82,  83,  87,  88,
+    92,  93,  94,  98,  99,  100, 104, 105, 109, 110, 111, 112, 113,
+    117, 122, 123, 127, 132, 133, 134, 139, 144, 145, 150};
 
   void parser::yy_stack_print_() const
   {
@@ -1436,4 +1435,4 @@ namespace yy
 #endif // YYDEBUG
 
 } // namespace yy
-#line 1362 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1361 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"

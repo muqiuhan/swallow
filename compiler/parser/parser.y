@@ -1,19 +1,18 @@
-%{
-#include <string>
-#include <iostream>
-#include "ast.h"
-#include "bison_parser.hpp"
-#include "reporter.h"
-
-std::vector<swallow::compiler::ast::Definition::Ptr> Program;
-extern yy::parser::symbol_type yylex();
-
-%}
-
 %code requires {
     #include "ast.h"
     using namespace swallow::compiler::ast;
 }
+
+%{
+#include <string>
+#include <iostream>
+#include "bison_parser.hpp"
+#include "reporter.h"
+
+std::vector<Definition::Ptr> Program;
+extern yy::parser::symbol_type yylex();
+
+%}
 
 %token PLUS
 %token TIMES
