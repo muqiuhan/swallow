@@ -40,14 +40,10 @@ namespace swallow::compiler::type
     -> Result<Type::Ptr, Void>
   {
     if (const auto it = Names.find(name); it != Names.end())
-      {
-        return Ok(it->second);
-      }
+      return Ok(it->second);
 
     if (Parent != nullptr)
-      {
-        return Parent->lookup(name);
-      }
+      return Parent->lookup(name);
 
     return Err(Void());
   }

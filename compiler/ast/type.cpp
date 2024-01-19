@@ -27,7 +27,6 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "type.hpp"
 #include "ast.h"
 #include "code.hpp"
 #include "environment.h"

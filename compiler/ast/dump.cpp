@@ -36,9 +36,7 @@ namespace swallow::compiler::ast
   static void printIndent(uint8_t n, std::ostream &to) noexcept
   {
     while ((n--) != 0U)
-      {
-        to << "  ";
-      }
+      to << "  ";
   }
 
   void Int::dump(uint8_t indent, std::ostream &to) const noexcept
@@ -110,9 +108,7 @@ namespace swallow::compiler::ast
     to << Constructor;
 
     for (const auto &param : Params)
-      {
-        to << " " << param;
-      }
+      to << " " << param;
   }
 
 } // namespace swallow::compiler::ast

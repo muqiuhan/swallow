@@ -37,14 +37,11 @@ namespace swallow::compiler::type
                       std::ostream &to) const noexcept
   {
     const auto it = typeManager.Types.find(Name);
+
     if (it != typeManager.Types.end())
-      {
-        it->second->dump(typeManager, to);
-      }
+      it->second->dump(typeManager, to);
     else
-      {
-        to << Name;
-      }
+      to << Name;
   }
 
   void Arrow::dump(const Manager &typeManager, std::ostream &to) const noexcept

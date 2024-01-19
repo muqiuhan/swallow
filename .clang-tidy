@@ -1,5 +1,5 @@
 ---
-Checks: 'modernize-*, performance-*'
+Checks: 'modernize-*, performance-*, llvm-*'
 WarningsAsErrors: ''
 HeaderFileExtensions:
   - h
