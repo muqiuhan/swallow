@@ -47,9 +47,8 @@ namespace swallow::compiler::type
   void Arrow::dump(const Manager &typeManager, std::ostream &to) const noexcept
   {
     Left->dump(typeManager, to);
-    to << " => (";
+    to << " -> ";
     Left->dump(typeManager, to);
-    to << ")";
   }
 
   void Base::dump(const Manager &typeManager, std::ostream &to) const noexcept

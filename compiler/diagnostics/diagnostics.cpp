@@ -304,8 +304,8 @@ namespace swallow::compiler::diagnostics
 
   auto Details::get_path() const -> const std::string & { return this->path_; }
 
-  LabelGroup::LabelGroup(
-    Details *general_details_, std::vector<const Label *> labels)
+  LabelGroup::LabelGroup(Details *general_details_,
+                         std::vector<const Label *> labels)
     : first_label_()
     , last_label_()
     , details_(general_details_)
@@ -344,7 +344,7 @@ namespace swallow::compiler::diagnostics
         auto line_number = line_index + 1;
         output << "  "
                << COLOR_RGB(std::setw(spaces_prefix.length() - 3)
-                              << std::setfill(' ') << line_number << " │  ",
+                              << std::setfill(' ') << line_number << " |  ",
                             COLOR_GREY);
 
         auto labels = this->find_labels_in_line(line_index);
@@ -388,7 +388,7 @@ namespace swallow::compiler::diagnostics
         current_label_startings[relative_span.get_start_index()] = label;
       }
 
-    output << spaces_prefix << COLOR_RGB("·  ", COLOR_GREY);
+    output << spaces_prefix << COLOR_RGB("o  ", COLOR_GREY);
 
     const Label *last_label = nullptr;
     size_t last_end_index = 0U;
@@ -397,22 +397,22 @@ namespace swallow::compiler::diagnostics
         if (next_label_endings.contains(index))
           {
             auto &next_label = next_label_endings.at(index);
-            COLOR_BY_TYPE(next_label->get_color(), "│");
+            COLOR_BY_TYPE(next_label->get_color(), "|");
             continue;
           }
         if (next_label_startings.contains(index))
           {
             auto &next_label = next_label_startings.at(index);
-            COLOR_BY_TYPE(next_label->get_color(), "│");
+            COLOR_BY_TYPE(next_label->get_color(), "|");
             continue;
           }
 
         if (!current_label_startings.contains(index))
           {
             if (index == last_end_index && index != 0)
-              COLOR_BY_TYPE(last_label->get_color(), "╯");
+              COLOR_BY_TYPE(last_label->get_color(), "^");
             else if (index < last_end_index)
-              COLOR_BY_TYPE(last_label->get_color(), "─");
+              COLOR_BY_TYPE(last_label->get_color(), "^");
             else
               output << " ";
 
@@ -425,19 +425,19 @@ namespace swallow::compiler::diagnostics
         if (last_end_index >= index && index != 0)
           {
             if (label->get_message())
-              COLOR_BY_TYPE(label->get_color(), "┤");
+              COLOR_BY_TYPE(label->get_color(), "=");
             else
-              COLOR_BY_TYPE(label->get_color(), "╯");
+              COLOR_BY_TYPE(label->get_color(), "+");
           }
         else if (relative_span.get_end_index() > index)
           {
             if (label->get_message())
-              COLOR_BY_TYPE(label->get_color(), "├");
+              COLOR_BY_TYPE(label->get_color(), "^");
             else
-              COLOR_BY_TYPE(label->get_color(), "╰");
+              COLOR_BY_TYPE(label->get_color(), "+");
           }
         else if (label->get_message())
-          COLOR_BY_TYPE(label->get_color(), "│");
+          COLOR_BY_TYPE(label->get_color(), "^");
         else
           COLOR_BY_TYPE(label->get_color(), "^");
 
@@ -452,7 +452,7 @@ namespace swallow::compiler::diagnostics
         if (!label->get_message())
           continue;
 
-        output << spaces_prefix << COLOR_RGB("·  ", COLOR_GREY);
+        output << spaces_prefix << COLOR_RGB("o  ", COLOR_GREY);
 
         const auto relative_span = label->get_span().relative_to(line_span);
         for (auto index = 0U; index < relative_span.get_start_index(); index++)
@@ -460,28 +460,28 @@ namespace swallow::compiler::diagnostics
             if (next_label_endings.contains(index))
               {
                 auto &next_label = next_label_endings.at(index);
-                COLOR_BY_TYPE(next_label->get_color(), "│");
+                COLOR_BY_TYPE(next_label->get_color(), "|");
                 continue;
               }
 
             if (next_label_startings.contains(index))
               {
                 auto &next_label = next_label_startings.at(index);
-                COLOR_BY_TYPE(next_label->get_color(), "│");
+                COLOR_BY_TYPE(next_label->get_color(), "|");
                 continue;
               }
 
             if (current_label_startings.contains(index))
               {
                 auto &next_label = current_label_startings.at(index);
-                COLOR_BY_TYPE(next_label->get_color(), "│");
+                COLOR_BY_TYPE(next_label->get_color(), "|");
                 continue;
               }
 
             output << " ";
           }
 
-        COLOR_BY_TYPE(label->get_color(), "╰─▶ ");
+        COLOR_BY_TYPE(label->get_color(), ":= ");
         print_formatted_text(output, label->get_message().value());
         output << "\n";
       }
@@ -654,12 +654,12 @@ namespace swallow::compiler::diagnostics
   void FileGroup::print(std::ostream &output,
                         const std::string &spaces_prefix) const
   {
-    output << COLOR_RGB("─[", COLOR_GREY)
+    output << COLOR_RGB("-[", COLOR_GREY)
            << COLOR_RGB(this->details_->get_path(), COLOR_WHITE)
            << COLOR_RGB("]", COLOR_GREY);
     output << "\n";
 
-    output << spaces_prefix << COLOR_RGB("·", COLOR_GREY);
+    output << spaces_prefix << COLOR_RGB("o", COLOR_GREY);
     output << "\n";
 
     for (auto index = 0U; index < this->label_groups_.size(); index++)
@@ -734,7 +734,7 @@ namespace swallow::compiler::diagnostics
     auto biggest_number_width = std::to_string(biggest_number).length();
     auto spaces_prefix = std::string(biggest_number_width + 3, ' ');
 
-    output << spaces_prefix << COLOR_RGB("╭", COLOR_GREY);
+    output << spaces_prefix << COLOR_RGB("/", COLOR_GREY);
     for (auto index = 0U; index < file_groups.size(); index++)
       {
         const auto &file_group = file_groups.at(index);
@@ -742,27 +742,27 @@ namespace swallow::compiler::diagnostics
 
         if (index != file_groups.size() - 1)
           {
-            output << spaces_prefix << COLOR_RGB("·", COLOR_GREY);
+            output << spaces_prefix << COLOR_RGB("o", COLOR_GREY);
             output << "\n";
 
-            output << spaces_prefix << COLOR_RGB("├", COLOR_GREY);
+            output << spaces_prefix << COLOR_RGB("^", COLOR_GREY);
           }
       }
 
-    output << spaces_prefix << COLOR_RGB("·", COLOR_GREY);
+    output << spaces_prefix << COLOR_RGB("o", COLOR_GREY);
     output << "\n";
 
     if (this->note_)
       {
-        output << spaces_prefix << COLOR_RGB("│", COLOR_GREY)
-               << COLOR_RGB("  Note: ", COLOR_BEACH);
+        output << spaces_prefix << COLOR_RGB("o-- ", COLOR_GREY)
+               << COLOR_RGB("Note: ", COLOR_BEACH);
         print_formatted_text(output, this->note_.value());
         output << "\n";
       }
 
     auto dashes_prefix = biggest_number_width + 3;
-    output << COLOR_RGB(repeat_string("─", dashes_prefix), COLOR_GREY)
-           << COLOR_RGB("╯", COLOR_GREY);
+    output << COLOR_RGB(repeat_string("-", dashes_prefix), COLOR_GREY)
+           << COLOR_RGB("/", COLOR_GREY);
     output << "\n";
   }
 
