@@ -41,8 +41,8 @@ using namespace swallow::utils;
 
 namespace swallow::compiler::ast
 {
-  Result<std::string, Void>
-    Binop::operatorsToString(const Operators &op) noexcept
+  auto Binop::operatorsToString(const Operators &op) noexcept
+    -> Result<std::string, Void>
   {
     switch (op)
       {
@@ -65,12 +65,16 @@ namespace swallow::compiler::ast
       {
         Fn *fn = dynamic_cast<Fn *>(definition.get());
 
-        if (!fn)
-          continue;
+        if (fn == nullptr)
+          {
+            continue;
+          }
         for (const auto &param : fn->Params)
-          std::cout << " " << param;
+          {
+            std::cout << " " << param;
+          }
 
-        std::cout << ":" << std::endl;
+        std::cout << ":" << '\n';
         fn->Body->dump(1, std::cout);
       }
   }
@@ -93,9 +97,13 @@ namespace swallow::compiler::type
     typeEnvironment.bind("/", binopType);
 
     for (const auto &definition : program)
-      definition->scanDefinitionType(typeManager, typeEnvironment);
+      {
+        definition->scanDefinitionType(typeManager, typeEnvironment);
+      }
 
     for (const auto &definition : program)
-      definition->typecheck(typeManager, typeEnvironment);
+      {
+        definition->typecheck(typeManager, typeEnvironment);
+      }
   }
 } // namespace swallow::compiler::type

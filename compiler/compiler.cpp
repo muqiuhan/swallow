@@ -35,12 +35,12 @@
 
 using namespace swallow::compiler;
 
-auto main(int argc, char ** argv) -> int
+auto main(int argc, char **argv) -> int
 {
   CompileUnit::FILE = new CompileUnit(argv[1]);
   diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 
-  auto & program = parser::parse();
+  auto &program = parser::parse();
   type::typecheck(program);
 
   delete CompileUnit::FILE;

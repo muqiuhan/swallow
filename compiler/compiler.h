@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_H
-#define SWALLOW_COMPILER_H
+#ifndef HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_COMPILER_H
+#define HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_COMPILER_H
 
 #include <fstream>
 #include <string>
@@ -42,16 +42,16 @@ namespace swallow::compiler
     const std::string FileValue;
     const std::string FilePath;
 
-    inline static CompileUnit * FILE = nullptr;
+    inline static CompileUnit *FILE = nullptr;
 
     explicit CompileUnit(const std::string FilePath)
       : FilePath(FilePath), FileValue(readEntireFile(FilePath))
     {}
 
   private:
-    static std::string readEntireFile(const std::string FilePath)
+    static auto readEntireFile(const std::string FilePath) -> std::string
     {
-      constexpr size_t read_size = std::size_t(4096);
+      constexpr auto read_size = std::size_t(4096);
       auto stream = std::ifstream(FilePath.data());
       stream.exceptions(std::ios_base::badbit);
 
@@ -71,4 +71,4 @@ namespace swallow::compiler
 
 } // namespace swallow::compiler
 
-#endif /* SWALLOW_COMPILER_H */
+#endif // HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_COMPILER_H

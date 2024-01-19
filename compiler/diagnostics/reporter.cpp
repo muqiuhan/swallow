@@ -7,11 +7,11 @@ using namespace swallow::utils;
 namespace swallow::compiler::diagnostics
 {
 
-  [[noreturn]] Err<Void> Reporter::normal(const yy::parser::location_type & loc,
-                                          const std::string && msg,
-                                          const std::string && labelMsg,
-                                          const std::string && note,
-                                          const std::uint32_t & code)
+  [[noreturn]] auto Reporter::normal(const yy::parser::location_type &loc,
+                                     const std::string &&msg,
+                                     const std::string &&labelMsg,
+                                     const std::string &&note,
+                                     const std::uint32_t &code) -> Err<Void>
   {
 
     ReportBuilder()
@@ -30,7 +30,6 @@ namespace swallow::compiler::diagnostics
       .print(std::cout);
 
     exit(EXIT_FAILURE);
-    return {Void()};
   }
 
 } // namespace swallow::compiler::diagnostics

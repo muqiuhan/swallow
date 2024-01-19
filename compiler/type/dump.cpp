@@ -33,18 +33,21 @@
 
 namespace swallow::compiler::type
 {
-  void Variable::dump(const Manager & typeManager,
-                      std::ostream & to) const noexcept
+  void Variable::dump(const Manager &typeManager,
+                      std::ostream &to) const noexcept
   {
     const auto it = typeManager.Types.find(Name);
     if (it != typeManager.Types.end())
-      it->second->dump(typeManager, to);
+      {
+        it->second->dump(typeManager, to);
+      }
     else
-      to << Name;
+      {
+        to << Name;
+      }
   }
 
-  void Arrow::dump(const Manager & typeManager,
-                   std::ostream & to) const noexcept
+  void Arrow::dump(const Manager &typeManager, std::ostream &to) const noexcept
   {
     Left->dump(typeManager, to);
     to << " => (";
@@ -52,19 +55,18 @@ namespace swallow::compiler::type
     to << ")";
   }
 
-  void Base::dump(const Manager & typeManager, std::ostream & to) const noexcept
+  void Base::dump(const Manager &typeManager, std::ostream &to) const noexcept
   {
     to << Name;
   }
 
-  void Environment::dump(std::ostream & to,
-                         const Manager & typeManager) noexcept
+  void Environment::dump(std::ostream &to, const Manager &typeManager) noexcept
   {
-    for (const auto & [name, type] : Names)
+    for (const auto &[name, type] : Names)
       {
         to << name << ": ";
         type->dump(typeManager, to);
-        to << std::endl;
+        to << '\n';
       }
   }
 } // namespace swallow::compiler::type

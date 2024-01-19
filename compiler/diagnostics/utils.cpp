@@ -2,11 +2,13 @@
 
 namespace swallow::compiler::diagnostics
 {
-  std::string repeat_string(const std::string & input, size_t amount)
+  auto repeat_string(const std::string &input, size_t amount) -> std::string
   {
     std::string output;
-    while (amount--)
-      output += input;
+    while ((amount--) != 0U)
+      {
+        output += input;
+      }
 
     return output;
   }

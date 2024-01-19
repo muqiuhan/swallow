@@ -33,82 +33,86 @@
 
 namespace swallow::compiler::ast
 {
-  static void printIndent(uint8_t n, std::ostream & to) noexcept
+  static void printIndent(uint8_t n, std::ostream &to) noexcept
   {
-    while (n--)
-      to << "  ";
+    while ((n--) != 0U)
+      {
+        to << "  ";
+      }
   }
 
-  void Int::dump(uint8_t indent, std::ostream & to) const noexcept
-  {
-    printIndent(indent, to);
-    to << std::format("<Int: {}>", Value) << std::endl;
-  }
-
-  void LID::dump(uint8_t indent, std::ostream & to) const noexcept
+  void Int::dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
-    to << std::format("<LID: {}>", ID) << std::endl;
+    to << std::format("<Int: {}>", Value) << '\n';
   }
 
-  void UID::dump(uint8_t indent, std::ostream & to) const noexcept
+  void LID::dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
-    to << std::format("<UID: {}>", ID) << std::endl;
+    to << std::format("<LID: {}>", ID) << '\n';
   }
 
-  void Binop::dump(uint8_t indent, std::ostream & to) const noexcept
+  void UID::dump(uint8_t indent, std::ostream &to) const noexcept
+  {
+    printIndent(indent, to);
+    to << std::format("<UID: {}>", ID) << '\n';
+  }
+
+  void Binop::dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
 
     to << std::format("<Binop: {}", operatorsToString(Operator).unwrap())
-       << std::endl;
+       << '\n';
 
     Left->dump(indent + 1, to);
     Left->dump(indent + 1, to);
 
-    to << ">" << std::endl;
+    to << ">" << '\n';
   }
 
-  void Application::dump(uint8_t indent, std::ostream & to) const noexcept
+  void Application::dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
 
-    to << "<Application: " << std::endl;
+    to << "<Application: " << '\n';
 
     Left->dump(indent + 1, to);
     Left->dump(indent + 1, to);
-    to << ">" << std::endl;
+    to << ">" << '\n';
   }
 
-  void Match::dump(uint8_t indent, std::ostream & to) const noexcept
+  void Match::dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
 
-    to << "<Match: " << std::endl;
+    to << "<Match: " << '\n';
 
-    for (const auto & branch : Branches)
+    for (const auto &branch : Branches)
       {
         printIndent(indent + 1, to);
         branch->Patt->dump(to);
-        to << std::endl;
+        to << '\n';
         branch->Expr->dump(indent + 2, to);
       }
 
-    to << ">" << std::endl;
+    to << ">" << '\n';
   }
 
-  void PatternVariable::dump(std::ostream & to) const noexcept
+  void PatternVariable::dump(std::ostream &to) const noexcept
   {
     to << Variable;
   }
 
-  void PatternConstructor::dump(std::ostream & to) const noexcept
+  void PatternConstructor::dump(std::ostream &to) const noexcept
   {
     to << Constructor;
 
-    for (const auto & param : Params)
-      to << " " << param;
+    for (const auto &param : Params)
+      {
+        to << " " << param;
+      }
   }
 
 } // namespace swallow::compiler::ast

@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_TYPE_ENVIRONMENT_H
-#define SWALLOW_TYPE_ENVIRONMENT_H
+#ifndef HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
+#define HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
 
 #include "type.h"
 #include <map>
@@ -40,21 +40,21 @@ namespace swallow::compiler::type
   {
   public:
     std::map<std::string, Type::Ptr> Names;
-    Environment const * Parent = nullptr;
+    Environment const *Parent = nullptr;
 
-    explicit Environment(Environment const * Parent) : Parent(Parent) {}
+    explicit Environment(Environment const *Parent) : Parent(Parent) {}
 
     Environment() : Environment(nullptr) {}
 
-    [[nodiscard]] utils::Result<Type::Ptr, utils::Void>
-      lookup(const std::string & name) const noexcept;
+    [[nodiscard]] auto lookup(const std::string &name) const noexcept
+      -> utils::Result<Type::Ptr, utils::Void>;
 
-    [[nodiscard]] Environment scope() const noexcept;
+    [[nodiscard]] auto scope() const noexcept -> Environment;
 
-    void bind(const std::string & name, Type::Ptr type) noexcept;
-    void dump(std::ostream & to, const Manager & typeManager) noexcept;
+    void bind(const std::string &name, Type::Ptr type) noexcept;
+    void dump(std::ostream &to, const Manager &typeManager) noexcept;
   };
 
 } // namespace swallow::compiler::type
 
-#endif /* SWALLOW_TYPE_ENVIRONMENT_H */
+#endif // HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_TYPE_ENVIRONMENT_H

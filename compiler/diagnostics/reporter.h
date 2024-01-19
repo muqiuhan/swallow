@@ -1,5 +1,5 @@
-#ifndef SWALLOW_COMPILER_PARSER_REPORTER_H
-#define SWALLOW_COMPILER_PARSER_REPORTER_H
+#ifndef HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
+#define HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
 
 #include "bison_parser.hpp"
 #include "compiler.h"
@@ -13,20 +13,18 @@ namespace swallow::compiler::diagnostics
     Details Detail;
 
   public:
-    inline static Reporter * REPORTER = nullptr;
+    inline static Reporter *REPORTER = nullptr;
 
     explicit Reporter()
       : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
     {}
 
-    [[noreturn]] utils::Err<utils::Void>
-      normal(const yy::parser::location_type & loc,
-             const std::string && msg,
-             const std::string && labelMsg,
-             const std::string && note,
-             const std::uint32_t & code);
+    [[noreturn]] auto
+      normal(const yy::parser::location_type &loc, const std::string &&msg,
+             const std::string &&labelMsg, const std::string &&note,
+             const std::uint32_t &code) -> utils::Err<utils::Void>;
   };
 
 } // namespace swallow::compiler::diagnostics
 
-#endif /* SWALLOW_COMPILER_PARSER_REPORTER_H */
+#endif // HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H

@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_PARSER_H
-#define SWALLOW_PARSER_H
+#ifndef HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_PARSER_H
+#define HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_PARSER_H
 
 #include "ast/ast.h"
 #include "bison_parser.hpp"
@@ -36,7 +36,8 @@
 namespace swallow::compiler::parser
 {
 
-  std::vector<swallow::compiler::ast::Definition::Ptr> & parse() noexcept;
+  auto parse() noexcept
+    -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
 
 } // namespace swallow::compiler::parser
 
