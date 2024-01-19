@@ -6,9 +6,7 @@ namespace swallow::compiler::diagnostics
   {
     std::string output;
     while ((amount--) != 0U)
-      {
-        output += input;
-      }
+      output += input;
 
     return output;
   }

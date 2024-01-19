@@ -1,19 +1,18 @@
-%{
-#include <string>
-#include <iostream>
-#include "ast.h"
-#include "bison_parser.hpp"
-#include "reporter.h"
-
-std::vector<swallow::compiler::ast::Definition::Ptr> Program;
-extern yy::parser::symbol_type yylex();
-
-%}
-
 %code requires {
     #include "ast.h"
     using namespace swallow::compiler::ast;
 }
+
+%{
+#include <string>
+#include <iostream>
+#include "bison_parser.hpp"
+#include "reporter.h"
+
+std::vector<Definition::Ptr> Program;
+extern yy::parser::symbol_type yylex();
+
+%}
 
 %token PLUS
 %token TIMES
@@ -131,8 +130,9 @@ Branch
 
 Pattern
     : LID { $$ = Pattern::Ptr(new PatternVariable(@$, std::move($1))); }
-    | UID LowercaseParams
-        { $$ = Pattern::Ptr(new PatternConstructor(@$, std::move($1), std::move($2))); }
+    | UID { $$ = Pattern::Ptr(new PatternConstructor(@$, std::move($1), std::vector<std::string>())); }
+    | UID OPAREN LowercaseParams CPAREN
+        { $$ = Pattern::Ptr(new PatternConstructor(@$, std::move($1), std::move($3))); }
     ;
 
 Data

@@ -114,9 +114,7 @@ namespace swallow::compiler::type
         leftID != nullptr && rightID != nullptr)
       {
         if (leftID->Name == rightID->Name)
-          {
-            return Ok(Void());
-          }
+          return Ok(Void());
       }
 
     return Err(Void());
@@ -126,9 +124,8 @@ namespace swallow::compiler::type
   {
     if (const auto *other = dynamic_cast<const Variable *>(type.get());
         (other != nullptr) && other->Name == name)
-      {
-        return;
-      }
+      return;
+
     Types[name] = type;
   }
 
