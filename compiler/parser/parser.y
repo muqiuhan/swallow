@@ -120,7 +120,7 @@ Match
     ;
 
 Branches
-    : Branches Branch { $$ = std::move($1); $1.push_back(std::move($2)); }
+    : Branches Branch { $$ = std::move($1); $$.push_back(std::move($2)); }
     | Branch { $$ = std::vector<Branch::Ptr>(); $$.push_back(std::move($1));}
     ;
 

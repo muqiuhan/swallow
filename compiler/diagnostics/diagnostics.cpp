@@ -1,14 +1,12 @@
 #include "diagnostics.h"
 
-#include "optional/optional.hpp"
+#include "panic/panic.hpp"
+#include "termcolor.hpp"
+#include "utils.h"
 #include <iomanip>
 #include <iostream>
-#include <map>
 #include <regex>
 #include <utility>
-
-#include "panic/panic.hpp"
-#include "utils.h"
 
 namespace swallow::compiler::diagnostics
 {

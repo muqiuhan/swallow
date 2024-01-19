@@ -1012,7 +1012,7 @@ namespace yy
                   {
                     yylhs.value.as<std::vector<Branch::Ptr> >() = std::move(
                       yystack_[1].value.as<std::vector<Branch::Ptr> >());
-                    yystack_[1].value.as<std::vector<Branch::Ptr> >().push_back(
+                    yylhs.value.as<std::vector<Branch::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Branch::Ptr>()));
                   }
 #line 958 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"

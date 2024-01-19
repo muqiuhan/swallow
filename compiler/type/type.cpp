@@ -28,7 +28,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "type.h"
-#include "panic/panic.hpp"
 #include <algorithm>
 
 using namespace swallow::utils;
@@ -102,7 +101,7 @@ namespace swallow::compiler::type
 
     if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
         *rightArrow = dynamic_cast<Arrow *>(right.get());
-        leftArrow && rightArrow)
+        leftArrow != nullptr && rightArrow != nullptr)
       {
         return unify(leftArrow->Left, rightArrow->Left)
           .and_then([&](const auto &ok) {
@@ -110,12 +109,14 @@ namespace swallow::compiler::type
           });
       }
 
-    else if (auto *leftID = dynamic_cast<Base *>(left.get()),
-             *rightID = dynamic_cast<Base *>(right.get());
-             leftID && rightID)
+    if (auto *leftID = dynamic_cast<Base *>(left.get()),
+        *rightID = dynamic_cast<Base *>(right.get());
+        leftID != nullptr && rightID != nullptr)
       {
         if (leftID->Name == rightID->Name)
-          return Ok(Void());
+          {
+            return Ok(Void());
+          }
       }
 
     return Err(Void());

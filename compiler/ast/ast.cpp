@@ -29,10 +29,7 @@
 
 #include "ast.h"
 #include "environment.h"
-#include "panic/panic.hpp"
 #include "type.h"
-#include <algorithm>
-#include <cstdlib>
 #include <reporter.h>
 #include <utils.h>
 #include <vector>

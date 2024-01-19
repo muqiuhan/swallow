@@ -27,14 +27,13 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_AST_AST_H
-#define HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_AST_AST_H
+#ifndef SWALLOW_COMPILER_AST_AST_H
+#define SWALLOW_COMPILER_AST_AST_H
 
 #include "environment.h"
 #include "location.hh"
 #include "result/result.hpp"
 #include "type.h"
-#include "type.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>

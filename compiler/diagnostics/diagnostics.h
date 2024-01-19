@@ -1,16 +1,11 @@
-#ifndef HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
-#define HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
+#ifndef SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
+#define SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
 
 #include <cassert>
-#include <cstdint>
 #include <memory>
 #include <optional>
-#include <sstream>
 #include <string>
 #include <vector>
-
-#include "location.hh"
-#include "termcolor.hpp"
 
 #define COLOR_BY_TYPE(type, text)                                              \
   color_by_type(std::cout, type) << text << termcolor::reset
@@ -270,4 +265,4 @@ namespace swallow::compiler::diagnostics
 
 } // namespace swallow::compiler::diagnostics
 
-#endif // HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
+#endif // SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H

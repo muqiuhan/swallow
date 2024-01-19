@@ -27,14 +27,13 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "type.h"
+#include "type.hpp"
 #include "ast.h"
 #include "code.hpp"
 #include "environment.h"
-#include "panic/panic.hpp"
+#include "reporter.h"
 #include <algorithm>
-#include <cstdlib>
-#include <reporter.h>
+#include <format>
 #include <sstream>
 #include <utils.h>
 #include <vector>
@@ -194,7 +193,8 @@ namespace swallow::compiler::ast
                         const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
-    type::Type::Ptr matchType =
+    type::Variable *var = nullptr;
+    type::Type::Ptr matchType = typeManager.resolve(
       With->typecheck(typeManager, typeEnvironment)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
@@ -202,8 +202,9 @@ namespace swallow::compiler::ast
             std::format("No more information"),
             diagnostics::MATCH_EXPR_TYPE_CHECKING_FAILED);
         })
-        .unwrap();
-    ;
+        .unwrap(),
+      var);
+
     type::Type::Ptr branchType = typeManager.newType();
 
     for (const auto &branch : Branches)
@@ -216,7 +217,8 @@ namespace swallow::compiler::ast
             .or_else([&](const auto &err) {
               return diagnostics::Reporter::REPORTER->normal(
                 branch->Location, "Type checking failed", "Wrong type here",
-                "No more information", 0x0003);
+                "No more information",
+                diagnostics::MATCH_EXPR_CURRENT_BRANCHE_TYPE_CHECKING_FAILED);
             })
             .unwrap();
 
@@ -238,6 +240,15 @@ namespace swallow::compiler::ast
               diagnostics::MATCH_EXPR_BRANCHE_TYPE_CONFLICTS);
           })
           .ignore();
+      }
+
+    matchType = typeManager.resolve(matchType, var);
+    if (nullptr == dynamic_cast<type::Base *>(matchType.get()))
+      {
+        return diagnostics::Reporter::REPORTER->normal(
+          Location, "Type checking failed for match expression",
+          "This is not a data type", "No more information",
+          diagnostics::MATCH_NON_DATA_TYPE);
       }
 
     return Ok(branchType);
@@ -368,11 +379,11 @@ namespace swallow::compiler::ast
     auto fullType = type::Type::Ptr(new type::Base(Name));
     for (const auto &constructor : Constructors)
       {
-        for (const auto &typeName : constructor->Types)
-          {
-            fullType = type::Type::Ptr(new type::Arrow(
-              type::Type::Ptr(new type::Base(typeName)), fullType));
-          }
+        std::for_each(constructor->Types.rbegin(), constructor->Types.rend(),
+                      [&](const auto &typeName) {
+                        fullType = type::Type::Ptr(new type::Arrow(
+                          type::Type::Ptr(new type::Base(typeName)), fullType));
+                      });
 
         typeEnvironment.bind(constructor->Name, fullType);
       }

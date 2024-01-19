@@ -23,8 +23,6 @@
 
 #include <exception>
 #include <functional>
-#include <new>
-#include <optional>
 #include <type_traits>
 #include <utility>
 

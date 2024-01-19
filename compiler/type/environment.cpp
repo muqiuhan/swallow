@@ -28,8 +28,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "environment.h"
-
-#include "panic/panic.hpp"
 #include "result/result.hpp"
 #include <utility>
 
