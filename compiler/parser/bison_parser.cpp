@@ -1052,22 +1052,34 @@ namespace yy
 #line 976 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-                  case 31: // Pattern: UID LowercaseParams
-#line 135 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  case 31: // Pattern: UID
+#line 134 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Pattern::Ptr>() =
                       Pattern::Ptr(new PatternConstructor(
                         yylhs.location,
-                        std::move(yystack_[1].value.as<std::string>()),
-                        std::move(
-                          yystack_[0].value.as<std::vector<std::string> >())));
+                        std::move(yystack_[0].value.as<std::string>()),
+                        std::vector<std::string>()));
                   }
 #line 982 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-                  case 32: // Data: DATA UID EQUAL OBRACKET Constructors
+                  case 32: // Pattern: UID OPAREN LowercaseParams CPAREN
+#line 136 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  {
+                    yylhs.value.as<Pattern::Ptr>() =
+                      Pattern::Ptr(new PatternConstructor(
+                        yylhs.location,
+                        std::move(yystack_[3].value.as<std::string>()),
+                        std::move(
+                          yystack_[1].value.as<std::vector<std::string> >())));
+                  }
+#line 988 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+                  break;
+
+                  case 33: // Data: DATA UID EQUAL OBRACKET Constructors
                            // CBRACKET
-#line 140 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+#line 141 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() =
                       Definition::Ptr(new Data(
@@ -1077,11 +1089,11 @@ namespace yy
                           yystack_[1]
                             .value.as<std::vector<Constructor::Ptr> >())));
                   }
-#line 988 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 994 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-                  case 33: // Constructors: Constructors COMMA Constructor
-#line 144 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  case 34: // Constructors: Constructors COMMA Constructor
+#line 145 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Constructor::Ptr> >() =
                       std::move(
@@ -1089,22 +1101,22 @@ namespace yy
                     yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
-#line 994 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1000 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-                  case 34: // Constructors: Constructor
-#line 146 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  case 35: // Constructors: Constructor
+#line 147 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Constructor::Ptr> >() =
                       std::vector<Constructor::Ptr>();
                     yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
-#line 1000 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1006 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-                  case 35: // Constructor: UID UppercaseParams
-#line 151 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
+                  case 36: // Constructor: UID UppercaseParams
+#line 152 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
                   {
                     yylhs.value.as<Constructor::Ptr>() =
                       Constructor::Ptr(new Constructor(
@@ -1113,10 +1125,10 @@ namespace yy
                         std::move(
                           yystack_[0].value.as<std::vector<std::string> >())));
                   }
-#line 1006 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1012 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
                   break;
 
-#line 1010 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1016 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
 
                 default:
                   break;
@@ -1298,50 +1310,50 @@ namespace yy
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char parser::yypact_[] = {
-    22,  -20, -16, 25, 22, -32, -32, -32, 24, -7,  -32, -32, 10, 28,
-    -32, -1,  17,  27, 29, -32, 19,  -32, 33, -32, 26,  -32, 17, -5,
-    -32, -32, -32, -5, -5, -32, -32, 7,   23, -5,  -32, -32, 21, 1,
-    -5,  -5,  -32, -5, -5, -32, 34,  -32, 23, 23,  -5,  -5,  31, 16,
-    15,  -32, -32, 10, 32, -32, -32, 36,  43, -5,  8,   -32};
+    28,  -20, -16, 15, 28, -32, -32, -32, 16, 11,  -32, -32, 20, 30,
+    -32, -1,  23,  29, 27, -32, 22,  -32, 26, -32, 31,  -32, 23, -5,
+    -32, -32, -32, -5, -5, -32, -32, 7,   25, -5,  -32, -32, 21, 1,
+    -5,  -5,  -32, -5, -5, -32, 40,  -32, 25, 25,  -5,  -5,  33, 18,
+    14,  -32, -32, 42, 36, -32, -32, 20,  46, 10,  -5,  -32, 8,  -32};
 
   const signed char parser::yydefact_[] = {
-    0,  0,  0,  0,  2,  4,  5,  6,  0,  0, 1,  3,  8,  0,  9, 0,  0,
-    0,  0,  11, 0,  34, 0,  10, 35, 32, 0, 0,  12, 33, 21, 0, 0,  22,
-    23, 0,  15, 18, 20, 25, 0,  0,  0,  0, 7,  0,  0,  19, 0, 24, 13,
-    14, 16, 17, 0,  0,  0,  28, 30, 8,  0, 26, 27, 31, 0,  0, 0,  29};
+    0,  0,  0,  0,  2,  4,  5,  6,  0,  0, 1,  3,  8,  0,  9,  0,  0,  0,
+    0,  11, 0,  35, 0,  10, 36, 33, 0,  0, 12, 34, 21, 0,  0,  22, 23, 0,
+    15, 18, 20, 25, 0,  0,  0,  0,  7,  0, 0,  19, 0,  24, 13, 14, 16, 17,
+    0,  0,  0,  28, 30, 31, 0,  26, 27, 8, 0,  0,  0,  32, 0,  29};
 
-  const signed char parser::yypgoto_[] = {-32, -32, -32, 52,  -32, -2,
-                                          -32, -31, 0,   2,   -30, -32,
-                                          -32, 3,   -32, -32, -32, 35};
+  const signed char parser::yypgoto_[] = {-32, -32, -32, 50,  -32, -4,
+                                          -32, -31, 2,   3,   -30, -32,
+                                          -32, 4,   -32, -32, -32, 35};
 
   const signed char parser::yydefgoto_[] = {0,  3,  4,  5,  6,  15, 24, 35, 36,
                                             37, 38, 39, 56, 57, 60, 7,  20, 21};
 
   const signed char parser::yytable_[] = {
-    40, 41, 30, 8,  42, 31, 43, 47, 9,  32, 42, 42, 43, 43, 17, 13,
-    49, 18, 33, 34, 44, 67, 47, 47, 42, 10, 43, 45, 61, 46, 1,  2,
-    48, 14, 66, 55, 25, 26, 12, 58, 59, 19, 50, 51, 16, 27, 54, 52,
-    53, 22, 28, 55, 23, 64, 18, 65, 11, 63, 0,  62, 0,  29};
+    40, 41, 30, 8,  42, 31, 43, 47, 9,  32, 42, 42, 43, 43, 17, 10,
+    49, 18, 33, 34, 44, 69, 47, 47, 42, 67, 43, 61, 18, 45, 12, 46,
+    48, 13, 55, 68, 1,  2,  27, 25, 26, 58, 59, 14, 50, 51, 16, 19,
+    52, 53, 23, 22, 54, 55, 11, 28, 63, 64, 66, 65, 62, 29};
 
   const signed char parser::yycheck_[] = {
-    31, 32, 7,  23, 3,  10, 5,  37, 24, 14, 3,  3,  5,  5,  15, 22,
-    15, 18, 23, 24, 13, 13, 52, 53, 3,  0,  5,  4,  13, 6,  8,  9,
-    11, 23, 65, 20, 17, 18, 14, 23, 24, 24, 42, 43, 16, 12, 12, 45,
-    46, 22, 24, 20, 23, 21, 18, 12, 4,  59, -1, 56, -1, 26};
+    31, 32, 7,  23, 3,  10, 5,  37, 24, 14, 3,  3,  5,  5,  15, 0,
+    15, 18, 23, 24, 13, 13, 52, 53, 3,  15, 5,  13, 18, 4,  14, 6,
+    11, 22, 20, 66, 8,  9,  12, 17, 18, 23, 24, 23, 42, 43, 16, 24,
+    45, 46, 23, 22, 12, 20, 4,  24, 14, 21, 12, 63, 56, 26};
 
   const signed char parser::yystos_[] = {
-    0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 14, 22, 23, 30, 16,
-    15, 18, 24, 41, 42, 22, 23, 31, 17, 18, 12, 24, 42, 7,  10, 14, 23,
-    24, 32, 33, 34, 35, 36, 32, 32, 3,  5,  13, 4,  6,  35, 11, 15, 33,
-    33, 34, 34, 12, 20, 37, 38, 23, 24, 39, 13, 38, 30, 21, 12, 32, 13};
+    0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 14, 22, 23, 30, 16, 15,
+    18, 24, 41, 42, 22, 23, 31, 17, 18, 12, 24, 42, 7,  10, 14, 23, 24, 32,
+    33, 34, 35, 36, 32, 32, 3,  5,  13, 4,  6,  35, 11, 15, 33, 33, 34, 34,
+    12, 20, 37, 38, 23, 24, 39, 13, 38, 14, 21, 30, 12, 15, 32, 13};
 
   const signed char parser::yyr1_[] = {
-    0,  25, 26, 27, 27, 28, 28, 29, 30, 30, 30, 31, 31, 32, 32, 32, 33, 33,
-    33, 34, 34, 35, 35, 35, 35, 35, 36, 37, 37, 38, 39, 39, 40, 41, 41, 42};
+    0,  25, 26, 27, 27, 28, 28, 29, 30, 30, 30, 31, 31, 32, 32, 32, 33, 33, 33,
+    34, 34, 35, 35, 35, 35, 35, 36, 37, 37, 38, 39, 39, 39, 40, 41, 41, 42};
 
-  const signed char parser::yyr2_[] = {0, 2, 1, 2, 1, 1, 1, 9, 0, 1, 3, 0,
-                                       2, 3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1,
-                                       3, 1, 6, 2, 1, 6, 1, 2, 6, 3, 1, 2};
+  const signed char parser::yyr2_[] = {0, 2, 1, 2, 1, 1, 1, 9, 0, 1, 3, 0, 2,
+                                       3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1, 3, 1,
+                                       6, 2, 1, 6, 1, 1, 4, 6, 3, 1, 2};
 
 #if YYDEBUG
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
@@ -1394,9 +1406,9 @@ namespace yy
 
 #if YYDEBUG
   const unsigned char parser::yyrline_[] = {
-    0,   62,  62,  66,  67,  71,  72,  76,  82,  83,  84,  88,
-    89,  93,  94,  95,  99,  100, 101, 105, 106, 110, 111, 112,
-    113, 114, 118, 123, 124, 128, 133, 134, 139, 144, 145, 150};
+    0,   62,  62,  66,  67,  71,  72,  76,  82,  83,  84,  88,  89,
+    93,  94,  95,  99,  100, 101, 105, 106, 110, 111, 112, 113, 114,
+    118, 123, 124, 128, 133, 134, 135, 140, 145, 146, 151};
 
   void parser::yy_stack_print_() const
   {
@@ -1424,4 +1436,4 @@ namespace yy
 #endif // YYDEBUG
 
 } // namespace yy
-#line 1356 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
+#line 1362 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.cpp"
