@@ -6,7 +6,7 @@
 
 namespace swallow::compiler::diagnostics
 {
-  std::string repeat_string(const std::string & input, size_t amount);
+  std::string repeat_string(const std::string &input, size_t amount);
 }
 
 #endif

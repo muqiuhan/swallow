@@ -28,31 +28,38 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "environment.h"
-#include "panic/panic.hpp"
 #include "result/result.hpp"
+#include <utility>
 
 using namespace swallow::utils;
 
 namespace swallow::compiler::type
 {
 
-  Result<Type::Ptr, Void>
-    Environment::lookup(const std::string & name) const noexcept
+  auto Environment::lookup(const std::string &name) const noexcept
+    -> Result<Type::Ptr, Void>
   {
     if (const auto it = Names.find(name); it != Names.end())
-      return Ok(it->second);
+      {
+        return Ok(it->second);
+      }
 
-    if (Parent)
-      return Parent->lookup(name);
+    if (Parent != nullptr)
+      {
+        return Parent->lookup(name);
+      }
 
     return Err(Void());
   }
 
-  void Environment::bind(const std::string & name, Type::Ptr type) noexcept
+  void Environment::bind(const std::string &name, Type::Ptr type) noexcept
   {
-    Names[name] = type;
+    Names[name] = std::move(type);
   }
 
-  Environment Environment::scope() const noexcept { return Environment(this); }
+  auto Environment::scope() const noexcept -> Environment
+  {
+    return Environment(this);
+  }
 
 } // namespace swallow::compiler::type

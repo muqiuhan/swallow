@@ -28,14 +28,13 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "type.h"
-#include "panic/panic.hpp"
 #include <algorithm>
 
 using namespace swallow::utils;
 
 namespace swallow::compiler::type
 {
-  std::string Manager::newTypeName() noexcept
+  auto Manager::newTypeName() noexcept -> std::string
   {
     int32_t currentID = LastID++;
     std::string name;
@@ -50,22 +49,22 @@ namespace swallow::compiler::type
     return name;
   }
 
-  Type::Ptr Manager::newType() noexcept
+  auto Manager::newType() noexcept -> Type::Ptr
   {
     return Type::Ptr(new Variable(newTypeName()));
   }
 
-  Type::Ptr Manager::newArrowType() noexcept
+  auto Manager::newArrowType() noexcept -> Type::Ptr
   {
     return Type::Ptr(new Arrow(newType(), newType()));
   }
 
-  Type::Ptr Manager::resolve(Type::Ptr type, Variable *&var) noexcept
+  auto Manager::resolve(Type::Ptr type, Variable *&var) noexcept -> Type::Ptr
   {
-    Variable *cast;
+    Variable *cast = nullptr;
     var = nullptr;
 
-    while ((cast = dynamic_cast<Variable *>(type.get())))
+    while ((cast = dynamic_cast<Variable *>(type.get())) != nullptr)
       {
         const auto it = Types.find(cast->Name);
         if (it == Types.end())
@@ -79,29 +78,30 @@ namespace swallow::compiler::type
     return type;
   }
 
-  Result<Void, Void> Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
+  auto Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
+    -> Result<Void, Void>
   {
-    Variable *leftVar;
-    Variable *rightVar;
+    Variable *leftVar = nullptr;
+    Variable *rightVar = nullptr;
 
     left = resolve(left, leftVar);
     right = resolve(right, rightVar);
 
-    if (leftVar)
+    if (leftVar != nullptr)
       {
         bind(leftVar->Name, right);
         return Ok(Void());
       }
 
-    else if (rightVar)
+    if (rightVar != nullptr)
       {
         bind(rightVar->Name, left);
         return Ok(Void());
       }
 
-    else if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
-             *rightArrow = dynamic_cast<Arrow *>(right.get());
-             leftArrow && rightArrow)
+    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
+        *rightArrow = dynamic_cast<Arrow *>(right.get());
+        leftArrow != nullptr && rightArrow != nullptr)
       {
         return unify(leftArrow->Left, rightArrow->Left)
           .and_then([&](const auto &ok) {
@@ -109,12 +109,14 @@ namespace swallow::compiler::type
           });
       }
 
-    else if (auto *leftID = dynamic_cast<Base *>(left.get()),
-             *rightID = dynamic_cast<Base *>(right.get());
-             leftID && rightID)
+    if (auto *leftID = dynamic_cast<Base *>(left.get()),
+        *rightID = dynamic_cast<Base *>(right.get());
+        leftID != nullptr && rightID != nullptr)
       {
         if (leftID->Name == rightID->Name)
-          return Ok(Void());
+          {
+            return Ok(Void());
+          }
       }
 
     return Err(Void());
@@ -122,9 +124,11 @@ namespace swallow::compiler::type
 
   void Manager::bind(const std::string &name, const Type::Ptr &type) noexcept
   {
-    if (auto *other = dynamic_cast<const Variable *>(type.get());
-        other && other->Name == name)
-      return;
+    if (const auto *other = dynamic_cast<const Variable *>(type.get());
+        (other != nullptr) && other->Name == name)
+      {
+        return;
+      }
     Types[name] = type;
   }
 

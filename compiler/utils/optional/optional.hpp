@@ -23,8 +23,6 @@
 
 #include <exception>
 #include <functional>
-#include <new>
-#include <optional>
 #include <type_traits>
 #include <utility>
 
@@ -205,8 +203,7 @@ namespace tl
     // std::invoke from C++17
     // https://stackoverflow.com/questions/38288042/c11-14-invoke-workaround
     template <
-      typename Fn,
-      typename... Args,
+      typename Fn, typename... Args,
 #ifdef TL_TRAITS_LIBCXX_MEM_FN_WORKAROUND
       typename = enable_if_t<!(is_pointer_to_non_const_member_func<Fn>::value
                                && is_const_or_const_ref<Args...>::value)>,
@@ -221,8 +218,7 @@ namespace tl
     }
 
     template <
-      typename Fn,
-      typename... Args,
+      typename Fn, typename... Args,
       typename = enable_if_t<!std::is_member_pointer<decay_t<Fn>>::value>>
     constexpr auto invoke(Fn &&f, Args &&...args) noexcept(
       noexcept(std::forward<Fn>(f)(std::forward<Args>(args)...)))
@@ -273,8 +269,7 @@ namespace tl
       // helper functions to test if an unqualified swap is possible, and if it
       // becomes std::swap
       template <class, class> std::false_type can_swap(...) noexcept(false);
-      template <class T,
-                class U,
+      template <class T, class U,
                 class = decltype(swap(std::declval<T &>(),
                                       std::declval<U &>()))>
       std::true_type can_swap(int) noexcept(
@@ -316,11 +311,10 @@ namespace tl
     template <class T, std::size_t N>
     struct is_swappable<T[N], T[N]>
       : std::integral_constant<
-          bool,
-          decltype(detail::swap_adl_tests::can_swap<T[N], T[N]>(0))::value
-            && (!decltype(detail::swap_adl_tests::uses_std<T[N], T[N]>(
-                  0))::value
-                || is_swappable<T, T>::value)>
+          bool, decltype(detail::swap_adl_tests::can_swap<T[N], T[N]>(0))::value
+                  && (!decltype(detail::swap_adl_tests::uses_std<T[N], T[N]>(
+                        0))::value
+                      || is_swappable<T, T>::value)>
     {};
 
     template <class T, class U = T>
@@ -599,10 +593,9 @@ namespace tl
 
     // This class manages conditionally having a trivial copy assignment
     // operator
-    template <class T,
-              bool = TL_OPTIONAL_IS_TRIVIALLY_COPY_ASSIGNABLE(T)
-                     && TL_OPTIONAL_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)
-                     && TL_OPTIONAL_IS_TRIVIALLY_DESTRUCTIBLE(T)>
+    template <class T, bool = TL_OPTIONAL_IS_TRIVIALLY_COPY_ASSIGNABLE(T)
+                              && TL_OPTIONAL_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)
+                              && TL_OPTIONAL_IS_TRIVIALLY_DESTRUCTIBLE(T)>
     struct optional_copy_assign_base : optional_move_base<T>
     {
       using optional_move_base<T>::optional_move_base;
@@ -632,10 +625,9 @@ namespace tl
 // to make do with a non-trivial move assignment operator even if T is trivially
 // move assignable
 #ifndef TL_OPTIONAL_GCC49
-    template <class T,
-              bool = std::is_trivially_destructible<T>::value
-                     && std::is_trivially_move_constructible<T>::value
-                     && std::is_trivially_move_assignable<T>::value>
+    template <class T, bool = std::is_trivially_destructible<T>::value
+                              && std::is_trivially_move_constructible<T>::value
+                              && std::is_trivially_move_assignable<T>::value>
     struct optional_move_assign_base : optional_copy_assign_base<T>
     {
       using optional_copy_assign_base<T>::optional_copy_assign_base;
@@ -669,8 +661,7 @@ namespace tl
 
     // optional_delete_ctor_base will conditionally delete copy and move
     // constructors depending on whether T is copy/move constructible
-    template <class T,
-              bool EnableCopy = std::is_copy_constructible<T>::value,
+    template <class T, bool EnableCopy = std::is_copy_constructible<T>::value,
               bool EnableMove = std::is_move_constructible<T>::value>
     struct optional_delete_ctor_base
     {
@@ -1253,9 +1244,7 @@ namespace tl
       detail::enable_if_t<
         std::is_constructible<T, std::initializer_list<U> &, Args &&...>::value,
         in_place_t>,
-      std::initializer_list<U>
-        il,
-      Args &&...args)
+      std::initializer_list<U> il, Args &&...args)
     {
       this->construct(il, std::forward<Args>(args)...);
     }
@@ -1277,8 +1266,7 @@ namespace tl
 
     /// Converting copy constructor.
     template <
-      class U,
-      detail::enable_from_other<T, U, const U &> * = nullptr,
+      class U, detail::enable_from_other<T, U, const U &> * = nullptr,
       detail::enable_if_t<std::is_convertible<const U &, T>::value> * = nullptr>
     optional(const optional<U> &rhs)
     {
@@ -1288,8 +1276,7 @@ namespace tl
         }
     }
 
-    template <class U,
-              detail::enable_from_other<T, U, const U &> * = nullptr,
+    template <class U, detail::enable_from_other<T, U, const U &> * = nullptr,
               detail::enable_if_t<!std::is_convertible<const U &, T>::value> * =
                 nullptr>
     explicit optional(const optional<U> &rhs)
@@ -1302,8 +1289,7 @@ namespace tl
 
     /// Converting move constructor.
     template <
-      class U,
-      detail::enable_from_other<T, U, U &&> * = nullptr,
+      class U, detail::enable_from_other<T, U, U &&> * = nullptr,
       detail::enable_if_t<std::is_convertible<U &&, T>::value> * = nullptr>
     optional(optional<U> &&rhs)
     {
@@ -1314,8 +1300,7 @@ namespace tl
     }
 
     template <
-      class U,
-      detail::enable_from_other<T, U, U &&> * = nullptr,
+      class U, detail::enable_from_other<T, U, U &&> * = nullptr,
       detail::enable_if_t<!std::is_convertible<U &&, T>::value> * = nullptr>
     explicit optional(optional<U> &&rhs)
     {
@@ -1756,12 +1741,10 @@ namespace tl
     {};
   } // namespace detail
 
-  template <class T = detail::i_am_secret,
-            class U,
+  template <class T = detail::i_am_secret, class U,
             class Ret =
               detail::conditional_t<std::is_same<T, detail::i_am_secret>::value,
-                                    detail::decay_t<U>,
-                                    T>>
+                                    detail::decay_t<U>, T>>
   inline constexpr optional<Ret> make_optional(U &&v)
   {
     return optional<Ret>(std::forward<U>(v));
@@ -1787,8 +1770,7 @@ namespace tl
   namespace detail
   {
 #ifdef TL_OPTIONAL_CXX14
-    template <class Opt,
-              class F,
+    template <class Opt, class F,
               class Ret = decltype(detail::invoke(std::declval<F>(),
                                                   *std::declval<Opt>())),
               detail::enable_if_t<!std::is_void<Ret>::value> * = nullptr>
@@ -1799,8 +1781,7 @@ namespace tl
                : optional<Ret>(nullopt);
     }
 
-    template <class Opt,
-              class F,
+    template <class Opt, class F,
               class Ret = decltype(detail::invoke(std::declval<F>(),
                                                   *std::declval<Opt>())),
               detail::enable_if_t<std::is_void<Ret>::value> * = nullptr>
@@ -1815,8 +1796,7 @@ namespace tl
       return optional<monostate>(nullopt);
     }
 #else
-    template <class Opt,
-              class F,
+    template <class Opt, class F,
               class Ret = decltype(detail::invoke(std::declval<F>(),
                                                   *std::declval<Opt>())),
               detail::enable_if_t<!std::is_void<Ret>::value> * = nullptr>
@@ -1828,8 +1808,7 @@ namespace tl
                : optional<Ret>(nullopt);
     }
 
-    template <class Opt,
-              class F,
+    template <class Opt, class F,
               class Ret = decltype(detail::invoke(std::declval<F>(),
                                                   *std::declval<Opt>())),
               detail::enable_if_t<std::is_void<Ret>::value> * = nullptr>
@@ -2279,9 +2258,8 @@ namespace tl
     TL_OPTIONAL_11_CONSTEXPR optional(optional &&rhs) = default;
 
     /// Constructs the stored value with `u`.
-    template <class U = T,
-              detail::enable_if_t<
-                !detail::is_optional<detail::decay_t<U>>::value> * = nullptr>
+    template <class U = T, detail::enable_if_t<!detail::is_optional<
+                             detail::decay_t<U>>::value> * = nullptr>
     constexpr optional(U &&u) noexcept : m_value(std::addressof(u))
     {
       static_assert(std::is_lvalue_reference<U>::value, "U must be an lvalue");
@@ -2311,9 +2289,8 @@ namespace tl
     optional &operator=(const optional &rhs) = default;
 
     /// Rebinds this optional to `u`.
-    template <class U = T,
-              detail::enable_if_t<
-                !detail::is_optional<detail::decay_t<U>>::value> * = nullptr>
+    template <class U = T, detail::enable_if_t<!detail::is_optional<
+                             detail::decay_t<U>>::value> * = nullptr>
     optional &operator=(U &&u)
     {
       static_assert(std::is_lvalue_reference<U>::value, "U must be an lvalue");
@@ -2332,9 +2309,8 @@ namespace tl
     }
 
     /// Rebinds this optional to `u`.
-    template <class U = T,
-              detail::enable_if_t<
-                !detail::is_optional<detail::decay_t<U>>::value> * = nullptr>
+    template <class U = T, detail::enable_if_t<!detail::is_optional<
+                             detail::decay_t<U>>::value> * = nullptr>
     optional &emplace(U &&u) noexcept
     {
       return *this = std::forward<U>(u);

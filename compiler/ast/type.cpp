@@ -27,14 +27,13 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "type.h"
+#include "type.hpp"
 #include "ast.h"
 #include "code.hpp"
 #include "environment.h"
-#include "panic/panic.hpp"
+#include "reporter.h"
 #include <algorithm>
-#include <cstdlib>
-#include <reporter.h>
+#include <format>
 #include <sstream>
 #include <utils.h>
 #include <vector>
@@ -44,44 +43,41 @@ using namespace swallow::utils;
 namespace swallow::compiler::ast
 {
 
-  Result<type::Type::Ptr, Void>
-    Int::typecheck(type::Manager &typeManager,
-                   const type::Environment &typeEnvironment) const noexcept
+  auto Int::typecheck(type::Manager &typeManager,
+                      const type::Environment &typeEnvironment) const noexcept
+    -> Result<type::Type::Ptr, Void>
   {
     return Ok(type::Type::Ptr(new type::Base("Int")));
   }
 
-  Result<type::Type::Ptr, Void>
-    LID::typecheck(type::Manager &typeManager,
-                   const type::Environment &typeEnvironment) const noexcept
+  auto LID::typecheck(type::Manager &typeManager,
+                      const type::Environment &typeEnvironment) const noexcept
+    -> Result<type::Type::Ptr, Void>
   {
     return typeEnvironment.lookup(ID).or_else([&](const auto &err) {
       return diagnostics::Reporter::REPORTER->normal(
-        Location,
-        std::format("'{}' was not declared", ID),
+        Location, std::format("'{}' was not declared", ID),
         "The definition of this identifier cannot be found in the context",
         "Function or Variable is undefined",
         diagnostics::Code::LID_NOT_DECLARED);
     });
   }
 
-  Result<type::Type::Ptr, Void>
-    UID::typecheck(type::Manager &typeManager,
-                   const type::Environment &typeEnvironment) const noexcept
+  auto UID::typecheck(type::Manager &typeManager,
+                      const type::Environment &typeEnvironment) const noexcept
+    -> Result<type::Type::Ptr, Void>
   {
     return typeEnvironment.lookup(ID).or_else([&](const auto &err) {
       return diagnostics::Reporter::REPORTER->normal(
-        Location,
-        std::format("'{}' was not declared", ID),
+        Location, std::format("'{}' was not declared", ID),
         "The definition of this identifier cannot be found in the context",
-        "Type or Constructor is undefined",
-        diagnostics::UID_NOT_DECLARED);
+        "Type or Constructor is undefined", diagnostics::UID_NOT_DECLARED);
     });
   }
 
-  Result<type::Type::Ptr, Void>
-    Binop::typecheck(type::Manager &typeManager,
-                     const type::Environment &typeEnvironment) const noexcept
+  auto Binop::typecheck(type::Manager &typeManager,
+                        const type::Environment &typeEnvironment) const noexcept
+    -> Result<type::Type::Ptr, Void>
   {
     const std::string operatorName = operatorsToString(Operator).unwrap();
 
@@ -89,9 +85,7 @@ namespace swallow::compiler::ast
       Left->typecheck(typeManager, typeEnvironment)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            Left->Location,
-            "Type checking failed",
-            "Wrong type here",
+            Left->Location, "Type checking failed", "Wrong type here",
             std::format("No more information"),
             diagnostics::EXPR_TYPE_CHECKING_FAILED);
         })
@@ -101,9 +95,7 @@ namespace swallow::compiler::ast
       Right->typecheck(typeManager, typeEnvironment)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            Left->Location,
-            "Type checking failed",
-            "Wrong type here",
+            Left->Location, "Type checking failed", "Wrong type here",
             std::format("No more information"),
             diagnostics::EXPR_TYPE_CHECKING_FAILED);
         })
@@ -113,12 +105,10 @@ namespace swallow::compiler::ast
       typeEnvironment.lookup(operatorName)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            Location,
-            std::format("'{}' was not declared", operatorName),
+            Location, std::format("'{}' was not declared", operatorName),
             "The definition of this operator cannot be found in the "
             "context",
-            "Operator is undefined",
-            diagnostics::BINOP_NOT_DECLARED);
+            "Operator is undefined", diagnostics::BINOP_NOT_DECLARED);
         })
         .unwrap();
 
@@ -141,28 +131,24 @@ namespace swallow::compiler::ast
           std::format("Type checking failed for '{}'", operatorName),
           std::format(
             "The operator '{}' has type '{}', but here may need a '{}'",
-            operatorName,
-            expected.str(),
-            actual.str()),
+            operatorName, expected.str(), actual.str()),
           std::format("'{}' conflicts with '{}'", expected.str(), actual.str()),
           diagnostics::BINOP_TYPE_MISMATCH);
       })
-      .unwrap();
+      .ignore();
 
     return Ok(returnType);
   }
 
-  Result<type::Type::Ptr, Void> Application::typecheck(
-    type::Manager &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+  auto Application::typecheck(type::Manager &typeManager,
+                              const type::Environment &typeEnvironment)
+    const noexcept -> Result<type::Type::Ptr, Void>
   {
     type::Type::Ptr leftType =
       Left->typecheck(typeManager, typeEnvironment)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            Left->Location,
-            "Type checking failed",
-            "Wrong type here",
+            Left->Location, "Type checking failed", "Wrong type here",
             std::format("No more information"),
             diagnostics::EXPR_TYPE_CHECKING_FAILED);
         })
@@ -172,9 +158,7 @@ namespace swallow::compiler::ast
       Right->typecheck(typeManager, typeEnvironment)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            Left->Location,
-            "Type checking failed",
-            "Wrong type here",
+            Left->Location, "Type checking failed", "Wrong type here",
             std::format("No more information"),
             diagnostics::EXPR_TYPE_CHECKING_FAILED);
         })
@@ -196,35 +180,34 @@ namespace swallow::compiler::ast
           Location,
           std::format("Type checking failed for function application"),
           std::format("This expression has type '{}', but here may need a '{}'",
-                      actual.str(),
-                      expected.str()),
+                      actual.str(), expected.str()),
           std::format("'{}' conflicts with '{}'", expected.str(), actual.str()),
           diagnostics::APPLICATION_TYPE_MISMATCH);
       })
-      .unwrap();
+      .ignore();
 
     return Ok(returnType);
   }
 
-  Result<type::Type::Ptr, Void>
-    Match::typecheck(type::Manager &typeManager,
-                     const type::Environment &typeEnvironment) const noexcept
+  auto Match::typecheck(type::Manager &typeManager,
+                        const type::Environment &typeEnvironment) const noexcept
+    -> Result<type::Type::Ptr, Void>
   {
-    type::Type::Ptr matchType =
+    type::Variable *var = nullptr;
+    type::Type::Ptr matchType = typeManager.resolve(
       With->typecheck(typeManager, typeEnvironment)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            With->Location,
-            "Type checking failed",
-            "Wrong type here",
+            With->Location, "Type checking failed", "Wrong type here",
             std::format("No more information"),
             diagnostics::MATCH_EXPR_TYPE_CHECKING_FAILED);
         })
-        .unwrap();
-    ;
+        .unwrap(),
+      var);
+
     type::Type::Ptr branchType = typeManager.newType();
 
-    for (auto &branch : Branches)
+    for (const auto &branch : Branches)
       {
         type::Environment newEnvironment = typeEnvironment.scope();
         branch->Patt->match(matchType, typeManager, newEnvironment);
@@ -233,11 +216,9 @@ namespace swallow::compiler::ast
           branch->Expr->typecheck(typeManager, newEnvironment)
             .or_else([&](const auto &err) {
               return diagnostics::Reporter::REPORTER->normal(
-                branch->Location,
-                "Type checking failed",
-                "Wrong type here",
+                branch->Location, "Type checking failed", "Wrong type here",
                 "No more information",
-                0x0003);
+                diagnostics::MATCH_EXPR_CURRENT_BRANCHE_TYPE_CHECKING_FAILED);
             })
             .unwrap();
 
@@ -253,53 +234,57 @@ namespace swallow::compiler::ast
               branch->Location,
               "Type checking failed for match expression's branch",
               std::format("This branch has type '{}', but here may need a '{}'",
-                          actual.str(),
-                          expected.str()),
-              std::format(
-                "'{}' conflicts with '{}'", expected.str(), actual.str()),
+                          actual.str(), expected.str()),
+              std::format("'{}' conflicts with '{}'", expected.str(),
+                          actual.str()),
               diagnostics::MATCH_EXPR_BRANCHE_TYPE_CONFLICTS);
           })
-          .unwrap();
+          .ignore();
+      }
+
+    matchType = typeManager.resolve(matchType, var);
+    if (nullptr == dynamic_cast<type::Base *>(matchType.get()))
+      {
+        return diagnostics::Reporter::REPORTER->normal(
+          Location, "Type checking failed for match expression",
+          "This is not a data type", "No more information",
+          diagnostics::MATCH_NON_DATA_TYPE);
       }
 
     return Ok(branchType);
   }
 
-  void PatternVariable::match(type::Type::Ptr type,
-                              type::Manager &typeManager,
+  void PatternVariable::match(type::Type::Ptr type, type::Manager &typeManager,
                               type::Environment &typeEnvironment) const noexcept
   {
     typeManager.bind(Variable, type);
   }
 
   void
-    PatternConstructor::match(type::Type::Ptr type,
-                              type::Manager &typeManager,
+    PatternConstructor::match(type::Type::Ptr type, type::Manager &typeManager,
                               type::Environment &typeEnvironment) const noexcept
   {
     type::Type::Ptr constructorType =
       typeEnvironment.lookup(Constructor)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
-            Location,
-            std::format("'{}' was not declared", Constructor),
+            Location, std::format("'{}' was not declared", Constructor),
             "The definition of this constructor cannot be found in the "
             "context",
-            "Constructor is undefined",
-            diagnostics::CONSTRUCTOR_NOT_DECLARED);
+            "Constructor is undefined", diagnostics::CONSTRUCTOR_NOT_DECLARED);
         })
         .unwrap();
 
     std::for_each(Params.begin(), Params.end(), [&](const std::string &param) {
       auto *arrow = dynamic_cast<type::Arrow *>(constructorType.get());
 
-      if (!arrow)
-        diagnostics::Reporter::REPORTER->normal(
-          Location,
-          "Illegal Pattern",
-          "This identifier is not a constructor",
-          "Constructor must be a function type",
-          diagnostics::PATTERN_CONSTRUCTOR_IS_NOT_FUNCTION);
+      if (arrow == nullptr)
+        {
+          diagnostics::Reporter::REPORTER->normal(
+            Location, "Illegal Pattern", "This identifier is not a constructor",
+            "Constructor must be a function type",
+            diagnostics::PATTERN_CONSTRUCTOR_IS_NOT_FUNCTION);
+        }
 
       typeEnvironment.bind(param, arrow->Left);
       constructorType = arrow->Right;
@@ -314,24 +299,22 @@ namespace swallow::compiler::ast
         constructorType->dump(typeManager, actual);
 
         return diagnostics::Reporter::REPORTER->normal(
-          Location,
-          "Type checking failed for pattern",
+          Location, "Type checking failed for pattern",
           std::format("This pattern has type '{}', but here may need a '{}'",
-                      actual.str(),
-                      expected.str()),
+                      actual.str(), expected.str()),
           std::format("'{}' conflicts with '{}'", expected.str(), actual.str()),
           diagnostics::PATTERN_MISMATCH);
       })
-      .unwrap();
+      .ignore();
 
-    if (const auto resultType =
+    if (auto *const resultType =
           dynamic_cast<type::Base *>(constructorType.get());
-        !resultType)
-      diagnostics::Reporter::REPORTER->normal(Location,
-                                              "Illegal return type",
-                                              "Unable to return this value",
-                                              "No more information",
-                                              diagnostics::UNKNOWN);
+        resultType == nullptr)
+      {
+        diagnostics::Reporter::REPORTER->normal(
+          Location, "Illegal return type", "Unable to return this value",
+          "No more information", diagnostics::UNKNOWN);
+      }
   }
 
   void Fn::scanDefinitionType(type::Manager &typeManager,
@@ -366,10 +349,8 @@ namespace swallow::compiler::ast
     auto bodyType = Body->typecheck(typeManager, newEnvironment)
                       .or_else([&](const auto &err) {
                         return diagnostics::Reporter::REPORTER->normal(
-                          Location,
-                          "Type checking failed for function body",
-                          "Wrong type here",
-                          "No more information",
+                          Location, "Type checking failed for function body",
+                          "Wrong type here", "No more information",
                           diagnostics::FUNCTION_BODY_TYPE_CHECKING_FAILED);
                       })
                       .unwrap();
@@ -383,15 +364,13 @@ namespace swallow::compiler::ast
         bodyType->dump(typeManager, actual);
 
         return diagnostics::Reporter::REPORTER->normal(
-          Location,
-          "Type checking failed for function",
+          Location, "Type checking failed for function",
           std::format("This function has type '{}', but the body has type '{}'",
-                      expected.str(),
-                      actual.str()),
+                      expected.str(), actual.str()),
           std::format("'{}' conflicts with '{}'", expected.str(), actual.str()),
           diagnostics::MATCH_EXPR_BRANCHE_TYPE_CONFLICTS);
       })
-      .unwrap();
+      .ignore();
   }
 
   void Data::scanDefinitionType(type::Manager &typeManager,
@@ -400,9 +379,11 @@ namespace swallow::compiler::ast
     auto fullType = type::Type::Ptr(new type::Base(Name));
     for (const auto &constructor : Constructors)
       {
-        for (const auto &typeName : constructor->Types)
-          fullType = type::Type::Ptr(new type::Arrow(
-            type::Type::Ptr(new type::Base(typeName)), fullType));
+        std::for_each(constructor->Types.rbegin(), constructor->Types.rend(),
+                      [&](const auto &typeName) {
+                        fullType = type::Type::Ptr(new type::Arrow(
+                          type::Type::Ptr(new type::Base(typeName)), fullType));
+                      });
 
         typeEnvironment.bind(constructor->Name, fullType);
       }

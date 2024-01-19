@@ -42,10 +42,8 @@ namespace yy
   void parser::error(const location_type &loc, const std::string &msg)
   {
     swallow::compiler::diagnostics::Reporter::REPORTER->normal(
-      location{loc.begin, loc.begin},
-      "Syntax error",
-      "There is a syntax problem here",
-      "No more information",
+      location{loc.begin, loc.begin}, "Syntax error",
+      "There is a syntax problem here", "No more information",
       swallow::compiler::diagnostics::Code::PARSING);
   }
 
@@ -58,13 +56,15 @@ extern FILE *yyin, *yyout;
 namespace swallow::compiler::parser
 {
 
-  std::vector<ast::Definition::Ptr> &parse() noexcept
+  auto parse() noexcept -> std::vector<ast::Definition::Ptr> &
   {
     FILE *file = std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
 
-    if (!file)
-      utils::panic("Cannot open file {}",
-                   compiler::CompileUnit::FILE->FilePath);
+    if (file == nullptr)
+      {
+        utils::panic("Cannot open file {}",
+                     compiler::CompileUnit::FILE->FilePath);
+      }
 
     yyin = file;
     yy::parser().parse();

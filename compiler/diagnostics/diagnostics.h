@@ -1,16 +1,11 @@
-#ifndef SWALLOW_DIAGNOSTICS_H
-#define SWALLOW_DIAGNOSTICS_H
+#ifndef SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
+#define SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H
 
 #include <cassert>
-#include <cstdint>
 #include <memory>
 #include <optional>
-#include <sstream>
 #include <string>
 #include <vector>
-
-#include "location.hh"
-#include "termcolor.hpp"
 
 #define COLOR_BY_TYPE(type, text)                                              \
   color_by_type(std::cout, type) << text << termcolor::reset
@@ -84,8 +79,7 @@ namespace swallow::compiler::diagnostics
   class Label
   {
   public:
-    Label(std::optional<std::string> message,
-          const Span &span,
+    Label(std::optional<std::string> message, const Span &span,
           ColorType color_type);
 
     [[nodiscard]] auto get_message() const
@@ -109,13 +103,13 @@ namespace swallow::compiler::diagnostics
   public:
     LabelBuilder();
 
-    LabelBuilder &with_message(const std::string &message);
+    auto with_message(const std::string &message) -> LabelBuilder &;
 
-    LabelBuilder &with_color(ColorType color);
+    auto with_color(ColorType color) -> LabelBuilder &;
 
-    LabelBuilder &with_span(const Span &span);
+    auto with_span(const Span &span) -> LabelBuilder &;
 
-    Label build();
+    auto build() -> Label;
 
   private:
     std::optional<std::string> message_;
@@ -125,12 +119,12 @@ namespace swallow::compiler::diagnostics
 
   struct AscendingLabels
   {
-    bool operator()(const Label *first, const Label *second) const;
+    auto operator()(const Label *first, const Label *second) const -> bool;
   };
 
   struct DescendingLabels
   {
-    bool operator()(const Label *first, const Label *second) const;
+    auto operator()(const Label *first, const Label *second) const -> bool;
   };
 
   class Details
@@ -166,13 +160,11 @@ namespace swallow::compiler::diagnostics
       -> void;
 
     static auto print_labels_level(const std::vector<Labels> &level_labels,
-                                   size_t current_level,
-                                   const Span &line_span,
+                                   size_t current_level, const Span &line_span,
                                    std::ostream &output,
                                    const std::string &spaces_prefix) -> void;
 
-    auto print_colored_source_line(std::ostream &output,
-                                   const Span &label_span,
+    auto print_colored_source_line(std::ostream &output, const Span &label_span,
                                    const Labels &labels) const -> void;
 
     [[nodiscard]] static auto find_label_levels(const Labels &labels)
@@ -221,13 +213,8 @@ namespace swallow::compiler::diagnostics
   class Report
   {
   public:
-    Report(ReportType type,
-           std::string message,
-           size_t code,
-           std::vector<Label>
-             labels,
-           std::optional<std::string>
-             note);
+    Report(ReportType type, std::string message, size_t code,
+           std::vector<Label> labels, std::optional<std::string> note);
 
     auto print(std::ostream &output) const -> void;
 
@@ -256,17 +243,17 @@ namespace swallow::compiler::diagnostics
   public:
     ReportBuilder();
 
-    ReportBuilder &with_message(const std::string &message);
+    auto with_message(const std::string &message) -> ReportBuilder &;
 
-    ReportBuilder &with_note(const std::string &note);
+    auto with_note(const std::string &note) -> ReportBuilder &;
 
-    ReportBuilder &add_label(const Label &label);
+    auto add_label(const Label &label) -> ReportBuilder &;
 
-    ReportBuilder &with_type(ReportType type);
+    auto with_type(ReportType type) -> ReportBuilder &;
 
-    ReportBuilder &with_code(size_t code);
+    auto with_code(size_t code) -> ReportBuilder &;
 
-    Report build();
+    auto build() -> Report;
 
   private:
     std::optional<std::string> message_;
@@ -278,4 +265,4 @@ namespace swallow::compiler::diagnostics
 
 } // namespace swallow::compiler::diagnostics
 
-#endif // PRETTY_ERRORS_LIBRARY_H
+#endif // SWALLOW_COMPILER_DIAGNOSTICS_DIAGNOSTICS_H

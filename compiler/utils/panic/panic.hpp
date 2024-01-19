@@ -55,10 +55,9 @@ namespace swallow::utils
   [[noreturn]] void panic(panic_format<std::type_identity_t<Args>...> fmt,
                           Args &&...args) noexcept
   {
-    auto msg = std::format("{}:{} panic: {}\n",
-                           fmt.loc.file_name(),
-                           fmt.loc.line(),
-                           std::format(fmt.fmt, std::forward<Args>(args)...));
+    auto msg =
+      std::format("{}:{} panic: {}\n", fmt.loc.file_name(), fmt.loc.line(),
+                  std::format(fmt.fmt, std::forward<Args>(args)...));
     std::cout << msg.c_str() << std::endl;
     std::terminate();
   }

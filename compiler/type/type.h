@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_TYPE_H
-#define SWALLOW_TYPE_H
+#ifndef SWALLOW_COMPILER_TYPE_TYPE_H
+#define SWALLOW_COMPILER_TYPE_TYPE_H
 
 #include "result/result.hpp"
 #include <cstdint>
@@ -47,8 +47,8 @@ namespace swallow::compiler::type
 
     virtual ~Type() = default;
 
-    virtual void dump(const Manager & typeManager,
-                      std::ostream & to) const noexcept = 0;
+    virtual void dump(const Manager &typeManager,
+                      std::ostream &to) const noexcept = 0;
   };
 
   class Variable final : public Type
@@ -58,8 +58,8 @@ namespace swallow::compiler::type
 
     explicit Variable(std::string Name) : Name(std::move(Name)) {}
 
-    void dump(const Manager & typeManager,
-              std::ostream & to) const noexcept override;
+    void dump(const Manager &typeManager,
+              std::ostream &to) const noexcept override;
   };
 
   class Base final : public Type
@@ -69,8 +69,8 @@ namespace swallow::compiler::type
 
     explicit Base(std::string Name) : Name(std::move(Name)) {}
 
-    void dump(const Manager & typeManager,
-              std::ostream & to) const noexcept override;
+    void dump(const Manager &typeManager,
+              std::ostream &to) const noexcept override;
   };
 
   class Arrow final : public Type
@@ -82,8 +82,8 @@ namespace swallow::compiler::type
     Arrow(Ptr Left, Ptr Right) : Left(std::move(Left)), Right(std::move(Right))
     {}
 
-    void dump(const Manager & typeManager,
-              std::ostream & to) const noexcept override;
+    void dump(const Manager &typeManager,
+              std::ostream &to) const noexcept override;
   };
 
   class Manager
@@ -92,19 +92,19 @@ namespace swallow::compiler::type
     int32_t LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
-    std::string newTypeName() noexcept;
-    Type::Ptr newType() noexcept;
-    Type::Ptr newArrowType() noexcept;
+    auto newTypeName() noexcept -> std::string;
+    auto newType() noexcept -> Type::Ptr;
+    auto newArrowType() noexcept -> Type::Ptr;
 
     /** Find values for placeholder variables such that they can equal. */
-    utils::Result<utils::Void, utils::Void> unify(Type::Ptr left,
-                                                  Type::Ptr right) noexcept;
+    auto unify(Type::Ptr left, Type::Ptr right) noexcept
+      -> utils::Result<utils::Void, utils::Void>;
 
     /** Get to the bottom of a chain of equations. */
-    Type::Ptr resolve(Type::Ptr type, Variable *& var) noexcept;
+    auto resolve(Type::Ptr type, Variable *&var) noexcept -> Type::Ptr;
 
     /** Map a type variable of some name to a type. */
-    void bind(const std::string & name, const Type::Ptr & type) noexcept;
+    void bind(const std::string &name, const Type::Ptr &type) noexcept;
   };
 } // namespace swallow::compiler::type
 
