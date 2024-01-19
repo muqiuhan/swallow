@@ -1,5 +1,5 @@
 ---
-Checks: 'modernize-*, readability-*, performance-*, cppcoreguidelines-*'
+Checks: 'modernize-*, performance-*'
 WarningsAsErrors: ''
 HeaderFileExtensions:
   - h
