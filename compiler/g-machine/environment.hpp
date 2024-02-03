@@ -30,6 +30,7 @@
 #ifndef SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
 #define SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
 
+#include "optional/optional.hpp"
 #include <memory>
 #include <string>
 
@@ -43,11 +44,11 @@ namespace swallow::compiler::gmachine
 
     virtual ~Environment() = default;
 
-    [[nodiscard]] virtual auto
-      get_offset(const std::string &name) const noexcept -> int = 0;
+    [[nodiscard]] virtual auto getOffset(const std::string &name) const noexcept
+      -> tl::optional<int> = 0;
 
     [[nodiscard]] virtual auto
-      has_variable(const std::string &name) const noexcept -> bool = 0;
+      hasVariable(const std::string &name) const noexcept -> bool = 0;
   };
 
   class Variable : public Environment
@@ -60,10 +61,10 @@ namespace swallow::compiler::gmachine
       : Name(Name), Parent(std::move(Parent))
     {}
 
-    [[nodiscard]] auto get_offset(const std::string &name) const noexcept
-      -> int override;
+    [[nodiscard]] auto getOffset(const std::string &name) const noexcept
+      -> tl::optional<int> override;
 
-    [[nodiscard]] auto has_variable(const std::string &name) const noexcept
+    [[nodiscard]] auto hasVariable(const std::string &name) const noexcept
       -> bool override;
   };
 
@@ -77,10 +78,10 @@ namespace swallow::compiler::gmachine
       : Value(Value), Parent(std::move(Parent))
     {}
 
-    [[nodiscard]] auto get_offset(const std::string &name) const noexcept
-      -> int override;
+    [[nodiscard]] auto getOffset(const std::string &name) const noexcept
+      -> tl::optional<int> override;
 
-    [[nodiscard]] auto has_variable(const std::string &name) const noexcept
+    [[nodiscard]] auto hasVariable(const std::string &name) const noexcept
       -> bool override;
   };
 
