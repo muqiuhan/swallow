@@ -27,42 +27,55 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.h"
-#include "type.h"
-#include <ostream>
+#include "environment.hpp"
+#include "optional/optional.hpp"
+#include "panic/panic.hpp"
 
-namespace swallow::compiler::type
+namespace swallow::compiler::gmachine
 {
-  void Variable::dump(const Manager &typeManager,
-                      std::ostream &to) const noexcept
-  {
-    const auto it = typeManager.Types.find(Name);
 
-    if (it != typeManager.Types.end())
-      it->second->dump(typeManager, to);
-    else
-      to << Name;
+  [[nodiscard]] auto Variable::getOffset(const std::string &name) const noexcept
+    -> tl::optional<int>
+  {
+    if (name == Name)
+      return tl::make_optional(0);
+
+    if (Parent != nullptr)
+      return Parent->getOffset(name).map(
+        [](const auto &offset) { return offset + 1; });
+
+    utils::panic("Get variable {} offset failed", name);
   }
 
-  void Arrow::dump(const Manager &typeManager, std::ostream &to) const noexcept
+  [[nodiscard]] auto
+    Variable::hasVariable(const std::string &name) const noexcept -> bool
   {
-    Left->dump(typeManager, to);
-    to << " -> ";
-    Left->dump(typeManager, to);
+    if (name == Name)
+      return true;
+
+    if (Parent != nullptr)
+      return Parent->hasVariable(name);
+
+    return false;
   }
 
-  void Base::dump(const Manager &typeManager, std::ostream &to) const noexcept
+  [[nodiscard]] auto Offset::hasVariable(const std::string &name) const noexcept
+    -> bool
   {
-    to << Name;
+    if (Parent != nullptr)
+      return Parent->hasVariable(name);
+
+    return false;
   }
 
-  void Environment::dump(std::ostream &to, const Manager &typeManager) noexcept
+  [[nodiscard]] auto Offset::getOffset(const std::string &name) const noexcept
+    -> tl::optional<int>
   {
-    for (const auto &[name, type] : Names)
-      {
-        to << name << ": ";
-        type->dump(typeManager, to);
-        to << '\n';
-      }
+    if (Parent != nullptr)
+      return Parent->getOffset(name).map(
+        [&](const auto &offset) { return offset + Value; });
+
+    utils::panic("Get variable {} offset failed, the Parent == nullptr", name);
   }
-} // namespace swallow::compiler::type
+
+} // namespace swallow::compiler::gmachine

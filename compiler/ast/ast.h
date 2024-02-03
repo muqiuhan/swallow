@@ -182,12 +182,10 @@ namespace swallow::compiler::ast
       DIVIDE
     };
 
-  private:
     const Operators Operator;
     const Ptr Left;
     const Ptr Right;
 
-  public:
     Binop(const yy::location Location, Operators Operator, Ptr Left, Ptr Right)
       : Operator(Operator)
       , Left(std::move(Left))

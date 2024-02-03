@@ -19,8 +19,6 @@
 
 ---
 
-![](./resources/IllegalPattern.png)
-
 ## Build & Install
 
 To build and run with [xmake](xmake.io):
@@ -31,33 +29,76 @@ To build and run with [xmake](xmake.io):
 - To install: xmake install
 
 ## Introduction
-- Typechecking
-  ```
-  data Bool = [ True, False ]
 
-  let main(argv) = {
-    match argv with {
-    | True => { 0 }
-    | False => { True }
-    }
+### Typechecking
+$$
+\begin{prooftree}
+\AXC{$\Gamma \vdash e_1 : \tau_1 \rightarrow \tau_2 \quad \Gamma \vdash e_2 : \tau_1$}
+\UnaryInfC{$\Gamma \vdash e_1 e_2 : \tau_2$}
+\end{prooftree}
+$$
+
+$$
+\begin{prooftree}
+\AXC{$\Gamma \vdash e : \tau \quad match_\tau(\tau, p_i) = b_i \quad \Gamma, b_i \vdash e_i : \tau_c $}
+\UnaryInfC{$\Gamma \vdash match \enspace e \enspace with \enspace \{(p_1, e_1) ... (p_n, e_n)\} : \tau_c$}
+\end{prooftree}
+$$
+
+$$
+\begin{prooftree}
+\AXC{}
+\UnaryInfC{$match_\tau(\tau, v) = \{v : \tau\}$}
+\end{prooftree}
+$$
+
+$$
+\begin{prooftree}
+\AXC{$\Gamma \vdash c : \tau_1 \rightarrow ... \rightarrow \tau_n \rightarrow \tau$}
+\UnaryInfC{$match_\tau(\tau, c \enspace v_1...v_n) = \{v_1 : \tau_1 ...v_n : \tau_n\}$}
+\end{prooftree}
+$$
+
+### Pattern Matching
+```rescript
+data List = [ Nil, Cons Int List ]
+
+let main(argv) = {
+  match argv with {
+  | Nil => { 0 }
+  | Cons x xs => { 0 }
   }
-  ```
-  ![./resources/BranchTypeChecking.png](./resources/BranchTypeChecking.png)
+}
+```
 
-- Pattern match
-  ```
-  data List = [ Nil, Cons Int List ]
+### Garbage Collection
+...
 
-  let main(argv) = {
-    match argv with {
-    | Nil => { 0 }
-    | Cons x xs => { 0 }
-    }
-  }
-  ```
+### Polymorphism
+...
 
-- [WIP] Garbage Collection
-- [WIP] Polymorphism
+## Acknowledge
+
+### Tools
+- [XMake: A cross-platform build utility based on Lua](https://xmake.io/#/)
+- [GNU Bison: A general-purpose parser generator](https://github.com/akimd/bison)
+- [Flex:  The Fast Lexical Analyzer - scanner generator for lexing in C and C++](https://github.com/westes/flex)
+
+
+### Library/Frameworks
+- [optional: C++11/14/17 std::optional with functional-style extensions and reference support](https://github.com/TartanLlama/optional)
+- [result: Result<T, E> for Modern C++](https://github.com/p-ranav/result)
+
+## REFERENCE
+- [Theory of computation](https://en.wikipedia.org/wiki/Theory_of_computation)
+- [Functional programming](https://en.wikipedia.org/wiki/Functional_programming)
+- [Finite-state machine](https://en.wikipedia.org/wiki/Finite-state_machine)
+- [Implementing Fun tional Languages: a tutorial](https://www.microsoft.com/en-us/research/wp-content/uploads/1992/01/student.pdf)
+- [The G-machine: A fast, graph-reduction evaluator](https://link.springer.com/chapter/10.1007/3-540-15975-4_50)
+- [Panic better using modern C++](https://buildingblock.ai/panic)
+- [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)
+- [Unification](https://en.wikipedia.org/wiki/Unification_(computer_science))
+- [Compiling a Functional Language Using C++](https://danilafe.com/blog/00_compiler_intro/)
 
 ## [LICENSE](./LICENSE)
 ```
