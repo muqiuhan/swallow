@@ -27,10 +27,10 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "reporter.h"
+#include "reporter.hpp"
 #include <cstdlib>
 
-using namespace swallow::utils;
+using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::diagnostics
 {

@@ -27,33 +27,32 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.h"
-#include "environment.h"
-#include "type.h"
-#include <reporter.h>
-#include <utils.h>
+#include "ast.hpp"
+#include "diagnostics/reporter.hpp"
+#include "panic/panic.hpp"
+#include "type/environment.hpp"
+#include "type/type.hpp"
 #include <vector>
 
-using namespace swallow::utils;
+using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::ast
 {
-  auto Binop::operatorsToString(const Operators &op) noexcept
-    -> Result<std::string, Void>
+  auto Binop::operatorsToString(const utils::Binop op) noexcept -> std::string
   {
     switch (op)
       {
-      case Operators::PLUS:
-        return Ok(std::string("+"));
-      case Operators::MINUS:
-        return Ok(std::string("-"));
-      case Operators::TIMES:
-        return Ok(std::string("*"));
-      case Operators::DIVIDE:
-        return Ok(std::string("/"));
+      case utils::Binop::PLUS:
+        return {"+"};
+      case utils::Binop::MINUS:
+        return {"-"};
+      case utils::Binop::TIMES:
+        return {"*"};
+      case utils::Binop::DIVIDE:
+        return {"/"};
       }
 
-    return Err(Void());
+    utils::panic("operatorsToString failed!!!");
   }
 
   void dump(const std::vector<Definition::Ptr> &Program) noexcept

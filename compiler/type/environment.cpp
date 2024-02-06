@@ -27,11 +27,11 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.h"
+#include "environment.hpp"
 #include "result/result.hpp"
 #include <utility>
 
-using namespace swallow::utils;
+using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::type
 {

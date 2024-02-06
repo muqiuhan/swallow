@@ -27,17 +27,17 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.h"
+#include "ast.hpp"
 #include "code.hpp"
-#include "environment.h"
-#include "reporter.h"
+#include "diagnostics/reporter.hpp"
+#include "type/environment.hpp"
 #include <algorithm>
 #include <format>
 #include <sstream>
 #include <utils.h>
 #include <vector>
 
-using namespace swallow::utils;
+using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::ast
 {
@@ -78,7 +78,7 @@ namespace swallow::compiler::ast
                         const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
-    const std::string operatorName = operatorsToString(Operator).unwrap();
+    const std::string operatorName = operatorsToString(Operator);
 
     type::Type::Ptr leftType =
       Left->typecheck(typeManager, typeEnvironment)

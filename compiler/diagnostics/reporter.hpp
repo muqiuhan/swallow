@@ -27,17 +27,33 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_PARSER_PARSER_H
-#define SWALLOW_COMPILER_PARSER_PARSER_H
+#ifndef SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
+#define SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
 
-#include "ast/ast.hpp"
+#include "compiler.h"
+#include "diagnostics/diagnostics.h"
+#include "parser/bison_parser.hpp"
+#include "result/result.hpp"
 
-namespace swallow::compiler::parser
+namespace swallow::compiler::diagnostics
 {
+  class Reporter
+  {
+    Details Detail;
 
-  auto parse() noexcept
-    -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
+  public:
+    inline static Reporter *REPORTER = nullptr;
 
-} // namespace swallow::compiler::parser
+    explicit Reporter()
+      : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
+    {}
 
-#endif
+    [[noreturn]] auto
+      normal(const yy::parser::location_type &loc, const std::string &&msg,
+             const std::string &&labelMsg, const std::string &&note,
+             const std::uint32_t &code) -> utils::Err<utils::Void>;
+  };
+
+} // namespace swallow::compiler::diagnostics
+
+#endif // SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H

@@ -32,36 +32,36 @@
 
 namespace swallow::compiler::gmachine
 {
-  [[nodiscard]] auto Binop::operatorsToString(const Operators &op) noexcept
+  [[nodiscard]] auto Binop::operatorsToString(utils::Binop op) noexcept
     -> std::string
   {
     switch (op)
       {
-      case Operators::PLUS:
+      case utils::Binop::PLUS:
         return {"+"};
-      case Operators::MINUS:
+      case utils::Binop::MINUS:
         return {"-"};
-      case Operators::TIMES:
+      case utils::Binop::TIMES:
         return {"*"};
-      case Operators::DIVIDE:
+      case utils::Binop::DIVIDE:
         return {"/"};
       }
 
     utils::panic("operatorsToString failed!!!");
   }
 
-  [[nodiscard]] auto Binop::operatorsAction(const Operators &op) noexcept
+  [[nodiscard]] auto Binop::operatorsAction(utils::Binop op) noexcept
     -> std::string
   {
     switch (op)
       {
-      case Operators::PLUS:
+      case utils::Binop::PLUS:
         return {"plus"};
-      case Operators::MINUS:
+      case utils::Binop::MINUS:
         return {"minus"};
-      case Operators::TIMES:
+      case utils::Binop::TIMES:
         return {"times"};
-      case Operators::DIVIDE:
+      case utils::Binop::DIVIDE:
         return {"divede"};
       }
 

@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.h"
-#include "type.h"
+#include "environment.hpp"
+#include "type.hpp"
 #include <ostream>
 
 namespace swallow::compiler::type

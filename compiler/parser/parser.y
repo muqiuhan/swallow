@@ -1,13 +1,15 @@
 %code requires {
-    #include "ast.h"
+    #include "ast/ast.hpp"
     using namespace swallow::compiler::ast;
+    using namespace swallow::compiler;
 }
 
 %{
 #include <string>
 #include <iostream>
 #include "bison_parser.hpp"
-#include "reporter.h"
+#include "diagnostics/reporter.hpp"
+#include "binop/binop.hpp"
 
 std::vector<Definition::Ptr> Program;
 extern yy::parser::symbol_type yylex();
@@ -89,14 +91,14 @@ UppercaseParams
     ;
 
 Add
-    : Add PLUS Mul { $$ = AST::Ptr(new Binop(@$, Binop::Operators::PLUS, std::move($1), std::move($3))); }
-    | Add MINUS Mul { $$ = AST::Ptr(new Binop(@$, Binop::Operators::MINUS, std::move($1), std::move($3))); }
+    : Add PLUS Mul { $$ = AST::Ptr(new Binop(@$, utils::Binop::PLUS, std::move($1), std::move($3))); }
+    | Add MINUS Mul { $$ = AST::Ptr(new Binop(@$, utils::Binop::MINUS, std::move($1), std::move($3))); }
     | Mul { $$ = std::move($1); }
     ;
 
 Mul
-    : Mul TIMES Application { $$ = AST::Ptr(new Binop(@$, Binop::Operators::TIMES, std::move($1), std::move($3))); }
-    | Mul DIVIDE Application { $$ = AST::Ptr(new Binop(@$, Binop::Operators::DIVIDE, std::move($1), std::move($3))); }
+    : Mul TIMES Application { $$ = AST::Ptr(new Binop(@$, utils::Binop::TIMES, std::move($1), std::move($3))); }
+    | Mul DIVIDE Application { $$ = AST::Ptr(new Binop(@$, utils::Binop::DIVIDE, std::move($1), std::move($3))); }
     | Application { $$ = std::move($1); }
     ;
 

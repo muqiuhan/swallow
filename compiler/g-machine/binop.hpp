@@ -30,6 +30,7 @@
 #ifndef SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
 #define SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
 
+#include "binop/binop.hpp"
 #include <string>
 
 namespace swallow::compiler::gmachine
@@ -37,17 +38,9 @@ namespace swallow::compiler::gmachine
   class Binop
   {
   public:
-    enum class Operators
-    {
-      PLUS,
-      MINUS,
-      TIMES,
-      DIVIDE
-    };
-
-    [[nodiscard]] static auto operatorsToString(const Operators &op) noexcept
+    [[nodiscard]] static auto operatorsToString(const utils::Binop op) noexcept
       -> std::string;
-    [[nodiscard]] static auto operatorsAction(const Operators &op) noexcept
+    [[nodiscard]] static auto operatorsAction(const utils::Binop op) noexcept
       -> std::string;
   };
 } // namespace swallow::compiler::gmachine

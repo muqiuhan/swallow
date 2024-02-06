@@ -46,10 +46,11 @@
 // "%code requires" blocks.
 #line 1 "/home/muqiuhan/Workspace/swallow/compiler/parser/parser.y"
 
-#include "ast.h"
+#include "ast/ast.hpp"
 using namespace swallow::compiler::ast;
+using namespace swallow::compiler;
 
-#line 54 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
+#line 55 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
 #include <cstdlib> // std::abort
 #include <iostream>
@@ -181,7 +182,7 @@ using namespace swallow::compiler::ast;
 
 namespace yy
 {
-#line 189 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
+#line 190 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
   /// A Bison parser.
   class parser
@@ -1741,6 +1742,6 @@ namespace yy
   }
 
 } // namespace yy
-#line 2017 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
+#line 2018 "/home/muqiuhan/Workspace/swallow/compiler/parser/bison_parser.hpp"
 
 #endif // !YY_YY_HOME_MUQIUHAN_WORKSPACE_SWALLOW_COMPILER_PARSER_BISON_PARSER_HPP_INCLUDED

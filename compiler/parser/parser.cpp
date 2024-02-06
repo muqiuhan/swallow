@@ -31,9 +31,9 @@
 #include "bison_parser.hpp"
 #include "code.hpp"
 #include "compiler.h"
+#include "diagnostics/reporter.hpp"
 #include "location.hh"
 #include "panic/panic.hpp"
-#include "reporter.h"
 #include <cstdio>
 
 namespace yy

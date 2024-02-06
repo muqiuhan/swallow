@@ -48,8 +48,6 @@ namespace swallow::compiler::gmachine::instruction
     virtual ~Instruction() = default;
 
     virtual void dump(uint8_t indent, std::ostream& to) const noexcept = 0;
-    virtual void compile(const Environment& env,
-                         std::vector<Instruction::Ptr>& into) const;
   };
 
   class PushInt : public Instruction
@@ -138,9 +136,9 @@ namespace swallow::compiler::gmachine::instruction
   class Binop : public Instruction
   {
   public:
-    gmachine::Binop::Operators Operator;
+    utils::Binop Operator;
 
-    explicit Binop(gmachine::Binop::Operators Operator) : Operator(Operator) {}
+    explicit Binop(utils::Binop Operator) : Operator(Operator) {}
 
     void dump(uint8_t indent, std::ostream& to) const noexcept override;
   };

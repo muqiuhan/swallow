@@ -27,7 +27,7 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.h"
+#include "ast.hpp"
 #include <cstdint>
 #include <format>
 
@@ -61,8 +61,7 @@ namespace swallow::compiler::ast
   {
     printIndent(indent, to);
 
-    to << std::format("<Binop: {}", operatorsToString(Operator).unwrap())
-       << '\n';
+    to << std::format("<Binop: {}", operatorsToString(Operator)) << '\n';
 
     Left->dump(indent + 1, to);
     Left->dump(indent + 1, to);

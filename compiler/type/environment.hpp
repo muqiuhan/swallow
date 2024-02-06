@@ -27,33 +27,34 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
-#define SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
+#ifndef SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
+#define SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
 
-#include "bison_parser.hpp"
-#include "compiler.h"
-#include "diagnostics/diagnostics.h"
-#include "result/result.hpp"
+#include "type.hpp"
+#include <map>
+#include <string>
 
-namespace swallow::compiler::diagnostics
+namespace swallow::compiler::type
 {
-  class Reporter
+  class Environment
   {
-    Details Detail;
-
   public:
-    inline static Reporter *REPORTER = nullptr;
+    std::map<std::string, Type::Ptr> Names;
+    Environment const *Parent = nullptr;
 
-    explicit Reporter()
-      : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
-    {}
+    explicit Environment(Environment const *Parent) : Parent(Parent) {}
 
-    [[noreturn]] auto
-      normal(const yy::parser::location_type &loc, const std::string &&msg,
-             const std::string &&labelMsg, const std::string &&note,
-             const std::uint32_t &code) -> utils::Err<utils::Void>;
+    Environment() : Environment(nullptr) {}
+
+    [[nodiscard]] auto lookup(const std::string &name) const noexcept
+      -> utils::Result<Type::Ptr, utils::Void>;
+
+    [[nodiscard]] auto scope() const noexcept -> Environment;
+
+    void bind(const std::string &name, Type::Ptr type) noexcept;
+    void dump(std::ostream &to, const Manager &typeManager) noexcept;
   };
 
-} // namespace swallow::compiler::diagnostics
+} // namespace swallow::compiler::type
 
-#endif // SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
+#endif // SWALLOW_COMPILER_TYPE_ENVIRONMENT_H

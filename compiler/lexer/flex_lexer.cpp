@@ -457,7 +457,7 @@ char *yytext;
 #line 1 "/home/muqiuhan/Workspace/swallow/compiler/lexer/lexer.l"
 #line 4 "/home/muqiuhan/Workspace/swallow/compiler/lexer/lexer.l"
 
-#include "ast.h"
+#include "ast/ast.hpp"
 #include "bison_parser.hpp"
 
 #define YY_DECL yy::parser::symbol_type yylex()
