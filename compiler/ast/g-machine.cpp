@@ -31,57 +31,52 @@
 #include "g-machine/binop.hpp"
 #include "g-machine/instruction.hpp"
 
+using namespace swallow::compiler::gmachine::instruction;
 using namespace swallow::compiler::gmachine;
 
 namespace swallow::compiler::ast
 {
-  void Int::compile(
-    const Environment::Ptr &machineEnvironment,
-    std::vector<instruction::Instruction::Ptr> &into) const noexcept
+  void Int::compile(const Environment::Ptr &machineEnvironment,
+                    std::vector<Instruction::Ptr> &into) const noexcept
+  {
+    into.push_back(Instruction::Ptr(new PushInt(Value)));
+  }
+
+  void LID::compile(const Environment::Ptr &machineEnvironment,
+                    std::vector<Instruction::Ptr> &into) const noexcept
   {
     into.push_back(
-      instruction::Instruction::Ptr(new instruction::PushInt(Value)));
+      Instruction::Ptr(machineEnvironment->hasVariable(ID)
+                         ? dynamic_cast<Instruction *>(
+                           new Push(machineEnvironment->getOffset(ID).value()))
+
+                         : dynamic_cast<Instruction *>(new PushGlobal(ID))));
   }
 
-  void LID::compile(
-    const Environment::Ptr &machineEnvironment,
-    std::vector<instruction::Instruction::Ptr> &into) const noexcept
+  void UID::compile(const Environment::Ptr &machineEnvironment,
+                    std::vector<Instruction::Ptr> &into) const noexcept
   {
-    into.push_back(instruction::Instruction::Ptr(
-      machineEnvironment->hasVariable(ID)
-        ? dynamic_cast<instruction::Instruction *>(
-          new instruction::Push(machineEnvironment->getOffset(ID).value()))
-
-        : dynamic_cast<instruction::Instruction *>(
-          new instruction::PushGlobal(ID))));
+    into.push_back(Instruction::Ptr(new PushGlobal(ID)));
   }
 
-  void UID::compile(
-    const Environment::Ptr &machineEnvironment,
-    std::vector<instruction::Instruction::Ptr> &into) const noexcept
-  {
-    into.push_back(
-      instruction::Instruction::Ptr(new instruction::PushGlobal(ID)));
-  }
-
-  void Application::compile(
-    const gmachine::Environment::Ptr &machineEnvironment,
-    std::vector<gmachine::instruction::Instruction::Ptr> &into) const noexcept
+  void
+    Application::compile(const gmachine::Environment::Ptr &machineEnvironment,
+                         std::vector<Instruction::Ptr> &into) const noexcept
   {}
 
-  void Binop::compile(
-    const gmachine::Environment::Ptr &machineEnvironment,
-    std::vector<gmachine::instruction::Instruction::Ptr> &into) const noexcept
+  void Binop::compile(const gmachine::Environment::Ptr &machineEnvironment,
+                      std::vector<Instruction::Ptr> &into) const noexcept
   {
     Right->compile(machineEnvironment, into);
     Left->compile(machineEnvironment, into);
 
-    into.push_back(instruction::Instruction::Ptr(
-      new instruction::PushGlobal(gmachine::Binop::operatorsAction(Operator))));
+    into.push_back(Instruction::Ptr(
+      new PushGlobal(gmachine::Binop::operatorsAction(Operator))));
+    into.push_back(Instruction::Ptr(new MakeApplication()));
+    into.push_back(Instruction::Ptr(new MakeApplication()));
   }
 
-  void Match::compile(
-    const gmachine::Environment::Ptr &machineEnvironment,
-    std::vector<gmachine::instruction::Instruction::Ptr> &into) const noexcept
+  void Match::compile(const gmachine::Environment::Ptr &machineEnvironment,
+                      std::vector<Instruction::Ptr> &into) const noexcept
   {}
 } // namespace swallow::compiler::ast
