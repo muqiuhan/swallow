@@ -27,54 +27,29 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.hpp"
-#include "optional/optional.hpp"
+#ifndef SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
+#define SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
+
+#include <string>
 
 namespace swallow::compiler::gmachine
 {
-
-  [[nodiscard]] auto Variable::getOffset(const std::string &name) const noexcept
-    -> tl::optional<int>
+  class Binop
   {
-    if (name == Name)
-      return tl::make_optional(0);
+  public:
+    enum class Operators
+    {
+      PLUS,
+      MINUS,
+      TIMES,
+      DIVIDE
+    };
 
-    if (Parent != nullptr)
-      return Parent->getOffset(name).map(
-        [](const auto &offset) { return offset + 1; });
-
-    return tl::nullopt;
-  }
-
-  [[nodiscard]] auto
-    Variable::hasVariable(const std::string &name) const noexcept -> bool
-  {
-    if (name == Name)
-      return true;
-
-    if (Parent != nullptr)
-      return Parent->hasVariable(name);
-
-    return false;
-  }
-
-  [[nodiscard]] auto Offset::hasVariable(const std::string &name) const noexcept
-    -> bool
-  {
-    if (Parent != nullptr)
-      return Parent->hasVariable(name);
-
-    return false;
-  }
-
-  [[nodiscard]] auto Offset::getOffset(const std::string &name) const noexcept
-    -> tl::optional<int>
-  {
-    if (Parent != nullptr)
-      return Parent->getOffset(name).map(
-        [&](const auto &offset) { return offset + Value; });
-
-    return tl::nullopt;
-  }
-
+    [[nodiscard]] static auto operatorsToString(const Operators &op) noexcept
+      -> std::string;
+    [[nodiscard]] static auto operatorsAction(const Operators &op) noexcept
+      -> std::string;
+  };
 } // namespace swallow::compiler::gmachine
+
+#endif /* SWALLOW_COMPILER_G_MACHINE_BINOP_HPP */

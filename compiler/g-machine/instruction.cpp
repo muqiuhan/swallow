@@ -29,5 +29,5 @@
 
 #include "instruction.hpp"
 
-namespace swallow::compiler::gmachine
-{} // namespace swallow::compiler::gmachine
+namespace swallow::compiler::gmachine::instruction
+{} // namespace swallow::compiler::gmachine::instruction

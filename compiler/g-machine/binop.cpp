@@ -27,54 +27,44 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.hpp"
-#include "optional/optional.hpp"
+#include "binop.hpp"
+#include "panic/panic.hpp"
 
 namespace swallow::compiler::gmachine
 {
-
-  [[nodiscard]] auto Variable::getOffset(const std::string &name) const noexcept
-    -> tl::optional<int>
+  [[nodiscard]] auto Binop::operatorsToString(const Operators &op) noexcept
+    -> std::string
   {
-    if (name == Name)
-      return tl::make_optional(0);
+    switch (op)
+      {
+      case Operators::PLUS:
+        return {"+"};
+      case Operators::MINUS:
+        return {"-"};
+      case Operators::TIMES:
+        return {"*"};
+      case Operators::DIVIDE:
+        return {"/"};
+      }
 
-    if (Parent != nullptr)
-      return Parent->getOffset(name).map(
-        [](const auto &offset) { return offset + 1; });
-
-    return tl::nullopt;
+    utils::panic("operatorsToString failed!!!");
   }
 
-  [[nodiscard]] auto
-    Variable::hasVariable(const std::string &name) const noexcept -> bool
+  [[nodiscard]] auto Binop::operatorsAction(const Operators &op) noexcept
+    -> std::string
   {
-    if (name == Name)
-      return true;
+    switch (op)
+      {
+      case Operators::PLUS:
+        return {"plus"};
+      case Operators::MINUS:
+        return {"minus"};
+      case Operators::TIMES:
+        return {"times"};
+      case Operators::DIVIDE:
+        return {"divede"};
+      }
 
-    if (Parent != nullptr)
-      return Parent->hasVariable(name);
-
-    return false;
+    utils::panic("operatorsAction failed!!!");
   }
-
-  [[nodiscard]] auto Offset::hasVariable(const std::string &name) const noexcept
-    -> bool
-  {
-    if (Parent != nullptr)
-      return Parent->hasVariable(name);
-
-    return false;
-  }
-
-  [[nodiscard]] auto Offset::getOffset(const std::string &name) const noexcept
-    -> tl::optional<int>
-  {
-    if (Parent != nullptr)
-      return Parent->getOffset(name).map(
-        [&](const auto &offset) { return offset + Value; });
-
-    return tl::nullopt;
-  }
-
 } // namespace swallow::compiler::gmachine

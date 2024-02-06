@@ -30,14 +30,14 @@
 #ifndef SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP
 #define SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP
 
-#include "ast.h"
+#include "binop.hpp"
 #include "g-machine/environment.hpp"
 #include <cstdint>
 #include <map>
 #include <memory>
 #include <vector>
 
-namespace swallow::compiler::gmachine
+namespace swallow::compiler::gmachine::instruction
 {
 
   class Instruction
@@ -138,9 +138,9 @@ namespace swallow::compiler::gmachine
   class Binop : public Instruction
   {
   public:
-    ast::Binop::Operators Operator;
+    gmachine::Binop::Operators Operator;
 
-    explicit Binop(ast::Binop::Operators Operator) : Operator(Operator) {}
+    explicit Binop(gmachine::Binop::Operators Operator) : Operator(Operator) {}
 
     void dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
@@ -175,6 +175,6 @@ namespace swallow::compiler::gmachine
 
     void dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
-} // namespace swallow::compiler::gmachine
+} // namespace swallow::compiler::gmachine::instruction
 
 #endif /* SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP */
