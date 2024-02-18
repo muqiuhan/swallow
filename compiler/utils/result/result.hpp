@@ -34,7 +34,7 @@
 #include <optional>
 #include <variant>
 
-namespace swallow::utils
+namespace swallow::compiler::utils
 {
   template <typename T> struct Ok;
   template <typename E> struct Err;
@@ -341,6 +341,6 @@ namespace swallow::utils
       return Result<E, E>(*this).and_then(op);
     }
   };
-} // namespace swallow::utils
+} // namespace swallow::compiler::utils
 
 #endif // SWALLOW_COMPILER_UTILS_RESULT_RESULT_HPP

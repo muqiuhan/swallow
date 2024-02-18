@@ -28,10 +28,10 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "compiler.h"
-#include "ast.h"
+#include "ast/ast.hpp"
 #include "parser.h"
 
-#include "reporter.h"
+#include "diagnostics/reporter.hpp"
 
 using namespace swallow::compiler;
 

@@ -2,7 +2,7 @@
 
 %{
 
-#include "ast.h"
+#include "ast/ast.hpp"
 #include "bison_parser.hpp"
 
 #define YY_DECL yy::parser::symbol_type yylex()

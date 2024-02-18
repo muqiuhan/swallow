@@ -27,33 +27,22 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
-#define SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
+#ifndef SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
+#define SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
 
-#include "bison_parser.hpp"
-#include "compiler.h"
-#include "diagnostics/diagnostics.h"
-#include "result/result.hpp"
+#include "binop/binop.hpp"
+#include <string>
 
-namespace swallow::compiler::diagnostics
+namespace swallow::compiler::gmachine
 {
-  class Reporter
+  class Binop
   {
-    Details Detail;
-
   public:
-    inline static Reporter *REPORTER = nullptr;
-
-    explicit Reporter()
-      : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
-    {}
-
-    [[noreturn]] auto
-      normal(const yy::parser::location_type &loc, const std::string &&msg,
-             const std::string &&labelMsg, const std::string &&note,
-             const std::uint32_t &code) -> utils::Err<utils::Void>;
+    [[nodiscard]] static auto operatorsToString(const utils::Binop op) noexcept
+      -> std::string;
+    [[nodiscard]] static auto operatorsAction(const utils::Binop op) noexcept
+      -> std::string;
   };
+} // namespace swallow::compiler::gmachine
 
-} // namespace swallow::compiler::diagnostics
-
-#endif // SWALLOW_COMPILER_DIAGNOSTICS_REPORTER_H
+#endif /* SWALLOW_COMPILER_G_MACHINE_BINOP_HPP */

@@ -27,17 +27,34 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_PARSER_PARSER_H
-#define SWALLOW_COMPILER_PARSER_PARSER_H
+#ifndef SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
+#define SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
 
-#include "ast/ast.hpp"
+#include "type.hpp"
+#include <map>
+#include <string>
 
-namespace swallow::compiler::parser
+namespace swallow::compiler::type
 {
+  class Environment
+  {
+  public:
+    std::map<std::string, Type::Ptr> Names;
+    Environment const *Parent = nullptr;
 
-  auto parse() noexcept
-    -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
+    explicit Environment(Environment const *Parent) : Parent(Parent) {}
 
-} // namespace swallow::compiler::parser
+    Environment() : Environment(nullptr) {}
 
-#endif
+    [[nodiscard]] auto lookup(const std::string &name) const noexcept
+      -> utils::Result<Type::Ptr, utils::Void>;
+
+    [[nodiscard]] auto scope() const noexcept -> Environment;
+
+    void bind(const std::string &name, Type::Ptr type) noexcept;
+    void dump(std::ostream &to, const Manager &typeManager) noexcept;
+  };
+
+} // namespace swallow::compiler::type
+
+#endif // SWALLOW_COMPILER_TYPE_ENVIRONMENT_H

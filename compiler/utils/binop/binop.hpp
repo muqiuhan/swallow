@@ -27,34 +27,18 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
-#define SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
+#ifndef SWALLOW_COMPILER_UTILS_BINOP_HPP
+#define SWALLOW_COMPILER_UTILS_BINOP_HPP
 
-#include "type.h"
-#include <map>
-#include <string>
-
-namespace swallow::compiler::type
+namespace swallow::compiler::utils
 {
-  class Environment
+  enum class Binop
   {
-  public:
-    std::map<std::string, Type::Ptr> Names;
-    Environment const *Parent = nullptr;
-
-    explicit Environment(Environment const *Parent) : Parent(Parent) {}
-
-    Environment() : Environment(nullptr) {}
-
-    [[nodiscard]] auto lookup(const std::string &name) const noexcept
-      -> utils::Result<Type::Ptr, utils::Void>;
-
-    [[nodiscard]] auto scope() const noexcept -> Environment;
-
-    void bind(const std::string &name, Type::Ptr type) noexcept;
-    void dump(std::ostream &to, const Manager &typeManager) noexcept;
+    PLUS,
+    MINUS,
+    TIMES,
+    DIVIDE
   };
+} // namespace swallow::compiler::utils
 
-} // namespace swallow::compiler::type
-
-#endif // SWALLOW_COMPILER_TYPE_ENVIRONMENT_H
+#endif /* SWALLOW_COMPILER_UTILS_BINOP_HPP */

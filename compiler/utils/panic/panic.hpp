@@ -35,7 +35,7 @@
 #include <iostream>
 #include <source_location>
 
-namespace swallow::utils
+namespace swallow::compiler::utils
 {
   template <class... Args> struct panic_format
   {
@@ -61,6 +61,6 @@ namespace swallow::utils
     std::cout << msg.c_str() << std::endl;
     std::terminate();
   }
-} // namespace swallow::utils
+} // namespace swallow::compiler::utils
 
 #endif

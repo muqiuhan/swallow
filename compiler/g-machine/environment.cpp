@@ -29,7 +29,6 @@
 
 #include "environment.hpp"
 #include "optional/optional.hpp"
-#include "panic/panic.hpp"
 
 namespace swallow::compiler::gmachine
 {
@@ -44,7 +43,7 @@ namespace swallow::compiler::gmachine
       return Parent->getOffset(name).map(
         [](const auto &offset) { return offset + 1; });
 
-    utils::panic("Get variable {} offset failed", name);
+    return tl::nullopt;
   }
 
   [[nodiscard]] auto
@@ -75,7 +74,7 @@ namespace swallow::compiler::gmachine
       return Parent->getOffset(name).map(
         [&](const auto &offset) { return offset + Value; });
 
-    utils::panic("Get variable {} offset failed, the Parent == nullptr", name);
+    return tl::nullopt;
   }
 
 } // namespace swallow::compiler::gmachine

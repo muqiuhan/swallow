@@ -29,5 +29,17 @@
 
 #include "instruction.hpp"
 
-namespace swallow::compiler::gmachine
-{} // namespace swallow::compiler::gmachine
+namespace swallow::compiler::gmachine::instruction
+{
+  void Pop::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void MakeApplication::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Pack::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Split::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Slide::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Allocation::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Unwind::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Jump::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void PushInt::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void PushGlobal::dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Push::dump(uint8_t indent, std::ostream& to) const noexcept {}
+} // namespace swallow::compiler::gmachine::instruction

@@ -27,18 +27,13 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.hpp"
-#include "diagnostics/reporter.hpp"
+#include "binop.hpp"
 #include "panic/panic.hpp"
-#include "type/environment.hpp"
-#include "type/type.hpp"
-#include <vector>
 
-using namespace swallow::compiler::utils;
-
-namespace swallow::compiler::ast
+namespace swallow::compiler::gmachine
 {
-  auto Binop::operatorsToString(const utils::Binop op) noexcept -> std::string
+  [[nodiscard]] auto Binop::operatorsToString(utils::Binop op) noexcept
+    -> std::string
   {
     switch (op)
       {
@@ -55,43 +50,21 @@ namespace swallow::compiler::ast
     utils::panic("operatorsToString failed!!!");
   }
 
-  void dump(const std::vector<Definition::Ptr> &Program) noexcept
+  [[nodiscard]] auto Binop::operatorsAction(utils::Binop op) noexcept
+    -> std::string
   {
-    for (const auto &definition : Program)
+    switch (op)
       {
-        Fn *fn = dynamic_cast<Fn *>(definition.get());
-
-        if (fn == nullptr)
-          continue;
-        for (const auto &param : fn->Params)
-          std::cout << " " << param;
-
-        std::cout << ":" << '\n';
-        fn->Body->dump(1, std::cout);
+      case utils::Binop::PLUS:
+        return {"plus"};
+      case utils::Binop::MINUS:
+        return {"minus"};
+      case utils::Binop::TIMES:
+        return {"times"};
+      case utils::Binop::DIVIDE:
+        return {"divede"};
       }
+
+    utils::panic("operatorsAction failed!!!");
   }
-} // namespace swallow::compiler::ast
-
-namespace swallow::compiler::type
-{
-  void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept
-  {
-    Manager typeManager;
-    Environment typeEnvironment;
-
-    auto intType = Type::Ptr(new Base("Int"));
-    auto binopType = Type::Ptr(
-      new Arrow(intType, Type::Ptr(new type::Arrow(intType, intType))));
-
-    typeEnvironment.bind("+", binopType);
-    typeEnvironment.bind("-", binopType);
-    typeEnvironment.bind("*", binopType);
-    typeEnvironment.bind("/", binopType);
-
-    for (const auto &definition : program)
-      definition->scanDefinitionType(typeManager, typeEnvironment);
-
-    for (const auto &definition : program)
-      definition->typecheck(typeManager, typeEnvironment);
-  }
-} // namespace swallow::compiler::type
+} // namespace swallow::compiler::gmachine

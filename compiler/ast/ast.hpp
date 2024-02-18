@@ -30,10 +30,13 @@
 #ifndef SWALLOW_COMPILER_AST_AST_H
 #define SWALLOW_COMPILER_AST_AST_H
 
-#include "environment.h"
-#include "location.hh"
+#include "binop/binop.hpp"
+#include "g-machine/environment.hpp"
+#include "g-machine/instruction.hpp"
+#include "parser/location.hh"
 #include "result/result.hpp"
-#include "type.h"
+#include "type/environment.hpp"
+#include "type/type.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -57,6 +60,10 @@ namespace swallow::compiler::ast
       -> utils::Result<type::Type::Ptr, utils::Void> = 0;
 
     virtual void dump(uint8_t indent, std::ostream &to) const noexcept = 0;
+
+    virtual void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                         std::vector<gmachine::instruction::Instruction::Ptr>
+                           &into) const noexcept = 0;
   };
 
   class Pattern
@@ -137,6 +144,10 @@ namespace swallow::compiler::ast
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
     void dump(uint8_t indent, std::ostream &to) const noexcept override;
+
+    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                 std::vector<gmachine::instruction::Instruction::Ptr> &into)
+      const noexcept override;
   };
 
   class LID final : public AST
@@ -153,6 +164,10 @@ namespace swallow::compiler::ast
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
     void dump(uint8_t indent, std::ostream &to) const noexcept override;
+
+    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                 std::vector<gmachine::instruction::Instruction::Ptr> &into)
+      const noexcept override;
   };
 
   class UID final : public AST
@@ -169,38 +184,39 @@ namespace swallow::compiler::ast
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
     void dump(uint8_t indent, std::ostream &to) const noexcept override;
+
+    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                 std::vector<gmachine::instruction::Instruction::Ptr> &into)
+      const noexcept override;
   };
 
   class Binop final : public AST
   {
   public:
-    enum class Operators
-    {
-      PLUS,
-      MINUS,
-      TIMES,
-      DIVIDE
-    };
-
-    const Operators Operator;
+    const utils::Binop Operator;
     const Ptr Left;
     const Ptr Right;
 
-    Binop(const yy::location Location, Operators Operator, Ptr Left, Ptr Right)
+    Binop(const yy::location Location, utils::Binop Operator, Ptr Left,
+          Ptr Right)
       : Operator(Operator)
       , Left(std::move(Left))
       , Right(std::move(Right))
       , AST(Location)
     {}
 
-    static auto operatorsToString(const Operators &op) noexcept
-      -> utils::Result<std::string, utils::Void>;
+    static auto operatorsToString(const utils::Binop op) noexcept
+      -> std::string;
 
     auto typecheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
     void dump(uint8_t indent, std::ostream &to) const noexcept override;
+
+    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                 std::vector<gmachine::instruction::Instruction::Ptr> &into)
+      const noexcept override;
   };
 
   class Application final : public AST
@@ -218,6 +234,10 @@ namespace swallow::compiler::ast
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
     void dump(uint8_t indent, std::ostream &to) const noexcept override;
+
+    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                 std::vector<gmachine::instruction::Instruction::Ptr> &into)
+      const noexcept override;
   };
 
   class Match final : public AST
@@ -235,6 +255,10 @@ namespace swallow::compiler::ast
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
     void dump(uint8_t indent, std::ostream &to) const noexcept override;
+
+    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+                 std::vector<gmachine::instruction::Instruction::Ptr> &into)
+      const noexcept override;
   };
 
   class PatternVariable final : public Pattern
