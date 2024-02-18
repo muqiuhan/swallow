@@ -31,33 +31,31 @@ To build and run with [xmake](xmake.io):
 ## Introduction
 
 ### Typechecking
-$$
-\begin{prooftree}
-\AXC{$\Gamma \vdash e_1 : \tau_1 \rightarrow \tau_2 \quad \Gamma \vdash e_2 : \tau_1$}
-\UnaryInfC{$\Gamma \vdash e_1 e_2 : \tau_2$}
-\end{prooftree}
-$$
+```rescript
+data Bool = [ True, False ]
+data List = [ Nil, Cons Int List ]
 
-$$
-\begin{prooftree}
-\AXC{$\Gamma \vdash e : \tau \quad match_\tau(\tau, p_i) = b_i \quad \Gamma, b_i \vdash e_i : \tau_c $}
-\UnaryInfC{$\Gamma \vdash match \enspace e \enspace with \enspace \{(p_1, e_1) ... (p_n, e_n)\} : \tau_c$}
-\end{prooftree}
-$$
+let main(argv) = {
+    match argv with {
+    | True => { 0 }
+    | Nil => { 1 }
+    }
+}
+```
 
-$$
-\begin{prooftree}
-\AXC{}
-\UnaryInfC{$match_\tau(\tau, v) = \{v : \tau\}$}
-\end{prooftree}
-$$
-
-$$
-\begin{prooftree}
-\AXC{$\Gamma \vdash c : \tau_1 \rightarrow ... \rightarrow \tau_n \rightarrow \tau$}
-\UnaryInfC{$match_\tau(\tau, c \enspace v_1...v_n) = \{v_1 : \tau_1 ...v_n : \tau_n\}$}
-\end{prooftree}
-$$
+```
+[E013] Error: Type checking failed for pattern
+    /-[example/PatternType.sw]
+    o
+  6 |      | True => { 0 }
+  7 |      | Nil => { 1 }
+    o        ^^^^        
+    o        := This pattern has type 'List', but here may need a 'Bool'
+  8 |      }
+    o
+    o-- Note: 'Bool' conflicts with 'List'
+----/
+```
 
 ### Pattern Matching
 ```rescript
