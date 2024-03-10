@@ -5,12 +5,17 @@ set_xmakever("2.8.1")
 add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
 
+includes("../stdlib")
+
 target("swc")
     set_kind("binary")
     set_languages("c++20")
     
+    add_cxxflags("clang::-stdlib=libc++")
     add_files("*.cpp", "**/*.cpp")
     add_includedirs(".", "ast", "type", "lexer", "parser", "diagnostics", "utils")
+
+    add_links("c++")
 
     before_build(function (target)
       os.run("flex -o $(scriptdir)/lexer/flex_lexer.cpp $(scriptdir)/lexer/lexer.l")
@@ -20,3 +25,5 @@ target("swc")
     after_build(function (_)
         os.run("make fmt")
     end)
+
+    add_deps("stdlib")
