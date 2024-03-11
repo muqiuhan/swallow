@@ -1,5 +1,3 @@
-includes("../compiler")
-
 target("stdlib")
     set_kind("shared")
     set_languages("c++20")

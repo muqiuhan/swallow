@@ -11,3 +11,11 @@ build/
 .idea/
 
 compile_commands.json
+
+compiler/lexer/flex_lexer.cpp
+compiler/parser/bison_parser.cpp
+compiler/parser/bison_parser.hpp
+compiler/parser/location.hh
+
+.ninja_deps
+.ninja_log

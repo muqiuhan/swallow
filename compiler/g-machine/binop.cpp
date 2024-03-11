@@ -11,7 +11,7 @@
 //     notice,
 //       this list of conditions and the following disclaimer in the
 //       documentation and/or other materials provided with the distribution.
-//     * Neither the name of Terifo nor the names of its contributors
+//     * Neither the name of Swallow nor the names of its contributors
 //       may be used to endorse or promote products derived from this software
 //       without specific prior written permission.
 //
@@ -46,8 +46,6 @@ namespace swallow::compiler::gmachine
       case utils::Binop::DIVIDE:
         return {"/"};
       }
-
-    utils::panic("operatorsToString failed!!!");
   }
 
   [[nodiscard]] auto Binop::operatorsAction(utils::Binop op) noexcept
@@ -62,9 +60,7 @@ namespace swallow::compiler::gmachine
       case utils::Binop::TIMES:
         return {"times"};
       case utils::Binop::DIVIDE:
-        return {"divede"};
+        return {"divide"};
       }
-
-    utils::panic("operatorsAction failed!!!");
   }
 } // namespace swallow::compiler::gmachine
