@@ -2,9 +2,6 @@ set_project("swallow")
 set_version("0.0.1")
 set_xmakever("2.8.1")
 
-add_rules("mode.debug", "mode.release")
-add_rules("plugin.compile_commands.autoupdate", {outputdir = "."})
-
 includes("../stdlib")
 
 target("swc")
@@ -23,7 +20,7 @@ target("swc")
     end)
 
     after_build(function (_)
-        os.run("make fmt")
+        os.run("sh after_build.sh")
     end)
 
     add_deps("stdlib")
