@@ -69,16 +69,16 @@ namespace termcolor
   } // namespace _internal
 
   template <typename CharT>
-  auto colorize(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    colorize(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     stream.iword(_internal::colorize_index()) = 1L;
     return stream;
   }
 
   template <typename CharT>
-  auto nocolorize(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    nocolorize(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     stream.iword(_internal::colorize_index()) = 0L;
     return stream;
@@ -138,8 +138,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto underline(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    underline(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -179,8 +179,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto concealed(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    concealed(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -219,8 +219,8 @@ namespace termcolor
   }
 
   template <uint8_t code, typename CharT>
-  auto on_color(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    on_color(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -246,8 +246,8 @@ namespace termcolor
   }
 
   template <uint8_t r, uint8_t g, uint8_t b, typename CharT>
-  auto on_color(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    on_color(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -396,8 +396,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto bright_red(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    bright_red(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -540,8 +540,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto on_green(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    on_green(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -555,8 +555,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto on_yellow(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    on_yellow(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -585,8 +585,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto on_magenta(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    on_magenta(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {
@@ -616,8 +616,8 @@ namespace termcolor
   }
 
   template <typename CharT>
-  auto on_white(std::basic_ostream<CharT> &stream)
-    -> std::basic_ostream<CharT> &
+  auto
+    on_white(std::basic_ostream<CharT> &stream) -> std::basic_ostream<CharT> &
   {
     if (_internal::is_colorized(stream))
       {

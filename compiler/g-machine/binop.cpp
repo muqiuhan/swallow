@@ -32,8 +32,8 @@
 
 namespace swallow::compiler::gmachine
 {
-  [[nodiscard]] auto Binop::operatorsToString(utils::Binop op) noexcept
-    -> std::string
+  [[nodiscard]] auto
+    Binop::operatorsToString(utils::Binop op) noexcept -> std::string
   {
     switch (op)
       {
@@ -46,10 +46,12 @@ namespace swallow::compiler::gmachine
       case utils::Binop::DIVIDE:
         return {"/"};
       }
+
+    utils::panic("ICE: operatorsToString");
   }
 
-  [[nodiscard]] auto Binop::operatorsAction(utils::Binop op) noexcept
-    -> std::string
+  [[nodiscard]] auto
+    Binop::operatorsAction(utils::Binop op) noexcept -> std::string
   {
     switch (op)
       {
@@ -62,5 +64,7 @@ namespace swallow::compiler::gmachine
       case utils::Binop::DIVIDE:
         return {"divide"};
       }
+
+    utils::panic("ICE: operatorsToString");
   }
 } // namespace swallow::compiler::gmachine

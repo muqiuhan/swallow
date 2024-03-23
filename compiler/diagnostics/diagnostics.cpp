@@ -55,8 +55,8 @@ namespace swallow::compiler::diagnostics
       }
   }
 
-  auto color_by_type(std::ostream &stream, const ColorType type)
-    -> std::ostream &
+  auto color_by_type(std::ostream &stream,
+                     const ColorType type) -> std::ostream &
   {
     switch (type)
       {
@@ -305,8 +305,8 @@ namespace swallow::compiler::diagnostics
 
   auto Details::get_path() const -> const std::string & { return this->path_; }
 
-  LabelGroup::LabelGroup(
-    Details *general_details_, std::vector<const Label *> labels)
+  LabelGroup::LabelGroup(Details *general_details_,
+                         std::vector<const Label *> labels)
     : first_label_()
     , last_label_()
     , details_(general_details_)
@@ -540,8 +540,8 @@ namespace swallow::compiler::diagnostics
     output << termcolor::reset << "\n";
   }
 
-  auto LabelGroup::find_label_levels(const Labels &labels)
-    -> std::vector<Labels>
+  auto
+    LabelGroup::find_label_levels(const Labels &labels) -> std::vector<Labels>
   {
     auto descending_labels(labels);
     std::sort(descending_labels.begin(), descending_labels.end(),
@@ -811,8 +811,8 @@ namespace swallow::compiler::diagnostics
 
   ReportBuilder::ReportBuilder() = default;
 
-  auto ReportBuilder::with_message(const std::string &message)
-    -> ReportBuilder &
+  auto
+    ReportBuilder::with_message(const std::string &message) -> ReportBuilder &
   {
     this->message_ = message;
     return *this;

@@ -58,8 +58,8 @@ namespace swallow::compiler::gmachine
     return false;
   }
 
-  [[nodiscard]] auto Offset::hasVariable(const std::string &name) const noexcept
-    -> bool
+  [[nodiscard]] auto
+    Offset::hasVariable(const std::string &name) const noexcept -> bool
   {
     if (Parent != nullptr)
       return Parent->hasVariable(name);

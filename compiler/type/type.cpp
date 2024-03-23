@@ -78,8 +78,8 @@ namespace swallow::compiler::type
     return type;
   }
 
-  auto Manager::unify(Type::Ptr left, Type::Ptr right) noexcept
-    -> Result<Void, Void>
+  auto Manager::unify(Type::Ptr left,
+                      Type::Ptr right) noexcept -> Result<Void, Void>
   {
     Variable *leftVar = nullptr;
     Variable *rightVar = nullptr;
