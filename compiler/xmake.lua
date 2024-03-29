@@ -8,7 +8,6 @@ target("swc")
     set_kind("binary")
     set_languages("c++20")
     
-    add_cxxflags("clang::-stdlib=libc++")
     add_files("*.cpp", "**/*.cpp")
     add_includedirs(".", "ast", "type", "lexer", "parser", "diagnostics", "utils")
 
