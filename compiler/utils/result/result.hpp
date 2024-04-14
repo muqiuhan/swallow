@@ -231,8 +231,8 @@ namespace swallow::compiler::utils
     // This function can be used to unpack a successful result while handling an
     // error.
     template <typename ErrorFunction, typename OkFunction>
-    auto map_or_else(ErrorFunction err_fn, OkFunction ok_fn)
-      -> decltype(ok_fn(T()))
+    auto map_or_else(ErrorFunction err_fn,
+                     OkFunction ok_fn) -> decltype(ok_fn(T()))
     {
       if (is_ok())
         return ok_fn(unwrap());

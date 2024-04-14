@@ -1,8 +1,5 @@
-includes("../compiler")
-
-target("swi")
-    set_kind("binary")
+target("base")
+    set_kind("shared")
     set_languages("c++20")
     add_files("*.cpp")
-    add_deps("swc")
     add_cxxflags("clang::-stdlib=libc++")

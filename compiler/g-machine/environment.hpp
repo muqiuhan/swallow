@@ -64,8 +64,8 @@ namespace swallow::compiler::gmachine
     [[nodiscard]] auto getOffset(const std::string &name) const noexcept
       -> tl::optional<int> override;
 
-    [[nodiscard]] auto hasVariable(const std::string &name) const noexcept
-      -> bool override;
+    [[nodiscard]] auto
+      hasVariable(const std::string &name) const noexcept -> bool override;
   };
 
   class Offset : public Environment
@@ -81,8 +81,8 @@ namespace swallow::compiler::gmachine
     [[nodiscard]] auto getOffset(const std::string &name) const noexcept
       -> tl::optional<int> override;
 
-    [[nodiscard]] auto hasVariable(const std::string &name) const noexcept
-      -> bool override;
+    [[nodiscard]] auto
+      hasVariable(const std::string &name) const noexcept -> bool override;
   };
 
 } // namespace swallow::compiler::gmachine

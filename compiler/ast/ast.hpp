@@ -54,10 +54,9 @@ namespace swallow::compiler::ast
     explicit AST(const yy::location Location) : Location(Location) {}
     virtual ~AST() = default;
 
-    virtual auto
-      typecheck(type::Manager &typeManager,
-                const type::Environment &typeEnvironment) const noexcept
-      -> utils::Result<type::Type::Ptr, utils::Void> = 0;
+    virtual auto typecheck(type::Manager &typeManager,
+                           const type::Environment &typeEnvironment)
+      const noexcept -> utils::Result<type::Type::Ptr, utils::Void> = 0;
 
     virtual void dump(uint8_t indent, std::ostream &to) const noexcept = 0;
 
@@ -205,8 +204,8 @@ namespace swallow::compiler::ast
       , AST(Location)
     {}
 
-    static auto operatorsToString(const utils::Binop op) noexcept
-      -> std::string;
+    static auto
+      operatorsToString(const utils::Binop op) noexcept -> std::string;
 
     auto typecheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
