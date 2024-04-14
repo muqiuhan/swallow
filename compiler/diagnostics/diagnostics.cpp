@@ -306,8 +306,8 @@ namespace swallow::compiler::diagnostics
 
   auto Details::get_path() const -> const std::string & { return this->path_; }
 
-  LabelGroup::LabelGroup(
-    Details *general_details_, std::vector<const Label *> labels)
+  LabelGroup::LabelGroup(Details *general_details_,
+                         std::vector<const Label *> labels)
     : first_label_()
     , last_label_()
     , details_(general_details_)

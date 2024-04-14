@@ -39,9 +39,9 @@ namespace swallow::compiler::gmachine
   {
   public:
     [[nodiscard]] static auto
-      operatorsToString(const utils::Binop op) noexcept -> std::string;
+      operatorsToString(utils::Binop op) noexcept -> std::string;
     [[nodiscard]] static auto
-      operatorsAction(const utils::Binop op) noexcept -> std::string;
+      operatorsAction(utils::Binop op) noexcept -> std::string;
   };
 } // namespace swallow::compiler::gmachine
 

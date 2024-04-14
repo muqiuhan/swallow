@@ -62,7 +62,9 @@ namespace swallow::compiler::ast
   void
     Application::compile(const gmachine::Environment::Ptr &machineEnvironment,
                          std::vector<Instruction::Ptr> &into) const noexcept
-  {}
+  {
+    Right->compile(machineEnvironment, into);
+  }
 
   void Binop::compile(const gmachine::Environment::Ptr &machineEnvironment,
                       std::vector<Instruction::Ptr> &into) const noexcept
