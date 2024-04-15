@@ -103,6 +103,7 @@ namespace swallow::compiler::ast
     const std::string Name;
     const std::vector<std::string> Types;
     const yy::location Location;
+    uint8_t Tag{};
 
     Constructor(const yy::location Location, std::string Name,
                 std::vector<std::string> Types)

@@ -321,6 +321,7 @@ namespace swallow::compiler::ast
   {
     ReturnType = typeManager.newType();
     type::Type::Ptr fullType = ReturnType;
+
     std::for_each(
       Params.rbegin(), Params.rend(), [&](const std::string &param) {
         type::Type::Ptr paramType = typeManager.newType();
@@ -375,9 +376,16 @@ namespace swallow::compiler::ast
   void Data::scanDefinitionType(type::Manager &typeManager,
                                 type::Environment &typeEnvironment) noexcept
   {
-    auto fullType = type::Type::Ptr(new type::Base(Name));
+    auto * thisType = new type::Data(Name);
+    auto returnType = type::Type::Ptr(thisType);
+    uint8_t nextTag = 0;
+
     for (const auto &constructor : Constructors)
       {
+        constructor->Tag = nextTag;
+        thisType->Constructors[constructor->Name] = { nextTag ++ };
+
+        auto fullType = returnType;
         std::for_each(constructor->Types.rbegin(), constructor->Types.rend(),
                       [&](const auto &typeName) {
                         fullType = type::Type::Ptr(new type::Arrow(

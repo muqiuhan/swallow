@@ -74,7 +74,7 @@ namespace swallow::compiler::gmachine
     uint32_t Value;
     Ptr Parent;
 
-    Offset(uint32_t &Value, Ptr Parent)
+    Offset(uint32_t Value, Ptr Parent)
       : Value(Value), Parent(std::move(Parent))
     {}
 

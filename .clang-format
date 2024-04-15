@@ -54,7 +54,7 @@ PenaltyExcessCharacter:	1000000
 PenaltyReturnTypeOnItsOwnLine:	60
 PointerAlignment:	Middle
 ReflowComments:	true
-SortIncludes:	true
+SortIncludes:	"Never"
 SpaceAfterCStyleCast:	true
 SpaceBeforeAssignmentOperators:	true
 SpaceBeforeParens:	ControlStatements

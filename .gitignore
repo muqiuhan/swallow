@@ -19,3 +19,5 @@ compiler/parser/location.hh
 
 .ninja_deps
 .ninja_log
+
+cmake-build-debug/

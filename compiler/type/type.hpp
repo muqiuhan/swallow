@@ -62,7 +62,7 @@ namespace swallow::compiler::type
               std::ostream &to) const noexcept override;
   };
 
-  class Base final : public Type
+  class Base : public Type
   {
   public:
     const std::string Name;
@@ -71,6 +71,18 @@ namespace swallow::compiler::type
 
     void dump(const Manager &typeManager,
               std::ostream &to) const noexcept override;
+  };
+
+  class Data final : public Base
+  {
+  public:
+    struct Constructor {
+      uint8_t Tag;
+    };
+
+    std::map<std::string, Constructor> Constructors;
+
+    explicit Data(std::string Name) : Base(std::move(Name)) {}
   };
 
   class Arrow final : public Type
