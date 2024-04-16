@@ -131,10 +131,10 @@ Branch
     ;
 
 Pattern
-    : LID { $$ = Pattern::Ptr(new PatternVariable(@$, std::move($1))); }
-    | UID { $$ = Pattern::Ptr(new PatternConstructor(@$, std::move($1), std::vector<std::string>())); }
+    : LID { $$ = Pattern::Ptr(new VariablePattern(@$, std::move($1))); }
+    | UID { $$ = Pattern::Ptr(new ConstructorPattern(@$, std::move($1), std::vector<std::string>())); }
     | UID OPAREN LowercaseParams CPAREN
-        { $$ = Pattern::Ptr(new PatternConstructor(@$, std::move($1), std::move($3))); }
+        { $$ = Pattern::Ptr(new ConstructorPattern(@$, std::move($1), std::move($3))); }
     ;
 
 Data

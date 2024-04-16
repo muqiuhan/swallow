@@ -37,7 +37,7 @@ namespace swallow::compiler::diagnostics
       case ReportType::WARNING:
         return "W";
       default:
-        utils::panic("This report type is not implemented yet.");
+        utils::Panic("This report type is not implemented yet.");
       }
   }
 
@@ -52,7 +52,7 @@ namespace swallow::compiler::diagnostics
       case ReportType::WARNING:
         return "Warning";
       default:
-        utils::panic("This report type is not implemented yet.");
+        utils::Panic("This report type is not implemented yet.");
       }
   }
 
@@ -290,7 +290,7 @@ namespace swallow::compiler::diagnostics
           return index;
       }
 
-    utils::panic("Couldn't find the associated line for this span.");
+    utils::Panic("Couldn't find the associated line for this span.");
   }
 
   auto Details::get_line_spans() const
@@ -541,8 +541,7 @@ namespace swallow::compiler::diagnostics
     output << termcolor::reset << "\n";
   }
 
-  auto
-    LabelGroup::find_label_levels(const Labels &labels) -> std::vector<Labels>
+  auto LabelGroup::find_label_levels(const Labels &labels) -> std::vector<Labels>
   {
     auto descending_labels(labels);
     std::sort(descending_labels.begin(), descending_labels.end(),
@@ -625,9 +624,8 @@ namespace swallow::compiler::diagnostics
 
   FileGroup::FileGroup(Details *details, Labels labels) : details_(details)
   {
-    assertm(
-      !labels.empty(),
-      "Cannot find label current_labels if there are no labels_collection.");
+    assertm(!labels.empty(), "Cannot find label current_labels if there are no "
+                             "labels_collection.");
 
     std::vector<Labels> labels_collection;
     auto *current_labels = &labels_collection.emplace_back();
@@ -812,8 +810,7 @@ namespace swallow::compiler::diagnostics
 
   ReportBuilder::ReportBuilder() = default;
 
-  auto
-    ReportBuilder::with_message(const std::string &message) -> ReportBuilder &
+  auto ReportBuilder::with_message(const std::string &message) -> ReportBuilder &
   {
     this->message_ = message;
     return *this;

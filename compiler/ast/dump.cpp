@@ -39,48 +39,48 @@ namespace swallow::compiler::ast
       to << "  ";
   }
 
-  void Int::dump(uint8_t indent, std::ostream &to) const noexcept
+  void Int::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
     to << std::format("<Int: {}>", Value) << '\n';
   }
 
-  void LID::dump(uint8_t indent, std::ostream &to) const noexcept
+  void LID::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
     to << std::format("<LID: {}>", ID) << '\n';
   }
 
-  void UID::dump(uint8_t indent, std::ostream &to) const noexcept
+  void UID::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
     to << std::format("<UID: {}>", ID) << '\n';
   }
 
-  void Binop::dump(uint8_t indent, std::ostream &to) const noexcept
+  void Binop::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
 
-    to << std::format("<Binop: {}", operatorsToString(Operator)) << '\n';
+    to << std::format("<Binop: {}", OperatorToString(Operator)) << '\n';
 
-    Left->dump(indent + 1, to);
-    Left->dump(indent + 1, to);
+    Left->Dump(indent + 1, to);
+    Left->Dump(indent + 1, to);
 
     to << ">" << '\n';
   }
 
-  void Application::dump(uint8_t indent, std::ostream &to) const noexcept
+  void Application::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
 
     to << "<Application: " << '\n';
 
-    Left->dump(indent + 1, to);
-    Left->dump(indent + 1, to);
+    Left->Dump(indent + 1, to);
+    Left->Dump(indent + 1, to);
     to << ">" << '\n';
   }
 
-  void Match::dump(uint8_t indent, std::ostream &to) const noexcept
+  void Match::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
     printIndent(indent, to);
 
@@ -89,22 +89,22 @@ namespace swallow::compiler::ast
     for (const auto &branch : Branches)
       {
         printIndent(indent + 1, to);
-        branch->Patt->dump(to);
+        branch->Patt->Dump(to);
         to << '\n';
-        branch->Expr->dump(indent + 2, to);
+        branch->Expr->Dump(indent + 2, to);
       }
 
     to << ">" << '\n';
   }
 
-  void PatternVariable::dump(std::ostream &to) const noexcept
+  void VariablePattern::Dump(std::ostream &to) const noexcept
   {
     to << Variable;
   }
 
-  void PatternConstructor::dump(std::ostream &to) const noexcept
+  void ConstructorPattern::Dump(std::ostream &to) const noexcept
   {
-    to << Constructor;
+    to << ConstructorName;
 
     for (const auto &param : Params)
       to << " " << param;

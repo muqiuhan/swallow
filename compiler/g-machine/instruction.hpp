@@ -47,7 +47,7 @@ namespace swallow::compiler::gmachine::instruction
 
     virtual ~Instruction() = default;
 
-    virtual void dump(uint8_t indent, std::ostream& to) const noexcept = 0;
+    virtual void Dump(uint8_t indent, std::ostream& to) const noexcept = 0;
   };
 
   class PushInt : public Instruction
@@ -57,7 +57,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit PushInt(int Value) : Value(Value) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class PushGlobal : public Instruction
@@ -67,7 +67,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit PushGlobal(std::string Name) : Name(std::move(Name)) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Push : public Instruction
@@ -77,7 +77,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Push(uint32_t Offset) : Offset(Offset) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Pop : public Instruction
@@ -87,13 +87,13 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Pop(uint32_t Count) : Count(Count) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class MakeApplication : public Instruction
   {
   public:
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Update : public Instruction
@@ -103,7 +103,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Update(uint32_t Offset) : Offset(Offset) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Pack : public Instruction
@@ -114,13 +114,13 @@ namespace swallow::compiler::gmachine::instruction
 
     Pack(int Tag, int Size) : Tag(Tag), Size(Size) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Split : public Instruction
   {
   public:
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Slide : public Instruction
@@ -130,7 +130,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Slide(uint32_t Offset) : Offset(Offset) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Binop : public Instruction
@@ -140,13 +140,13 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Binop(utils::Binop Operator) : Operator(Operator) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Eval : public Instruction
   {
   public:
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Allocation : public Instruction
@@ -156,22 +156,22 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Allocation(int Amount) : Amount(Amount) {}
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Unwind : public Instruction
   {
   public:
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 
   class Jump : public Instruction
   {
   public:
-    std::vector<std::vector<std::unique_ptr<Instruction::Ptr>>> Branches;
+    std::vector<std::vector<Instruction::Ptr>> Branches;
     std::map<int, int> TagMappings;
 
-    void dump(uint8_t indent, std::ostream& to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };
 } // namespace swallow::compiler::gmachine::instruction
 

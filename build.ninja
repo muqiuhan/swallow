@@ -91,7 +91,7 @@ build build/.objs/swi/linux/x86_64/debug/repl/main.cpp.o: cxx repl/main.cpp
 
 # build target: swc
 build swc: phony build/linux/x86_64/debug/swc
-build build/linux/x86_64/debug/swc: ld build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/g-machine/binop.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/g-machine/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/g-machine/instruction.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/type.cpp.o || $
+build build/linux/x86_64/debug/swc: ld build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/Dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/g-machine/binop.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/g-machine/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/g-machine/instruction.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/Dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/type.cpp.o || $
    build/linux/x86_64/debug/libstdlib.so
  ARGS = -m64 -Lbuild/linux/x86_64/debug -Wl,-rpath=$ORIGIN -lc++ -lstdlib
 
@@ -101,7 +101,7 @@ build build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o: cxx compiler/c
 build build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler -Icompiler/ast -Icompiler/type -Icompiler/lexer -Icompiler/parser -Icompiler/diagnostics -Icompiler/utils
 
-build build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o: cxx compiler/ast/dump.cpp
+build build/.objs/swc/linux/x86_64/debug/compiler/ast/Dump.cpp.o: cxx compiler/ast/Dump.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler -Icompiler/ast -Icompiler/type -Icompiler/lexer -Icompiler/parser -Icompiler/diagnostics -Icompiler/utils
 
 build build/.objs/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o: cxx compiler/ast/g-machine.cpp
@@ -140,7 +140,7 @@ build build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o: cxx compi
 build build/.objs/swc/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o: cxx compiler/parser/bison_parser.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler -Icompiler/ast -Icompiler/type -Icompiler/lexer -Icompiler/parser -Icompiler/diagnostics -Icompiler/utils
 
-build build/.objs/swc/linux/x86_64/debug/compiler/type/dump.cpp.o: cxx compiler/type/dump.cpp
+build build/.objs/swc/linux/x86_64/debug/compiler/type/Dump.cpp.o: cxx compiler/type/Dump.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler -Icompiler/ast -Icompiler/type -Icompiler/lexer -Icompiler/parser -Icompiler/diagnostics -Icompiler/utils
 
 build build/.objs/swc/linux/x86_64/debug/compiler/type/environment.cpp.o: cxx compiler/type/environment.cpp

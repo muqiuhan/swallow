@@ -7,7 +7,7 @@ let first(pair) = {
 }
 
 let second(pair) = {
-    match pair with {
+    Match pair with {
     | Pair(x, y) => { y }
     }
 }

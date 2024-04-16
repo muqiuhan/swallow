@@ -47,7 +47,7 @@ namespace swallow::compiler::type
 
     virtual ~Type() = default;
 
-    virtual void dump(const Manager &typeManager,
+    virtual void Dump(const Manager &typeManager,
                       std::ostream &to) const noexcept = 0;
   };
 
@@ -58,7 +58,7 @@ namespace swallow::compiler::type
 
     explicit Variable(std::string Name) : Name(std::move(Name)) {}
 
-    void dump(const Manager &typeManager,
+    void Dump(const Manager &typeManager,
               std::ostream &to) const noexcept override;
   };
 
@@ -69,14 +69,15 @@ namespace swallow::compiler::type
 
     explicit Base(std::string Name) : Name(std::move(Name)) {}
 
-    void dump(const Manager &typeManager,
+    void Dump(const Manager &typeManager,
               std::ostream &to) const noexcept override;
   };
 
   class Data final : public Base
   {
   public:
-    struct Constructor {
+    struct Constructor
+    {
       uint8_t Tag;
     };
 
@@ -94,7 +95,7 @@ namespace swallow::compiler::type
     Arrow(Ptr Left, Ptr Right) : Left(std::move(Left)), Right(std::move(Right))
     {}
 
-    void dump(const Manager &typeManager,
+    void Dump(const Manager &typeManager,
               std::ostream &to) const noexcept override;
   };
 
@@ -104,19 +105,19 @@ namespace swallow::compiler::type
     int32_t LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
-    auto newTypeName() noexcept -> std::string;
-    auto newType() noexcept -> Type::Ptr;
-    auto newArrowType() noexcept -> Type::Ptr;
+    auto NewTypeName() noexcept -> std::string;
+    auto NewType() noexcept -> Type::Ptr;
+    auto NewArrowType() noexcept -> Type::Ptr;
 
     /** Find values for placeholder variables such that they can equal. */
-    auto unify(Type::Ptr left, Type::Ptr right) noexcept
+    auto Unify(Type::Ptr left, Type::Ptr right) noexcept
       -> utils::Result<utils::Void, utils::Void>;
 
     /** Get to the bottom of a chain of equations. */
-    auto resolve(Type::Ptr type, Variable *&var) noexcept -> Type::Ptr;
+    auto Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr;
 
     /** Map a type variable of some name to a type. */
-    void bind(const std::string &name, const Type::Ptr &type) noexcept;
+    void Bind(const std::string &name, const Type::Ptr &type) noexcept;
   };
 } // namespace swallow::compiler::type
 
