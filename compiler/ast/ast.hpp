@@ -48,19 +48,28 @@ namespace swallow::compiler::ast
   {
   public:
     const yy::location Location;
+    type::Type::Ptr NodeType;
 
     using Ptr = std::unique_ptr<AST>;
 
     explicit AST(const yy::location Location) : Location(Location) {}
     virtual ~AST() = default;
 
-    virtual auto typecheck(type::Manager &typeManager,
+    auto CommonTypeCheck(type::Manager &typeManager,
+                         const type::Environment &typeEnvironment) noexcept
+      -> type::Type::Ptr;
+
+    void CommonResolve(const type::Manager &typeManager) noexcept;
+
+    virtual void Resolve(const type::Manager &typeManager) const noexcept = 0;
+
+    virtual auto TypeCheck(type::Manager &typeManager,
                            const type::Environment &typeEnvironment)
       const noexcept -> utils::Result<type::Type::Ptr, utils::Void> = 0;
 
-    virtual void dump(uint8_t indent, std::ostream &to) const noexcept = 0;
+    virtual void Dump(uint8_t indent, std::ostream &to) const noexcept = 0;
 
-    virtual void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    virtual void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                          std::vector<gmachine::instruction::Instruction::Ptr>
                            &into) const noexcept = 0;
   };
@@ -75,10 +84,10 @@ namespace swallow::compiler::ast
     explicit Pattern(const yy::location Location) : Location(Location) {}
     virtual ~Pattern() = default;
 
-    virtual void match(type::Type::Ptr type, type::Manager &typeManager,
+    virtual void Match(type::Type::Ptr type, type::Manager &typeManager,
                        type::Environment &typeEnvironment) const noexcept = 0;
 
-    virtual void dump(std::ostream &to) const noexcept = 0;
+    virtual void Dump(std::ostream &to) const noexcept = 0;
   };
 
   class Branch
@@ -103,6 +112,7 @@ namespace swallow::compiler::ast
     const std::string Name;
     const std::vector<std::string> Types;
     const yy::location Location;
+    uint8_t Tag{};
 
     Constructor(const yy::location Location, std::string Name,
                 std::vector<std::string> Types)
@@ -120,12 +130,13 @@ namespace swallow::compiler::ast
     explicit Definition(const yy::location Location) : Location(Location) {}
     virtual ~Definition() = default;
 
-    virtual void
-      scanDefinitionType(type::Manager &typeManager,
-                         type::Environment &typeEnvironment) noexcept = 0;
+    virtual void PreScanTypes(type::Manager &typeManager,
+                              type::Environment &typeEnvironment) noexcept = 0;
+
+    virtual void Resolve(const type::Manager &typeManager) const noexcept = 0;
 
     virtual void
-      typecheck(type::Manager &typeManager,
+      TypeCheck(type::Manager &typeManager,
                 const type::Environment &typeEnvironment) const noexcept = 0;
   };
 
@@ -138,13 +149,13 @@ namespace swallow::compiler::ast
       : Value(V), AST(Location)
     {}
 
-    auto typecheck(type::Manager &typeManager,
+    auto TypeCheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
-    void dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
 
-    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                  std::vector<gmachine::instruction::Instruction::Ptr> &into)
       const noexcept override;
   };
@@ -158,13 +169,13 @@ namespace swallow::compiler::ast
       : ID(std::move(ID)), AST(Location)
     {}
 
-    auto typecheck(type::Manager &typeManager,
+    auto TypeCheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
-    void dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
 
-    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                  std::vector<gmachine::instruction::Instruction::Ptr> &into)
       const noexcept override;
   };
@@ -178,13 +189,13 @@ namespace swallow::compiler::ast
       : ID(std::move(ID)), AST(Location)
     {}
 
-    auto typecheck(type::Manager &typeManager,
+    auto TypeCheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
-    void dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
 
-    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                  std::vector<gmachine::instruction::Instruction::Ptr> &into)
       const noexcept override;
   };
@@ -204,18 +215,19 @@ namespace swallow::compiler::ast
       , AST(Location)
     {}
 
-    static auto
-      operatorsToString(const utils::Binop op) noexcept -> std::string;
+    static auto OperatorToString(utils::Binop op) noexcept -> std::string;
 
-    auto typecheck(type::Manager &typeManager,
+    auto TypeCheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
-    void dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
 
-    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                  std::vector<gmachine::instruction::Instruction::Ptr> &into)
       const noexcept override;
+
+    virtual void Resolve(const type::Manager &typeManager) const noexcept;
   };
 
   class Application final : public AST
@@ -228,13 +240,13 @@ namespace swallow::compiler::ast
       : Left(std::move(Left)), Right(std::move(Right)), AST(Location)
     {}
 
-    auto typecheck(type::Manager &typeManager,
+    auto TypeCheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
-    void dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
 
-    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                  std::vector<gmachine::instruction::Instruction::Ptr> &into)
       const noexcept override;
   };
@@ -249,49 +261,49 @@ namespace swallow::compiler::ast
       : With(std::move(o)), Branches(std::move(b)), AST(Location)
     {}
 
-    auto typecheck(type::Manager &typeManager,
+    auto TypeCheck(type::Manager &typeManager,
                    const type::Environment &typeEnvironment) const noexcept
       -> utils::Result<type::Type::Ptr, utils::Void> override;
 
-    void dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
 
-    void compile(const gmachine::Environment::Ptr &machineEnvironment,
+    void Compile(const gmachine::Environment::Ptr &machineEnvironment,
                  std::vector<gmachine::instruction::Instruction::Ptr> &into)
       const noexcept override;
   };
 
-  class PatternVariable final : public Pattern
+  class VariablePattern final : public Pattern
   {
     const std::string Variable;
 
   public:
-    explicit PatternVariable(const yy::location Location, std::string Variable)
+    explicit VariablePattern(const yy::location Location, std::string Variable)
       : Variable(std::move(Variable)), Pattern(Location)
     {}
 
-    void match(type::Type::Ptr type, type::Manager &typeManager,
+    void Match(type::Type::Ptr type, type::Manager &typeManager,
                type::Environment &typeEnvironment) const noexcept override;
 
-    void dump(std::ostream &to) const noexcept override;
+    void Dump(std::ostream &to) const noexcept override;
   };
 
-  class PatternConstructor final : public Pattern
+  class ConstructorPattern final : public Pattern
   {
   public:
-    const std::string Constructor;
+    const std::string ConstructorName;
     const std::vector<std::string> Params;
 
-    PatternConstructor(const yy::location Location, std::string Constructor,
+    ConstructorPattern(const yy::location Location, std::string Constructor,
                        std::vector<std::string> Params)
-      : Constructor(std::move(Constructor))
+      : ConstructorName(std::move(Constructor))
       , Params(std::move(Params))
       , Pattern(Location)
     {}
 
-    void match(type::Type::Ptr type, type::Manager &typeManager,
+    void Match(type::Type::Ptr type, type::Manager &typeManager,
                type::Environment &typeEnvironment) const noexcept override;
 
-    void dump(std::ostream &to) const noexcept override;
+    void Dump(std::ostream &to) const noexcept override;
   };
 
   class Fn final : public Definition
@@ -312,11 +324,10 @@ namespace swallow::compiler::ast
       , Definition(Location)
     {}
 
-    void
-      scanDefinitionType(type::Manager &typeManager,
-                         type::Environment &typeEnvironment) noexcept override;
+    void PreScanTypes(type::Manager &typeManager,
+                      type::Environment &typeEnvironment) noexcept override;
 
-    void typecheck(
+    void TypeCheck(
       type::Manager &typeManager,
       const type::Environment &typeEnvironment) const noexcept override;
   };
@@ -334,21 +345,20 @@ namespace swallow::compiler::ast
       , Definition(Location)
     {}
 
-    void
-      scanDefinitionType(type::Manager &typeManager,
-                         type::Environment &typeEnvironment) noexcept override;
+    void PreScanTypes(type::Manager &typeManager,
+                      type::Environment &typeEnvironment) noexcept override;
 
-    void typecheck(
+    void TypeCheck(
       type::Manager &typeManager,
       const type::Environment &typeEnvironment) const noexcept override;
   };
 
-  void dump(const std::vector<Definition> &Program) noexcept;
+  void Dump(const std::vector<Definition> &Program) noexcept;
 } // namespace swallow::compiler::ast
 
 namespace swallow::compiler::type
 {
-  void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept;
+  void TypeCheck(const std::vector<ast::Definition::Ptr> &program) noexcept;
 } // namespace swallow::compiler::type
 
 #endif

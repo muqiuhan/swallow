@@ -36,24 +36,24 @@ using namespace swallow::compiler::utils;
 namespace swallow::compiler::type
 {
 
-  auto Environment::lookup(const std::string &name) const noexcept
+  auto Environment::Lookup(const std::string &name) const noexcept
     -> Result<Type::Ptr, Void>
   {
     if (const auto it = Names.find(name); it != Names.end())
       return Ok(it->second);
 
     if (Parent != nullptr)
-      return Parent->lookup(name);
+      return Parent->Lookup(name);
 
     return Err(Void());
   }
 
-  void Environment::bind(const std::string &name, Type::Ptr type) noexcept
+  void Environment::Bind(const std::string &name, Type::Ptr type) noexcept
   {
     Names[name] = std::move(type);
   }
 
-  auto Environment::scope() const noexcept -> Environment
+  auto Environment::Scope() const noexcept -> Environment
   {
     return Environment(this);
   }

@@ -40,8 +40,8 @@ auto main(int argc, char **argv) -> int
   CompileUnit::FILE = new CompileUnit(argv[1]);
   diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 
-  auto &program = parser::parse();
-  type::typecheck(program);
+  auto &program = parser::Parse();
+  type::TypeCheck(program);
 
   delete CompileUnit::FILE;
   delete diagnostics::Reporter::REPORTER;

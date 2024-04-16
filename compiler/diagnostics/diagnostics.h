@@ -82,8 +82,7 @@ namespace swallow::compiler::diagnostics
     Label(std::optional<std::string> message, const Span &span,
           ColorType color_type);
 
-    [[nodiscard]] auto
-      get_message() const -> const std::optional<std::string> &;
+    [[nodiscard]] auto get_message() const -> const std::optional<std::string> &;
 
     [[nodiscard]] auto get_span() const -> const Span &;
 

@@ -208,8 +208,7 @@ namespace tl
       typename = enable_if_t<!(is_pointer_to_non_const_member_func<Fn>::value
                                && is_const_or_const_ref<Args...>::value)>,
 #endif
-      typename = enable_if_t<std::is_member_pointer<decay_t<Fn>>::value>,
-      int = 0>
+      typename = enable_if_t<std::is_member_pointer<decay_t<Fn>>::value>, int = 0>
     constexpr auto invoke(Fn &&f, Args &&...args) noexcept(
       noexcept(std::mem_fn(f)(std::forward<Args>(args)...)))
       -> decltype(std::mem_fn(f)(std::forward<Args>(args)...))
@@ -217,9 +216,8 @@ namespace tl
       return std::mem_fn(f)(std::forward<Args>(args)...);
     }
 
-    template <
-      typename Fn, typename... Args,
-      typename = enable_if_t<!std::is_member_pointer<decay_t<Fn>>::value>>
+    template <typename Fn, typename... Args,
+              typename = enable_if_t<!std::is_member_pointer<decay_t<Fn>>::value>>
     constexpr auto invoke(Fn &&f, Args &&...args) noexcept(
       noexcept(std::forward<Fn>(f)(std::forward<Args>(args)...)))
       -> decltype(std::forward<Fn>(f)(std::forward<Args>(args)...))
@@ -231,11 +229,10 @@ namespace tl
     template <class F, class, class... Us> struct invoke_result_impl;
 
     template <class F, class... Us>
-    struct invoke_result_impl<F,
-                              decltype(detail::invoke(std::declval<F>(),
-                                                      std::declval<Us>()...),
-                                       void()),
-                              Us...>
+    struct invoke_result_impl<
+      F,
+      decltype(detail::invoke(std::declval<F>(), std::declval<Us>()...), void()),
+      Us...>
     {
       using type =
         decltype(detail::invoke(std::declval<F>(), std::declval<Us>()...));
@@ -270,15 +267,13 @@ namespace tl
       // becomes std::swap
       template <class, class> std::false_type can_swap(...) noexcept(false);
       template <class T, class U,
-                class = decltype(swap(std::declval<T &>(),
-                                      std::declval<U &>()))>
+                class = decltype(swap(std::declval<T &>(), std::declval<U &>()))>
       std::true_type can_swap(int) noexcept(
         noexcept(swap(std::declval<T &>(), std::declval<U &>())));
 
       template <class, class> std::false_type uses_std(...);
       template <class T, class U>
-      std::is_same<decltype(swap(std::declval<T &>(), std::declval<U &>())),
-                   tag>
+      std::is_same<decltype(swap(std::declval<T &>(), std::declval<U &>())), tag>
         uses_std(int);
 
       template <class T>
@@ -301,11 +296,10 @@ namespace tl
     template <class T, class U = T>
     struct is_swappable
       : std::integral_constant<
-          bool,
-          decltype(detail::swap_adl_tests::can_swap<T, U>(0))::value
-            && (!decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value
-                || (std::is_move_assignable<T>::value
-                    && std::is_move_constructible<T>::value))>
+          bool, decltype(detail::swap_adl_tests::can_swap<T, U>(0))::value
+                  && (!decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value
+                      || (std::is_move_assignable<T>::value
+                          && std::is_move_constructible<T>::value))>
     {};
 
     template <class T, std::size_t N>
@@ -325,8 +319,7 @@ namespace tl
             && ((decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value
                  && detail::swap_adl_tests::is_std_swap_noexcept<T>::value)
                 || (!decltype(detail::swap_adl_tests::uses_std<T, U>(0))::value
-                    && detail::swap_adl_tests::is_adl_swap_noexcept<T,
-                                                                    U>::value))>
+                    && detail::swap_adl_tests::is_adl_swap_noexcept<T, U>::value))>
     {};
 #endif
 #endif
@@ -390,8 +383,7 @@ namespace tl
       !std::is_same<optional<T>, detail::decay_t<U>>::value
       && !detail::conjunction<std::is_scalar<T>,
                               std::is_same<T, detail::decay_t<U>>>::value
-      && std::is_constructible<T, U>::value
-      && std::is_assignable<T &, U>::value>;
+      && std::is_constructible<T, U>::value && std::is_assignable<T &, U>::value>;
 
     template <class T, class U, class Other>
     using enable_assign_from_other = detail::enable_if_t<
@@ -667,8 +659,7 @@ namespace tl
     {
       optional_delete_ctor_base() = default;
       optional_delete_ctor_base(const optional_delete_ctor_base &) = default;
-      optional_delete_ctor_base(optional_delete_ctor_base &&) noexcept =
-        default;
+      optional_delete_ctor_base(optional_delete_ctor_base &&) noexcept = default;
       optional_delete_ctor_base &
         operator=(const optional_delete_ctor_base &) = default;
       optional_delete_ctor_base &
@@ -690,8 +681,7 @@ namespace tl
     {
       optional_delete_ctor_base() = default;
       optional_delete_ctor_base(const optional_delete_ctor_base &) = delete;
-      optional_delete_ctor_base(optional_delete_ctor_base &&) noexcept =
-        default;
+      optional_delete_ctor_base(optional_delete_ctor_base &&) noexcept = default;
       optional_delete_ctor_base &
         operator=(const optional_delete_ctor_base &) = default;
       optional_delete_ctor_base &
@@ -720,8 +710,7 @@ namespace tl
     struct optional_delete_assign_base
     {
       optional_delete_assign_base() = default;
-      optional_delete_assign_base(const optional_delete_assign_base &) =
-        default;
+      optional_delete_assign_base(const optional_delete_assign_base &) = default;
       optional_delete_assign_base(optional_delete_assign_base &&) noexcept =
         default;
       optional_delete_assign_base &
@@ -733,8 +722,7 @@ namespace tl
     template <class T> struct optional_delete_assign_base<T, true, false>
     {
       optional_delete_assign_base() = default;
-      optional_delete_assign_base(const optional_delete_assign_base &) =
-        default;
+      optional_delete_assign_base(const optional_delete_assign_base &) = default;
       optional_delete_assign_base(optional_delete_assign_base &&) noexcept =
         default;
       optional_delete_assign_base &
@@ -746,8 +734,7 @@ namespace tl
     template <class T> struct optional_delete_assign_base<T, false, true>
     {
       optional_delete_assign_base() = default;
-      optional_delete_assign_base(const optional_delete_assign_base &) =
-        default;
+      optional_delete_assign_base(const optional_delete_assign_base &) = default;
       optional_delete_assign_base(optional_delete_assign_base &&) noexcept =
         default;
       optional_delete_assign_base &
@@ -759,8 +746,7 @@ namespace tl
     template <class T> struct optional_delete_assign_base<T, false, false>
     {
       optional_delete_assign_base() = default;
-      optional_delete_assign_base(const optional_delete_assign_base &) =
-        default;
+      optional_delete_assign_base(const optional_delete_assign_base &) = default;
       optional_delete_assign_base(optional_delete_assign_base &&) noexcept =
         default;
       optional_delete_assign_base &
@@ -1725,10 +1711,9 @@ namespace tl
     return rhs.has_value() ? lhs >= *rhs : true;
   }
 
-  template <
-    class T,
-    detail::enable_if_t<std::is_move_constructible<T>::value> * = nullptr,
-    detail::enable_if_t<detail::is_swappable<T>::value> * = nullptr>
+  template <class T,
+            detail::enable_if_t<std::is_move_constructible<T>::value> * = nullptr,
+            detail::enable_if_t<detail::is_swappable<T>::value> * = nullptr>
   void swap(optional<T> &lhs,
             optional<T> &rhs) noexcept(noexcept(lhs.swap(rhs)))
   {
@@ -1742,9 +1727,8 @@ namespace tl
   } // namespace detail
 
   template <class T = detail::i_am_secret, class U,
-            class Ret =
-              detail::conditional_t<std::is_same<T, detail::i_am_secret>::value,
-                                    detail::decay_t<U>, T>>
+            class Ret = detail::conditional_t<
+              std::is_same<T, detail::i_am_secret>::value, detail::decay_t<U>, T>>
   inline constexpr optional<Ret> make_optional(U &&v)
   {
     return optional<Ret>(std::forward<U>(v));

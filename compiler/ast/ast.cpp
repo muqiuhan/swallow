@@ -38,7 +38,7 @@ using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::ast
 {
-  auto Binop::operatorsToString(const utils::Binop op) noexcept -> std::string
+  auto Binop::OperatorToString(utils::Binop op) noexcept -> std::string
   {
     switch (op)
       {
@@ -52,10 +52,10 @@ namespace swallow::compiler::ast
         return {"/"};
       }
 
-    utils::panic("operatorsToString failed!!!");
+    utils::Panic("OperatorToString failed!!!");
   }
 
-  void dump(const std::vector<Definition::Ptr> &Program) noexcept
+  void Dump(const std::vector<Definition::Ptr> &Program) noexcept
   {
     for (const auto &definition : Program)
       {
@@ -67,14 +67,15 @@ namespace swallow::compiler::ast
           std::cout << " " << param;
 
         std::cout << ":" << '\n';
-        fn->Body->dump(1, std::cout);
+        fn->Body->Dump(1, std::cout);
       }
   }
+
 } // namespace swallow::compiler::ast
 
 namespace swallow::compiler::type
 {
-  void typecheck(const std::vector<ast::Definition::Ptr> &program) noexcept
+  void TypeCheck(const std::vector<ast::Definition::Ptr> &program) noexcept
   {
     Manager typeManager;
     Environment typeEnvironment;
@@ -83,15 +84,18 @@ namespace swallow::compiler::type
     auto binopType = Type::Ptr(
       new Arrow(intType, Type::Ptr(new type::Arrow(intType, intType))));
 
-    typeEnvironment.bind("+", binopType);
-    typeEnvironment.bind("-", binopType);
-    typeEnvironment.bind("*", binopType);
-    typeEnvironment.bind("/", binopType);
+    typeEnvironment.Bind("+", binopType);
+    typeEnvironment.Bind("-", binopType);
+    typeEnvironment.Bind("*", binopType);
+    typeEnvironment.Bind("/", binopType);
 
     for (const auto &definition : program)
-      definition->scanDefinitionType(typeManager, typeEnvironment);
+      definition->PreScanTypes(typeManager, typeEnvironment);
 
     for (const auto &definition : program)
-      definition->typecheck(typeManager, typeEnvironment);
+      definition->TypeCheck(typeManager, typeEnvironment);
+
+    for (const auto &definition : program)
+      definition->Resolve(typeManager);
   }
 } // namespace swallow::compiler::type

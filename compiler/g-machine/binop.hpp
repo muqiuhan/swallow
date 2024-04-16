@@ -38,10 +38,8 @@ namespace swallow::compiler::gmachine
   class Binop
   {
   public:
-    [[nodiscard]] static auto
-      operatorsToString(utils::Binop op) noexcept -> std::string;
-    [[nodiscard]] static auto
-      operatorsAction(utils::Binop op) noexcept -> std::string;
+    [[nodiscard]] static auto ToString(utils::Binop op) noexcept -> std::string;
+    [[nodiscard]] static auto Action(utils::Binop op) noexcept -> std::string;
   };
 } // namespace swallow::compiler::gmachine
 

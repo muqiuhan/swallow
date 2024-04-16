@@ -34,7 +34,7 @@ using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::type
 {
-  auto Manager::newTypeName() noexcept -> std::string
+  auto Manager::NewTypeName() noexcept -> std::string
   {
     int32_t currentID = LastID++;
     std::string name;
@@ -49,17 +49,18 @@ namespace swallow::compiler::type
     return name;
   }
 
-  auto Manager::newType() noexcept -> Type::Ptr
+  auto Manager::NewType() noexcept -> Type::Ptr
   {
-    return Type::Ptr(new Variable(newTypeName()));
+    return Type::Ptr(new Variable(NewTypeName()));
   }
 
-  auto Manager::newArrowType() noexcept -> Type::Ptr
+  auto Manager::NewArrowType() noexcept -> Type::Ptr
   {
-    return Type::Ptr(new Arrow(newType(), newType()));
+    return Type::Ptr(new Arrow(NewType(), NewType()));
   }
 
-  auto Manager::resolve(Type::Ptr type, Variable *&var) noexcept -> Type::Ptr
+  auto Manager::Resolve(Type::Ptr type,
+                        Variable *&var) const noexcept -> Type::Ptr
   {
     Variable *cast = nullptr;
     var = nullptr;
@@ -78,24 +79,24 @@ namespace swallow::compiler::type
     return type;
   }
 
-  auto Manager::unify(Type::Ptr left,
+  auto Manager::Unify(Type::Ptr left,
                       Type::Ptr right) noexcept -> Result<Void, Void>
   {
     Variable *leftVar = nullptr;
     Variable *rightVar = nullptr;
 
-    left = resolve(left, leftVar);
-    right = resolve(right, rightVar);
+    left = Resolve(left, leftVar);
+    right = Resolve(right, rightVar);
 
     if (leftVar != nullptr)
       {
-        bind(leftVar->Name, right);
+        Bind(leftVar->Name, right);
         return Ok(Void());
       }
 
     if (rightVar != nullptr)
       {
-        bind(rightVar->Name, left);
+        Bind(rightVar->Name, left);
         return Ok(Void());
       }
 
@@ -103,9 +104,9 @@ namespace swallow::compiler::type
         *rightArrow = dynamic_cast<Arrow *>(right.get());
         leftArrow != nullptr && rightArrow != nullptr)
       {
-        return unify(leftArrow->Left, rightArrow->Left)
+        return Unify(leftArrow->Left, rightArrow->Left)
           .and_then([&](const auto &ok) {
-            return unify(leftArrow->Right, rightArrow->Right);
+            return Unify(leftArrow->Right, rightArrow->Right);
           });
       }
 
@@ -120,7 +121,7 @@ namespace swallow::compiler::type
     return Err(Void());
   }
 
-  void Manager::bind(const std::string &name, const Type::Ptr &type) noexcept
+  void Manager::Bind(const std::string &name, const Type::Ptr &type) noexcept
   {
     if (const auto *other = dynamic_cast<const Variable *>(type.get());
         (other != nullptr) && other->Name == name)

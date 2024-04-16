@@ -37,10 +37,10 @@
 
 namespace swallow::compiler::utils
 {
-  template <class... Args> struct panic_format
+  template <class... Args> struct PanicFormat
   {
     template <class T>
-    consteval panic_format(
+    consteval PanicFormat(
 
       const T &s,
       std::source_location loc = std::source_location::current()) noexcept
@@ -52,11 +52,11 @@ namespace swallow::compiler::utils
   };
 
   template <class... Args>
-  [[noreturn]] void panic(panic_format<std::type_identity_t<Args>...> fmt,
+  [[noreturn]] void Panic(PanicFormat<std::type_identity_t<Args>...> fmt,
                           Args &&...args) noexcept
   {
     auto msg =
-      std::format("{}:{} panic: {}\n", fmt.loc.file_name(), fmt.loc.line(),
+      std::format("{}:{} Panic: {}\n", fmt.loc.file_name(), fmt.loc.line(),
                   std::format(fmt.fmt, std::forward<Args>(args)...));
     std::cout << msg.c_str() << std::endl;
     std::terminate();

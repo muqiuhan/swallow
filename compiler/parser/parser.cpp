@@ -56,13 +56,13 @@ extern FILE *yyin, *yyout;
 namespace swallow::compiler::parser
 {
 
-  auto parse() noexcept -> std::vector<ast::Definition::Ptr> &
+  auto Parse() noexcept -> std::vector<ast::Definition::Ptr> &
   {
     FILE *file = std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
 
     if (file == nullptr)
       {
-        utils::panic("Cannot open file {}",
+        utils::Panic("Cannot open file {}",
                      compiler::CompileUnit::FILE->FilePath);
       }
 

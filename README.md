@@ -36,7 +36,7 @@ data Bool = [ True, False ]
 data List = [ Nil, Cons Int List ]
 
 let main(argv) = {
-    match argv with {
+    Match argv with {
     | True => { 0 }
     | Nil => { 1 }
     }
@@ -62,7 +62,7 @@ let main(argv) = {
 data List = [ Nil, Cons Int List ]
 
 let main(argv) = {
-  match argv with {
+  Match argv with {
   | Nil => { 0 }
   | Cons x xs => { 0 }
   }
@@ -93,7 +93,7 @@ let main(argv) = {
 - [Finite-state machine](https://en.wikipedia.org/wiki/Finite-state_machine)
 - [Implementing Fun tional Languages: a tutorial](https://www.microsoft.com/en-us/research/wp-content/uploads/1992/01/student.pdf)
 - [The G-machine: A fast, graph-reduction evaluator](https://link.springer.com/chapter/10.1007/3-540-15975-4_50)
-- [Panic better using modern C++](https://buildingblock.ai/panic)
+- [Panic better using modern C++](https://buildingblock.ai/Panic)
 - [Hindley–Milner type system](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)
 - [Unification](https://en.wikipedia.org/wiki/Unification_(computer_science))
 - [Compiling a Functional Language Using C++](https://danilafe.com/blog/00_compiler_intro/)

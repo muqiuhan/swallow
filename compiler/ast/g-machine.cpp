@@ -28,57 +28,139 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ast.hpp"
+#include "code.hpp"
+#include "diagnostics/reporter.hpp"
 #include "g-machine/binop.hpp"
 #include "g-machine/instruction.hpp"
+#include <format>
 
-using namespace swallow::compiler::gmachine::instruction;
+using swallow::compiler::gmachine::instruction::Instruction;
 using namespace swallow::compiler::gmachine;
+using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::ast
 {
-  void Int::compile(const Environment::Ptr &machineEnvironment,
+  void Int::Compile(const gmachine::Environment::Ptr &machineEnvironment,
                     std::vector<Instruction::Ptr> &into) const noexcept
   {
-    into.push_back(Instruction::Ptr(new PushInt(Value)));
+    into.push_back(Instruction::Ptr(new instruction::PushInt(Value)));
   }
 
-  void LID::compile(const Environment::Ptr &machineEnvironment,
+  void LID::Compile(const gmachine::Environment::Ptr &machineEnvironment,
                     std::vector<Instruction::Ptr> &into) const noexcept
   {
-    into.push_back(
-      Instruction::Ptr(machineEnvironment->hasVariable(ID)
-                         ? dynamic_cast<Instruction *>(new Push(
-                             machineEnvironment->getOffset(ID).value()))
+    into.push_back(Instruction::Ptr(
+      machineEnvironment->HasVariable(ID)
+        ? dynamic_cast<Instruction *>(
+            new instruction::Push(machineEnvironment->GetOffset(ID).value()))
 
-                         : dynamic_cast<Instruction *>(new PushGlobal(ID))));
+        : dynamic_cast<Instruction *>(new instruction::PushGlobal(ID))));
   }
 
-  void UID::compile(const Environment::Ptr &machineEnvironment,
+  void UID::Compile(const gmachine::Environment::Ptr &machineEnvironment,
                     std::vector<Instruction::Ptr> &into) const noexcept
   {
-    into.push_back(Instruction::Ptr(new PushGlobal(ID)));
+    into.push_back(Instruction::Ptr(new instruction::PushGlobal(ID)));
   }
 
-  void
-    Application::compile(const gmachine::Environment::Ptr &machineEnvironment,
-                         std::vector<Instruction::Ptr> &into) const noexcept
+  void Application::Compile(const gmachine::Environment::Ptr &machineEnvironment,
+                            std::vector<Instruction::Ptr> &into) const noexcept
   {
-    Right->compile(machineEnvironment, into);
+    Right->Compile(machineEnvironment, into);
+    Left->Compile(Environment::Ptr(new Offset(1, machineEnvironment)), into);
+    into.push_back(Instruction::Ptr(new instruction::MakeApplication()));
   }
 
-  void Binop::compile(const gmachine::Environment::Ptr &machineEnvironment,
+  void Binop::Compile(const gmachine::Environment::Ptr &machineEnvironment,
                       std::vector<Instruction::Ptr> &into) const noexcept
   {
-    Right->compile(machineEnvironment, into);
-    Left->compile(machineEnvironment, into);
+    Right->Compile(machineEnvironment, into);
+    Left->Compile(machineEnvironment, into);
 
     into.push_back(Instruction::Ptr(
-      new PushGlobal(gmachine::Binop::operatorsAction(Operator))));
-    into.push_back(Instruction::Ptr(new MakeApplication()));
-    into.push_back(Instruction::Ptr(new MakeApplication()));
+      new instruction::PushGlobal(gmachine::Binop::Action(Operator))));
+    into.push_back(Instruction::Ptr(new instruction::MakeApplication()));
+    into.push_back(Instruction::Ptr(new instruction::MakeApplication()));
   }
 
-  void Match::compile(const gmachine::Environment::Ptr &machineEnvironment,
+  void Match::Compile(const gmachine::Environment::Ptr &machineEnvironment,
                       std::vector<Instruction::Ptr> &into) const noexcept
-  {}
+  {
+    auto *type = dynamic_cast<type::Data *>(With->NodeType.get());
+    auto *jump = new instruction::Jump();
+
+    With->Compile(machineEnvironment, into);
+    into.push_back(Instruction::Ptr(new instruction::Eval()));
+    into.push_back(Instruction::Ptr(jump));
+
+    for (const auto &branch : Branches)
+      {
+        std::vector<Instruction::Ptr> branchInstructions;
+        auto *variablePattern =
+          dynamic_cast<VariablePattern *>(branch->Patt.get());
+        auto *constructorPattern =
+          dynamic_cast<ConstructorPattern *>(branch->Patt.get());
+
+        if (nullptr != variablePattern)
+          {
+            branch->Expr->Compile(
+              Environment::Ptr(new Offset(1, machineEnvironment)),
+              branchInstructions);
+
+            for (const auto &constructorPair : type->Constructors)
+              {
+                if (jump->TagMappings.find(constructorPair.second.Tag)
+                    != jump->TagMappings.end())
+                  break;
+
+                jump->TagMappings[constructorPair.second.Tag] =
+                  jump->Branches.size();
+              }
+            jump->Branches.push_back(std::move(branchInstructions));
+          }
+        else if (nullptr != constructorPattern)
+          {
+            auto newEnvironment = machineEnvironment;
+
+            std::for_each(
+              constructorPattern->Params.rbegin(),
+              constructorPattern->Params.rend(), [&](const auto &param) {
+                newEnvironment =
+                  Environment::Ptr(new Variable(param, newEnvironment));
+              });
+
+            branchInstructions.push_back(
+              Instruction::Ptr(new instruction::Split()));
+            branch->Expr->Compile(newEnvironment, branchInstructions);
+            branchInstructions.push_back(Instruction::Ptr(
+              new instruction::Slide(constructorPattern->Params.size())));
+
+            uint8_t newTag =
+              type->Constructors[constructorPattern->ConstructorName].Tag;
+            if (jump->TagMappings.find(newTag) != jump->TagMappings.end())
+              {
+                diagnostics::Reporter::REPORTER->normal(
+                  Location,
+                  std::format("Duplicate pattern {}",
+                              constructorPattern->ConstructorName),
+                  "This constructor already exists in context",
+                  "Consider remove this pattern",
+                  diagnostics::PATTERN_CONSTRUCTOR_IS_DUPLICATED);
+              }
+
+            jump->TagMappings[newTag] = jump->Branches.size();
+            jump->Branches.push_back(std::move(branchInstructions));
+          }
+
+        for (const auto &constructorPair : type->Constructors)
+          {
+            if (jump->TagMappings.find(constructorPair.second.Tag)
+                == jump->TagMappings.end())
+              diagnostics::Reporter::REPORTER->normal(
+                Location, "This pattern-matching is not exhaustive",
+                "There may be other patterns", "Please try to match all cases",
+                diagnostics::MATCH_EXPR_IS_NON_EXHAUSTIVE);
+          }
+      }
+  }
 } // namespace swallow::compiler::ast
