@@ -28,11 +28,10 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ast.hpp"
+#include "code.hpp"
+#include "diagnostics/reporter.hpp"
 #include "g-machine/binop.hpp"
 #include "g-machine/instruction.hpp"
-#include "diagnostics/reporter.hpp"
-#include "code.hpp"
-#include "utils/panic/panic.hpp"
 #include <format>
 
 using swallow::compiler::gmachine::instruction::Instruction;
