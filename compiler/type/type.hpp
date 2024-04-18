@@ -47,7 +47,8 @@ namespace swallow::compiler::type
 
     virtual ~Type() = default;
 
-    virtual void Dump(const Manager &typeManager, std::ostream &to) const noexcept = 0;
+    virtual void
+      Dump(const Manager &typeManager, std::ostream &to) const noexcept = 0;
   };
 
   class Variable final : public Type
@@ -57,7 +58,8 @@ namespace swallow::compiler::type
 
     explicit Variable(std::string Name) : Name(std::move(Name)) {}
 
-    void Dump(const Manager &typeManager, std::ostream &to) const noexcept override;
+    void Dump(
+      const Manager &typeManager, std::ostream &to) const noexcept override;
   };
 
   class Base : public Type
@@ -67,7 +69,8 @@ namespace swallow::compiler::type
 
     explicit Base(std::string Name) : Name(std::move(Name)) {}
 
-    void Dump(const Manager &typeManager, std::ostream &to) const noexcept override;
+    void Dump(
+      const Manager &typeManager, std::ostream &to) const noexcept override;
   };
 
   class Data final : public Base
@@ -89,23 +92,26 @@ namespace swallow::compiler::type
     const Ptr Left;
     const Ptr Right;
 
-    Arrow(Ptr Left, Ptr Right) : Left(std::move(Left)), Right(std::move(Right)) {}
+    Arrow(Ptr Left, Ptr Right) : Left(std::move(Left)), Right(std::move(Right))
+    {}
 
-    void Dump(const Manager &typeManager, std::ostream &to) const noexcept override;
+    void Dump(
+      const Manager &typeManager, std::ostream &to) const noexcept override;
   };
 
   class Manager
   {
   public:
-    int32_t LastID = 0;
+    int32_t                          LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
-    auto NewTypeName() noexcept -> std::string;
-    auto NewType() noexcept -> Type::Ptr;
-    auto NewArrowType() noexcept -> Type::Ptr;
+    auto                             NewTypeName() noexcept -> std::string;
+    auto                             NewType() noexcept -> Type::Ptr;
+    auto                             NewArrowType() noexcept -> Type::Ptr;
 
     /** Find values for placeholder variables such that they can equal. */
-    auto Unify(Type::Ptr left, Type::Ptr right) noexcept -> utils::Result<utils::Void, utils::Void>;
+    auto Unify(Type::Ptr left, Type::Ptr right) noexcept
+      -> utils::Result<utils::Void, utils::Void>;
 
     /** Get to the bottom of a chain of equations. */
     auto Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr;

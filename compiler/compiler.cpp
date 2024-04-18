@@ -42,6 +42,7 @@ auto main(int argc, char **argv) -> int
 
   auto &program = parser::Parse();
   type::TypeCheck(program);
+  gmachine::Compile(program);
 
   delete CompileUnit::FILE;
   delete diagnostics::Reporter::REPORTER;

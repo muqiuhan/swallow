@@ -40,17 +40,18 @@ namespace swallow::compiler::type
   {
   public:
     std::map<std::string, Type::Ptr> Names;
-    Environment const *Parent = nullptr;
+    Environment const               *Parent = nullptr;
 
     explicit Environment(Environment const *Parent) : Parent(Parent) {}
 
     Environment() : Environment(nullptr) {}
 
-    [[nodiscard]] auto Lookup(const std::string &name) const noexcept -> utils::Result<Type::Ptr, utils::Void>;
+    [[nodiscard]] auto Lookup(const std::string &name) const noexcept
+      -> utils::Result<Type::Ptr, utils::Void>;
 
     [[nodiscard]] auto Scope() const noexcept -> Environment;
 
-    void Bind(const std::string &name, Type::Ptr type) noexcept;
+    void               Bind(const std::string &name, Type::Ptr type) noexcept;
     void Dump(std::ostream &to, const Manager &typeManager) noexcept;
   };
 
