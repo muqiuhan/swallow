@@ -169,7 +169,7 @@ namespace swallow::compiler::gmachine::instruction
   {
   public:
     std::vector<std::vector<Instruction::Ptr>> Branches;
-    std::map<int, int> TagMappings;
+    std::map<uint8_t, uint8_t> TagMappings;
 
     void Dump(uint8_t indent, std::ostream& to) const noexcept override;
   };

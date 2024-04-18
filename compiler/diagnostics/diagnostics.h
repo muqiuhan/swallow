@@ -7,8 +7,7 @@
 #include <string>
 #include <vector>
 
-#define COLOR_BY_TYPE(type, text)                                              \
-  color_by_type(std::cout, type) << text << termcolor::reset
+#define COLOR_BY_TYPE(type, text) color_by_type(std::cout, type) << text << termcolor::reset
 #define COLOR_RGB(text, rgb) termcolor::color<rgb> << text << termcolor::reset
 
 #define assertm(exp, msg) assert(((void) msg, exp))
@@ -42,8 +41,7 @@ namespace swallow::compiler::diagnostics
 
   auto get_color_by_name(const std::string &name) -> ColorType;
 
-  auto print_formatted_text(std::ostream &output,
-                            const std::string &text) -> void;
+  auto print_formatted_text(std::ostream &output, const std::string &text) -> void;
 
   class Label;
 
@@ -79,8 +77,7 @@ namespace swallow::compiler::diagnostics
   class Label
   {
   public:
-    Label(std::optional<std::string> message, const Span &span,
-          ColorType color_type);
+    Label(std::optional<std::string> message, const Span &span, ColorType color_type);
 
     [[nodiscard]] auto get_message() const -> const std::optional<std::string> &;
 
@@ -135,8 +132,7 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_label_line(const Label &label) const -> size_t;
 
-    [[nodiscard]] auto
-      get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
+    [[nodiscard]] auto get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -155,22 +151,16 @@ namespace swallow::compiler::diagnostics
   public:
     LabelGroup(Details *general_details, Labels labels);
 
-    auto print(std::ostream &output,
-               const std::string &spaces_prefix) const -> void;
+    auto print(std::ostream &output, const std::string &spaces_prefix) const -> void;
 
-    static auto print_labels_level(const std::vector<Labels> &level_labels,
-                                   size_t current_level, const Span &line_span,
-                                   std::ostream &output,
-                                   const std::string &spaces_prefix) -> void;
+    static auto print_labels_level(const std::vector<Labels> &level_labels, size_t current_level, const Span &line_span,
+                                   std::ostream &output, const std::string &spaces_prefix) -> void;
 
-    auto print_colored_source_line(std::ostream &output, const Span &label_span,
-                                   const Labels &labels) const -> void;
+    auto print_colored_source_line(std::ostream &output, const Span &label_span, const Labels &labels) const -> void;
 
-    [[nodiscard]] static auto
-      find_label_levels(const Labels &labels) -> std::vector<Labels>;
+    [[nodiscard]] static auto find_label_levels(const Labels &labels) -> std::vector<Labels>;
 
-    [[nodiscard]] static auto
-      find_remove_overlapping_labels(Labels &labels) -> Labels;
+    [[nodiscard]] static auto find_remove_overlapping_labels(Labels &labels) -> Labels;
 
     [[nodiscard]] auto find_labels_in_line(size_t line_index) const -> Labels;
 
@@ -194,13 +184,11 @@ namespace swallow::compiler::diagnostics
   public:
     FileGroup(Details *details, Labels labels);
 
-    auto print(std::ostream &output,
-               const std::string &spaces_prefix) const -> void;
+    auto print(std::ostream &output, const std::string &spaces_prefix) const -> void;
 
     [[nodiscard]] auto get_biggest_displayed_number() const -> size_t;
 
-    [[nodiscard]] auto
-      get_label_groups() const -> const std::vector<LabelGroup> &;
+    [[nodiscard]] auto get_label_groups() const -> const std::vector<LabelGroup> &;
 
     [[nodiscard]] auto get_details() const -> Details *;
 
@@ -212,8 +200,8 @@ namespace swallow::compiler::diagnostics
   class Report
   {
   public:
-    Report(ReportType type, std::string message, size_t code,
-           std::vector<Label> labels, std::optional<std::string> note);
+    Report(ReportType type, std::string message, size_t code, std::vector<Label> labels,
+           std::optional<std::string> note);
 
     auto print(std::ostream &output) const -> void;
 

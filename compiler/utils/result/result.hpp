@@ -72,39 +72,23 @@ namespace swallow::compiler::utils
       return *this;
     }
 
-    auto operator==(const Ok<T> &val) const -> bool
-    {
-      return is_ok() && unwrap() == val.value;
-    }
+    auto operator==(const Ok<T> &val) const -> bool { return is_ok() && unwrap() == val.value; }
 
-    auto operator==(const Err<E> &val) const -> bool
-    {
-      return is_err() && unwrap_err() == val.value;
-    }
+    auto operator==(const Err<E> &val) const -> bool { return is_err() && unwrap_err() == val.value; }
 
     auto operator==(const Result<T, E> &rhs) const -> bool
     {
-      return (
-        (is_ok() && rhs.is_ok() && unwrap() == rhs.unwrap())
-        || (is_err() && rhs.is_err() && unwrap_err() == rhs.unwrap_err()));
+      return ((is_ok() && rhs.is_ok() && unwrap() == rhs.unwrap())
+              || (is_err() && rhs.is_err() && unwrap_err() == rhs.unwrap_err()));
     }
 
-    auto operator!=(const Result<T, E> &rhs) const -> bool
-    {
-      return !(*this == rhs);
-    }
+    auto operator!=(const Result<T, E> &rhs) const -> bool { return !(*this == rhs); }
 
     // Returns true if the result is Ok.
-    [[nodiscard]] auto is_ok() const -> bool
-    {
-      return std::holds_alternative<Ok<T>>(value);
-    }
+    [[nodiscard]] auto is_ok() const -> bool { return std::holds_alternative<Ok<T>>(value); }
 
     // Returns true if the result is Err.
-    [[nodiscard]] auto is_err() const -> bool
-    {
-      return std::holds_alternative<Err<E>>(value);
-    }
+    [[nodiscard]] auto is_err() const -> bool { return std::holds_alternative<Err<E>>(value); }
 
     // Converts from Result<T, E> to std::optional<T>.
     [[nodiscard]] auto ok() const -> std::optional<T>
@@ -131,8 +115,7 @@ namespace swallow::compiler::utils
     }
 
     // Synonymous with Result.and_(res)
-    template <typename U>
-    auto operator&&(const Result<U, E> &res) -> Result<U, E>
+    template <typename U> auto operator&&(const Result<U, E> &res) -> Result<U, E>
     {
       if (is_ok())
         return res;
@@ -191,34 +174,25 @@ namespace swallow::compiler::utils
       return op(unwrap_err());
     }
 
-    auto contains(const T &this_value) -> bool
-    {
-      return is_ok() ? unwrap() == this_value : false;
-    }
+    auto contains(const T &this_value) -> bool { return is_ok() ? unwrap() == this_value : false; }
 
-    auto contains_err(const E &this_value) -> bool
-    {
-      return is_err() ? unwrap_err() == this_value : false;
-    }
+    auto contains_err(const E &this_value) -> bool { return is_err() ? unwrap_err() == this_value : false; }
 
     // Maps a Result<T, E> to Result<U, E> by
     // applying a function to a contained Ok value,
     // leaving an Err value untouched.
     //
     // This function can be used to compose the results of two functions.
-    template <typename Function>
-    auto map(Function fn) -> Result<decltype(fn(T())), E>
+    template <typename Function> auto map(Function fn) -> Result<decltype(fn(T())), E>
     {
       if (is_ok())
-        return Result<decltype(fn(T())), E>(
-          Ok<decltype(fn(T()))>(fn(unwrap())));
+        return Result<decltype(fn(T())), E>(Ok<decltype(fn(T()))>(fn(unwrap())));
       return Result<decltype(fn(T())), E>(Err<E>(unwrap_err()));
     }
 
     // Applies a function to the contained value (if any),
     // or returns the provided default (if not).
-    template <typename Value, typename Function>
-    auto map_or(Value default_value, Function fn) -> decltype(fn(T()))
+    template <typename Value, typename Function> auto map_or(Value default_value, Function fn) -> decltype(fn(T()))
     {
       if (is_ok())
         return fn(unwrap());
@@ -231,8 +205,7 @@ namespace swallow::compiler::utils
     // This function can be used to unpack a successful result while handling an
     // error.
     template <typename ErrorFunction, typename OkFunction>
-    auto map_or_else(ErrorFunction err_fn,
-                     OkFunction ok_fn) -> decltype(ok_fn(T()))
+    auto map_or_else(ErrorFunction err_fn, OkFunction ok_fn) -> decltype(ok_fn(T()))
     {
       if (is_ok())
         return ok_fn(unwrap());
@@ -245,12 +218,10 @@ namespace swallow::compiler::utils
     //
     // This function can be used to pass
     // through a successful result while handling an error.
-    template <typename Function>
-    auto map_err(Function fn) -> Result<T, decltype(fn(E()))>
+    template <typename Function> auto map_err(Function fn) -> Result<T, decltype(fn(E()))>
     {
       if (is_err())
-        return Result<T, decltype(fn(E()))>(
-          Err<decltype(fn(E()))>(fn(unwrap_err())));
+        return Result<T, decltype(fn(E()))>(Err<decltype(fn(E()))>(fn(unwrap_err())));
       return Result<T, decltype(fn(E()))>(Ok<T>(unwrap()));
     }
 
@@ -325,10 +296,7 @@ namespace swallow::compiler::utils
     T value;
     Ok(T value) : value(value) {}
 
-    template <typename Function> auto and_then(Function op) -> Result<T, T>
-    {
-      return Result<T, T>(*this).and_then(op);
-    }
+    template <typename Function> auto and_then(Function op) -> Result<T, T> { return Result<T, T>(*this).and_then(op); }
   };
 
   template <typename E> struct Err
@@ -336,10 +304,7 @@ namespace swallow::compiler::utils
     E value;
     Err(E value) : value(value) {}
 
-    template <typename Function> auto and_then(Function op) -> Result<E, E>
-    {
-      return Result<E, E>(*this).and_then(op);
-    }
+    template <typename Function> auto and_then(Function op) -> Result<E, E> { return Result<E, E>(*this).and_then(op); }
   };
 } // namespace swallow::compiler::utils
 
