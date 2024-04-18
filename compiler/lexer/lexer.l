@@ -25,7 +25,7 @@ static yy::location LOC;
 [0-9]+  { return yy::parser::make_INT(atoi(yytext), LOC); }
 let     { return yy::parser::make_FN(LOC); }
 data    { return yy::parser::make_DATA(LOC); }
-Match   { return yy::parser::make_MATCH(LOC); }
+match   { return yy::parser::make_MATCH(LOC); }
 with    { return yy::parser::make_WITH(LOC); }
 \{      { return yy::parser::make_OCURLY(LOC); }
 \}      { return yy::parser::make_CCURLY(LOC); }

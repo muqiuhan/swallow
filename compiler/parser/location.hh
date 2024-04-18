@@ -31,12 +31,12 @@
 // version 2.2 of Bison.
 
 /**
- ** \file /home/muqiu/Workspace/swallow/compiler/parser/location.hh
+ ** \file ./parser/location.hh
  ** Define the yy::location class.
  */
 
-#ifndef YY_YY_HOME_MUQIU_WORKSPACE_SWALLOW_COMPILER_PARSER_LOCATION_HH_INCLUDED
-#define YY_YY_HOME_MUQIU_WORKSPACE_SWALLOW_COMPILER_PARSER_LOCATION_HH_INCLUDED
+#ifndef YY_YY_PARSER_LOCATION_HH_INCLUDED
+#define YY_YY_PARSER_LOCATION_HH_INCLUDED
 
 #include <iostream>
 #include <string>
@@ -55,7 +55,7 @@
 
 namespace yy
 {
-#line 58 "/home/muqiu/Workspace/swallow/compiler/parser/location.hh"
+#line 58 "./parser/location.hh"
 
   /// A point in a source file.
   class position
@@ -64,15 +64,17 @@ namespace yy
     /// Type for file name.
     typedef const std::string filename_type;
     /// Type for line and column numbers.
-    typedef int counter_type;
+    typedef int               counter_type;
 
     /// Construct a position.
-    explicit position(filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    explicit position(
+      filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
       : filename(f), line(l), column(c)
     {}
 
     /// Initialization.
-    void initialize(filename_type* fn = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    void initialize(
+      filename_type* fn = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
     {
       filename = fn;
       line = l;
@@ -93,18 +95,20 @@ namespace yy
 
     /// (column related) Advance to the COUNT next columns.
     void columns(counter_type count = 1) { column = add_(column, count, 1); }
+
     /** \} */
 
     /// File name to which this position refers.
     filename_type* filename;
     /// Current line number.
-    counter_type line;
+    counter_type   line;
     /// Current column number.
-    counter_type column;
+    counter_type   column;
 
   private:
     /// Compute max (min, lhs+rhs).
-    static counter_type add_(counter_type lhs, counter_type rhs, counter_type min)
+    static counter_type
+      add_(counter_type lhs, counter_type rhs, counter_type min)
     {
       return lhs + rhs < min ? min : lhs + rhs;
     }
@@ -118,20 +122,30 @@ namespace yy
   }
 
   /// Add \a width columns.
-  inline position operator+(position res, position::counter_type width) { return res += width; }
+  inline position operator+(position res, position::counter_type width)
+  {
+    return res += width;
+  }
 
   /// Subtract \a width columns, in place.
-  inline position& operator-=(position& res, position::counter_type width) { return res += -width; }
+  inline position& operator-=(position& res, position::counter_type width)
+  {
+    return res += -width;
+  }
 
   /// Subtract \a width columns.
-  inline position operator-(position res, position::counter_type width) { return res -= width; }
+  inline position operator-(position res, position::counter_type width)
+  {
+    return res -= width;
+  }
 
   /** \brief Intercept output stream redirection.
    ** \param ostr the destination output stream
    ** \param pos a reference to the position to redirect
    */
   template <typename YYChar>
-  std::basic_ostream<YYChar>& operator<<(std::basic_ostream<YYChar>& ostr, const position& pos)
+  std::basic_ostream<YYChar>&
+    operator<<(std::basic_ostream<YYChar>& ostr, const position& pos)
   {
     if (pos.filename)
       ostr << *pos.filename << ':';
@@ -145,7 +159,7 @@ namespace yy
     /// Type for file name.
     typedef position::filename_type filename_type;
     /// Type for line and column numbers.
-    typedef position::counter_type counter_type;
+    typedef position::counter_type  counter_type;
 
     /// Construct a location from \a b to \a e.
     location(const position& b, const position& e) : begin(b), end(e) {}
@@ -154,10 +168,13 @@ namespace yy
     explicit location(const position& p = position()) : begin(p), end(p) {}
 
     /// Construct a 0-width location in \a f, \a l, \a c.
-    explicit location(filename_type* f, counter_type l = 1, counter_type c = 1) : begin(f, l, c), end(f, l, c) {}
+    explicit location(filename_type* f, counter_type l = 1, counter_type c = 1)
+      : begin(f, l, c), end(f, l, c)
+    {}
 
     /// Initialization.
-    void initialize(filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    void initialize(
+      filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
     {
       begin.initialize(f, l, c);
       end = begin;
@@ -174,6 +191,7 @@ namespace yy
 
     /// Extend the current location to the COUNT next lines.
     void lines(counter_type count = 1) { end.lines(count); }
+
     /** \} */
 
   public:
@@ -191,7 +209,10 @@ namespace yy
   }
 
   /// Join two locations.
-  inline location operator+(location res, const location& end) { return res += end; }
+  inline location operator+(location res, const location& end)
+  {
+    return res += end;
+  }
 
   /// Add \a width columns to the end position, in place.
   inline location& operator+=(location& res, location::counter_type width)
@@ -201,13 +222,22 @@ namespace yy
   }
 
   /// Add \a width columns to the end position.
-  inline location operator+(location res, location::counter_type width) { return res += width; }
+  inline location operator+(location res, location::counter_type width)
+  {
+    return res += width;
+  }
 
   /// Subtract \a width columns to the end position, in place.
-  inline location& operator-=(location& res, location::counter_type width) { return res += -width; }
+  inline location& operator-=(location& res, location::counter_type width)
+  {
+    return res += -width;
+  }
 
   /// Subtract \a width columns to the end position.
-  inline location operator-(location res, location::counter_type width) { return res -= width; }
+  inline location operator-(location res, location::counter_type width)
+  {
+    return res -= width;
+  }
 
   /** \brief Intercept output stream redirection.
    ** \param ostr the destination output stream
@@ -216,11 +246,15 @@ namespace yy
    ** Avoid duplicate information.
    */
   template <typename YYChar>
-  std::basic_ostream<YYChar>& operator<<(std::basic_ostream<YYChar>& ostr, const location& loc)
+  std::basic_ostream<YYChar>&
+    operator<<(std::basic_ostream<YYChar>& ostr, const location& loc)
   {
-    location::counter_type end_col = 0 < loc.end.column ? loc.end.column - 1 : 0;
+    location::counter_type end_col =
+      0 < loc.end.column ? loc.end.column - 1 : 0;
     ostr << loc.begin;
-    if (loc.end.filename && (!loc.begin.filename || *loc.begin.filename != *loc.end.filename))
+    if (
+      loc.end.filename
+      && (!loc.begin.filename || *loc.begin.filename != *loc.end.filename))
       ostr << '-' << loc.end.filename << ':' << loc.end.line << '.' << end_col;
     else if (loc.begin.line < loc.end.line)
       ostr << '-' << loc.end.line << '.' << end_col;
@@ -230,6 +264,7 @@ namespace yy
   }
 
 } // namespace yy
-#line 303 "/home/muqiu/Workspace/swallow/compiler/parser/location.hh"
 
-#endif // !YY_YY_HOME_MUQIU_WORKSPACE_SWALLOW_COMPILER_PARSER_LOCATION_HH_INCLUDED
+#line 303 "./parser/location.hh"
+
+#endif // !YY_YY_PARSER_LOCATION_HH_INCLUDED
