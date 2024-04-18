@@ -31,6 +31,7 @@
 #define SWALLOW_COMPILER_DIAGNOSTICS_CODE_HPP
 
 #include <cstdint>
+
 namespace swallow::compiler::diagnostics
 {
 
@@ -57,6 +58,6 @@ namespace swallow::compiler::diagnostics
     AMBIGUOUSLY_TYPE,
   };
 
-}
+} // namespace swallow::compiler::diagnostics
 
 #endif /* SWALLOW_COMPILER_DIAGNOSTICS_CODE_HPP */

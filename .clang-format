@@ -1,8 +1,8 @@
 Language:	Cpp
 BasedOnStyle:	LLVM
-BinPackArguments:	true
-BinPackParameters:	true
-BraceWrapping:   
+BinPackArguments:	false
+BinPackParameters:	false
+BraceWrapping:
   AfterClass:	true
   AfterEnum:	true
   AfterFunction:	true
@@ -22,17 +22,38 @@ BreakBeforeTernaryOperators:	true
 BreakConstructorInitializersBeforeComma:	true
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
-ColumnLimit: 120
+ColumnLimit: 80
+LambdaBodyIndentation: OuterScope
+RemoveBracesLLVM: true
+SeparateDefinitionBlocks: Always
 CommentPragmas:	'^ IWYU pragma:'
 ConstructorInitializerAllOnOneLineOrOnePerLine:	true
 ConstructorInitializerIndentWidth:	2
 ContinuationIndentWidth:	2
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveDeclarations:
+  Enabled:         true
+  AcrossEmptyLines: true
+  AcrossComments:  true
+  AlignCompound:   true
+  PadOperators:    true
+AlignConsecutiveMacros:
+  Enabled:         true
+  AcrossEmptyLines: true
+  AcrossComments:  true
+  AlignCompound:   true
+  PadOperators:    true
+AlignEscapedNewlines: Right
+AlignOperands:   Align
+AlignTrailingComments: true
+AllowShortEnumsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
 Cpp11BracedListStyle:	true
 DerivePointerAlignment:	true
 DisableFormat:	false
 ExperimentalAutoDetectBinPacking:	true
 ForEachMacros:	[ foreach, Q_FOREACH, BOOST_FOREACH ]
-IncludeCategories: 
+IncludeCategories:
   - Regex:	'^"(llvm|llvm-c|clang|clang-c)/'
     Priority:	2
   - Regex:	'^(<|"(gtest|isl|json)/)'
@@ -47,11 +68,11 @@ MacroBlockBegin:	''
 MacroBlockEnd:	''
 MaxEmptyLinesToKeep:	1
 NamespaceIndentation: All
-PenaltyBreakComment:	120
-PenaltyBreakFirstLessLess:	120
-PenaltyBreakString:	120
-PenaltyExcessCharacter:	120
-PenaltyReturnTypeOnItsOwnLine:	120
+PenaltyBreakComment:	80
+PenaltyBreakFirstLessLess:	80
+PenaltyBreakString:	80
+PenaltyExcessCharacter:	80
+PenaltyReturnTypeOnItsOwnLine:	80
 PointerAlignment:	Middle
 ReflowComments:	true
 SortIncludes:	"Never"

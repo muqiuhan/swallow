@@ -77,11 +77,12 @@ namespace swallow::compiler::type
 {
   void TypeCheck(const std::vector<ast::Definition::Ptr> &program) noexcept
   {
-    Manager typeManager;
+    Manager     typeManager;
     Environment typeEnvironment;
 
-    auto intType = Type::Ptr(new Base("Int"));
-    auto binopType = Type::Ptr(new Arrow(intType, Type::Ptr(new type::Arrow(intType, intType))));
+    auto        intType = Type::Ptr(new Base("Int"));
+    auto        binopType = Type::Ptr(
+      new Arrow(intType, Type::Ptr(new type::Arrow(intType, intType))));
 
     typeEnvironment.Bind("+", binopType);
     typeEnvironment.Bind("-", binopType);
@@ -98,3 +99,21 @@ namespace swallow::compiler::type
       definition->Resolve(typeManager);
   }
 } // namespace swallow::compiler::type
+
+namespace swallow::compiler::gmachine
+{
+  void Compile(const std::vector<ast::Definition::Ptr> &program) noexcept
+  {
+    for (const auto &definition : program)
+      {
+        definition->Compile();
+        const auto *fn = dynamic_cast<Fn *>(definition.get());
+
+        if (nullptr == fn)
+          continue;
+
+        for (const auto &instruction : fn->Instructions)
+          instruction->Dump(0, std::cout);
+      }
+  }
+} // namespace swallow::compiler::gmachine

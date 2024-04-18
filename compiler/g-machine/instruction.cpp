@@ -28,20 +28,88 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "instruction.hpp"
+#include "ast.hpp"
+#include <format>
 
 namespace swallow::compiler::gmachine::instruction
 {
-  void Pop::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void MakeApplication::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Pack::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Split::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Slide::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Allocation::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Unwind::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Jump::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void PushInt::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void PushGlobal::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Push::Dump(uint8_t indent, std::ostream& to) const noexcept {}
-  void Eval::Dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Pop::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("Pop\tCount = {}\n", Count);
+  }
+
+  void MakeApplication::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << "MakeApplication\n";
+  }
+
+  void Pack::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("Pack\tTag = {}, Size = {}\n", Tag, Size);
+  }
+
+  void Split::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << "Split\n";
+  }
+
+  void Slide::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("Slide\tOffset = {}\n", Offset);
+  }
+
+  void Binop::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format(
+      "Binop\tOperator = {}\n", ast::Binop::OperatorToString(Operator));
+  }
+
+  void Allocation::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("Allocation\tAmount = {}\n", Amount);
+  }
+
+  void Unwind::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << "Unwind";
+  }
+
+  void Jump::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << "Jump\n";
+
+    for (const auto& branch : Branches)
+      {
+        std::for_each(
+          branch.begin(), branch.end(), [&](const auto& instruction) {
+          instruction->Dump(2, to);
+        });
+      }
+  }
+
+  void PushInt::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("PushInt\tValue = {}\n", Value);
+  }
+
+  void PushGlobal::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("PushGlobal\tName = {}\n", Name);
+  }
+
+  void Push::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("Push\tOffset = {}\n", Offset);
+  }
+
+  void Eval::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << "Eval\n";
+  }
+
+  void Update::Dump(uint8_t indent, std::ostream& to) const noexcept
+  {
+    to << std::format("Update\tOffset = {}\n", Offset);
+  }
 
 } // namespace swallow::compiler::gmachine::instruction
