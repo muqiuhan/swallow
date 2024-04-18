@@ -44,9 +44,7 @@ namespace swallow::compiler
 
     inline static CompileUnit *FILE = nullptr;
 
-    explicit CompileUnit(const std::string &FilePath)
-      : FilePath(FilePath), FileValue(ReadEntireFile(FilePath))
-    {}
+    explicit CompileUnit(const std::string &FilePath) : FilePath(FilePath), FileValue(ReadEntireFile(FilePath)) {}
 
   private:
     static auto ReadEntireFile(const std::string &FilePath) -> std::string

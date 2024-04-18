@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug|x64">
+      <Configuration>debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release|x64">
+      <Configuration>release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9D8CD2C9-F219-45F3-8DFF-9CB9B8A45BC5}</ProjectGuid>
+    <RootNamespace>swc</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <OutDir>../../build/linux/x86_64/debug\</OutDir>
+    <IntDir>../../build/.objs/swc/linux/x86_64/debug\</IntDir>
+    <TargetName>swc</TargetName>
+    <TargetExt></TargetExt>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <OutDir>../../build/linux/x86_64/release\</OutDir>
+    <IntDir>../../build/.objs/swc/linux/x86_64/release\</IntDir>
+    <TargetName>swc</TargetName>
+    <TargetExt></TargetExt>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Debugger">
+    <LocalDebuggerWorkingDirectory>../../build/linux/x86_64/debug</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerEnvironment>;%(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'" Label="Debugger">
+    <LocalDebuggerWorkingDirectory>../../build/linux/x86_64/release</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerEnvironment>;%(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <Link>
+      <AdditionalOptions>-m64 -Wl,-rpath=%24ORIGIN -lbase %(AdditionalOptions)</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <ExternalTemplatesDiagnostics>false</ExternalTemplatesDiagnostics>
+      <PreprocessorDefinitions>__config_debug__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../compiler;../../compiler/ast;../../compiler/type;../../compiler/lexer;../../compiler/parser;../../compiler/diagnostics;../../compiler/utils</AdditionalIncludeDirectories>
+      <AdditionalOptions>-m64 -g -std=c++20 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>__config_debug__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../compiler;../../compiler/ast;../../compiler/type;../../compiler/lexer;../../compiler/parser;../../compiler/diagnostics;../../compiler/utils</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <Link>
+      <AdditionalOptions>-m64 -Lbuild/linux/x86_64/release -Wl,-rpath=%24ORIGIN -s -lbase %(AdditionalOptions)</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <ExternalTemplatesDiagnostics>false</ExternalTemplatesDiagnostics>
+      <PreprocessorDefinitions>NDEBUG;__config_release__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>../../compiler;../../compiler/ast;../../compiler/type;../../compiler/lexer;../../compiler/parser;../../compiler/diagnostics;../../compiler/utils</AdditionalIncludeDirectories>
+      <AdditionalOptions>-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;__config_release__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../compiler;../../compiler/ast;../../compiler/type;../../compiler/lexer;../../compiler/parser;../../compiler/diagnostics;../../compiler/utils</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="../../compiler/ast/ast.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/ast/dump.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/ast/g-machine.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/ast/type.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/compiler.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/diagnostics/diagnostics.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/diagnostics/reporter.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/diagnostics/utils.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/g-machine/binop.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/g-machine/environment.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/g-machine/instruction.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/lexer/flex_lexer.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/lexer/lexer.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/parser/bison_parser.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/parser/parser.cpp">
+    </ClCompile>
+    <ClCompile Include="../../compiler/type/dump.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='debug|x64'">../../build/.objs/swc/linux/x86_64/debug/compiler/type/dump.cpp.o</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='release|x64'">../../build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="../../compiler/type/environment.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='debug|x64'">../../build/.objs/swc/linux/x86_64/debug/compiler/type/environment.cpp.o</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='release|x64'">../../build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="../../compiler/type/type.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='debug|x64'">../../build/.objs/swc/linux/x86_64/debug/compiler/type/type.cpp.o</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='release|x64'">../../build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o</ObjectFileName>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  <ProjectReference Include="../base/base.vcxproj">
+  <Project>{59F70C8B-EA5E-46BA-ACEB-3090DEE77107}</Project>
+  </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

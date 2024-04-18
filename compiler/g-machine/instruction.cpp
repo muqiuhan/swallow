@@ -42,4 +42,6 @@ namespace swallow::compiler::gmachine::instruction
   void PushInt::Dump(uint8_t indent, std::ostream& to) const noexcept {}
   void PushGlobal::Dump(uint8_t indent, std::ostream& to) const noexcept {}
   void Push::Dump(uint8_t indent, std::ostream& to) const noexcept {}
+  void Eval::Dump(uint8_t indent, std::ostream& to) const noexcept {}
+
 } // namespace swallow::compiler::gmachine::instruction
