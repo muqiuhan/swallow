@@ -8,24 +8,23 @@ cmake_policy(SET CMP0091 NEW)
 project(swallow VERSION 0.0.1 LANGUAGES CXX)
 
 # target
+set(CMAKE_C_COMPILER "/usr/bin/clang-18")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++-18")
 add_library(base SHARED "")
 set_target_properties(base PROPERTIES OUTPUT_NAME "base")
-set_target_properties(base PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
+set_target_properties(base PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
 target_compile_options(base PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
+    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
+    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
 set_target_properties(base PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(base PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(base PRIVATE $<$<CONFIG:Debug>:-Od>)
+    target_compile_options(base PRIVATE $<$<CONFIG:Release>:-Ox -fp:fast>)
 else()
-    target_compile_options(base PRIVATE -O0)
-endif()
-if(MSVC)
-    target_compile_options(base PRIVATE -Zi)
-else()
-    target_compile_options(base PRIVATE -g)
+    target_compile_options(base PRIVATE -O3)
 endif()
 if(MSVC)
     set_property(TARGET base PROPERTY
@@ -39,9 +38,11 @@ target_sources(base PRIVATE
 )
 
 # target
+set(CMAKE_C_COMPILER "/usr/bin/clang-18")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++-18")
 add_executable(swc "")
 set_target_properties(swc PROPERTIES OUTPUT_NAME "swc")
-set_target_properties(swc PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
+set_target_properties(swc PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
 add_dependencies(swc base)
 target_include_directories(swc PRIVATE
     compiler
@@ -55,73 +56,79 @@ target_include_directories(swc PRIVATE
 target_compile_options(swc PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
+    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
+    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
+    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
 )
 set_target_properties(swc PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(swc PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(swc PRIVATE $<$<CONFIG:Debug>:-Od>)
+    target_compile_options(swc PRIVATE $<$<CONFIG:Release>:-Ox -fp:fast>)
 else()
-    target_compile_options(swc PRIVATE -O0)
+    target_compile_options(swc PRIVATE -O3)
 endif()
 if(MSVC)
-    target_compile_options(swc PRIVATE -Zi)
 else()
-    target_compile_options(swc PRIVATE -g)
+    target_compile_options(swc PRIVATE -fvisibility=hidden)
 endif()
 if(MSVC)
     set_property(TARGET swc PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 target_link_libraries(swc PRIVATE
+    c++
     base
 )
 target_link_directories(swc PRIVATE
-    build/linux/x86_64/debug
+    build/linux/x86_64/release
 )
 target_link_options(swc PRIVATE
     -m64
 )
 target_sources(swc PRIVATE
     compiler/compiler.cpp
-    compiler/ast/ast.cpp
-    compiler/ast/dump.cpp
-    compiler/ast/g-machine.cpp
-    compiler/ast/type.cpp
-    compiler/diagnostics/utils.cpp
-    compiler/diagnostics/diagnostics.cpp
-    compiler/diagnostics/reporter.cpp
-    compiler/g-machine/binop.cpp
-    compiler/g-machine/environment.cpp
-    compiler/g-machine/instruction.cpp
-    compiler/lexer/lexer.cpp
-    compiler/lexer/flex_lexer.cpp
     compiler/parser/parser.cpp
     compiler/parser/bison_parser.cpp
     compiler/type/dump.cpp
     compiler/type/environment.cpp
     compiler/type/type.cpp
+    compiler/diagnostics/reporter.cpp
+    compiler/diagnostics/diagnostics.cpp
+    compiler/diagnostics/utils.cpp
+    compiler/g-machine/instruction.cpp
+    compiler/g-machine/binop.cpp
+    compiler/g-machine/environment.cpp
+    compiler/lexer/flex_lexer.cpp
+    compiler/lexer/lexer.cpp
+    compiler/ast/ast.cpp
+    compiler/ast/g-machine.cpp
+    compiler/ast/dump.cpp
+    compiler/ast/type.cpp
 )
 
 # target
+set(CMAKE_C_COMPILER "/usr/bin/clang-18")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++-18")
 add_executable(swi "")
 set_target_properties(swi PROPERTIES OUTPUT_NAME "swi")
-set_target_properties(swi PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
+set_target_properties(swi PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
 add_dependencies(swi swc)
 target_compile_options(swi PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
+    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
+    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
 set_target_properties(swi PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(swi PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(swi PRIVATE $<$<CONFIG:Debug>:-Od>)
+    target_compile_options(swi PRIVATE $<$<CONFIG:Release>:-Ox -fp:fast>)
 else()
-    target_compile_options(swi PRIVATE -O0)
+    target_compile_options(swi PRIVATE -O3)
 endif()
 if(MSVC)
-    target_compile_options(swi PRIVATE -Zi)
 else()
-    target_compile_options(swi PRIVATE -g)
+    target_compile_options(swi PRIVATE -fvisibility=hidden)
 endif()
 if(MSVC)
     set_property(TARGET swi PROPERTY
@@ -131,7 +138,7 @@ target_link_libraries(swi PRIVATE
     base
 )
 target_link_directories(swi PRIVATE
-    build/linux/x86_64/debug
+    build/linux/x86_64/release
 )
 target_link_options(swi PRIVATE
     -m64

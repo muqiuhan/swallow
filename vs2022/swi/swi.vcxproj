@@ -60,7 +60,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <Link>
-      <AdditionalOptions>-m64 -Wl,-rpath=%24ORIGIN -lbase %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-m64 --stdlib=libc++ -Wl,-rpath=%24ORIGIN -lbase %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -75,16 +75,18 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>-m64 -g -std=c++20 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Qunused-arguments -m64 -g -std=c++20 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>__config_debug__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
     <Link>
-      <AdditionalOptions>-m64 -Lbuild/linux/x86_64/release -Wl,-rpath=%24ORIGIN -s -lbase %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-m64 --stdlib=libc++ -Lbuild/linux/x86_64/release -Wl,-rpath=%24ORIGIN -s -lbase %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -99,11 +101,13 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Qunused-arguments -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;__config_release__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
