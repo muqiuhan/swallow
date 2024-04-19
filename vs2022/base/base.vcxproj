@@ -72,11 +72,13 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>-m64 -fPIC -g -std=c++20 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Qunused-arguments -m64 -fPIC -g -std=c++20 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>__config_debug__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
@@ -95,11 +97,13 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>-m64 -fPIC -O3 -std=c++20 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Qunused-arguments -m64 -fPIC -O3 -std=c++20 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;__config_release__;__config_x64__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>/usr/lib/llvm-18/include/c++/v1</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

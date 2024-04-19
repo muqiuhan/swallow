@@ -35,7 +35,7 @@ namespace swallow::compiler::gmachine::instruction
 {
   void Pop::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("Pop\tCount = {}\n", Count);
+    to << std::format("Pop\t\tCount = {}\n", Count);
   }
 
   void MakeApplication::Dump(uint8_t indent, std::ostream& to) const noexcept
@@ -45,7 +45,7 @@ namespace swallow::compiler::gmachine::instruction
 
   void Pack::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("Pack\tTag = {}, Size = {}\n", Tag, Size);
+    to << std::format("Pack\t\tTag = {}, Size = {}\n", Tag, Size);
   }
 
   void Split::Dump(uint8_t indent, std::ostream& to) const noexcept
@@ -55,18 +55,18 @@ namespace swallow::compiler::gmachine::instruction
 
   void Slide::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("Slide\tOffset = {}\n", Offset);
+    to << std::format("Slide\t\tOffset = {}\n", Offset);
   }
 
   void Binop::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
     to << std::format(
-      "Binop\tOperator = {}\n", ast::Binop::OperatorToString(Operator));
+      "Binop\t\tOperator = {}\n", ast::Binop::OperatorToString(Operator));
   }
 
   void Allocation::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("Allocation\tAmount = {}\n", Amount);
+    to << std::format("Allocation\t\tAmount = {}\n", Amount);
   }
 
   void Unwind::Dump(uint8_t indent, std::ostream& to) const noexcept
@@ -89,7 +89,7 @@ namespace swallow::compiler::gmachine::instruction
 
   void PushInt::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("PushInt\tValue = {}\n", Value);
+    to << std::format("PushInt\t\tValue = {}\n", Value);
   }
 
   void PushGlobal::Dump(uint8_t indent, std::ostream& to) const noexcept
@@ -99,7 +99,7 @@ namespace swallow::compiler::gmachine::instruction
 
   void Push::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("Push\tOffset = {}\n", Offset);
+    to << std::format("Push\t\tOffset = {}\n", Offset);
   }
 
   void Eval::Dump(uint8_t indent, std::ostream& to) const noexcept
@@ -109,7 +109,7 @@ namespace swallow::compiler::gmachine::instruction
 
   void Update::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format("Update\tOffset = {}\n", Offset);
+    to << std::format("Update\t\tOffset = {}\n", Offset);
   }
 
 } // namespace swallow::compiler::gmachine::instruction
