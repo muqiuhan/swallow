@@ -28,6 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <format>
+#include <sstream>
 
 #include "ast.hpp"
 #include "code.hpp"
@@ -180,11 +181,11 @@ namespace swallow::compiler::ast
   static void CompileBranch(
     const Branch::Ptr      &branch,
     instruction::Jump      *jump,
-    const AST::Ptr         &With,
+    type::Data             *type,
     const Environment::Ptr &machineEnvironment,
     const yy::location     &Location) noexcept
   {
-    auto *type = dynamic_cast<type::Data *>(With->NodeType.get());
+
     auto *variablePattern = dynamic_cast<VariablePattern *>(branch->Patt.get());
     auto *constructorPattern =
       dynamic_cast<ConstructorPattern *>(branch->Patt.get());
@@ -204,6 +205,22 @@ namespace swallow::compiler::ast
     const gmachine::Environment::Ptr &machineEnvironment,
     std::vector<Instruction::Ptr>    &into) const noexcept
   {
+    auto *type = dynamic_cast<type::Data *>(With->NodeType.get());
+
+    if (nullptr == type)
+      {
+        std::stringstream with;
+        With->Dump(0, with);
+        utils::Panic(
+          "ICE: Cannot compile expression to g-machine instruction for match "
+          "expr {} at ({}:{} - {}:{})",
+          with.str(),
+          Location.begin.line,
+          Location.begin.column,
+          Location.end.line,
+          Location.begin.column);
+      }
+
     auto *jump = new instruction::Jump();
 
     With->Compile(machineEnvironment, into);
@@ -211,8 +228,7 @@ namespace swallow::compiler::ast
     into.push_back(Instruction::Ptr(jump));
 
     for (const auto &branch : Branches)
-      CompileBranch(
-        branch, jump, this->With, machineEnvironment, this->Location);
+      CompileBranch(branch, jump, type, machineEnvironment, this->Location);
   }
 
   void Fn::Compile() noexcept

@@ -83,25 +83,10 @@ namespace swallow::compiler::ast
   {
     const std::string operatorName = OperatorToString(Operator);
 
-    type::Type::Ptr   leftType = Left->TypeCheck(typeManager, typeEnvironment)
-                                 .or_else([&](const auto &err) {
-      return diagnostics::Reporter::REPORTER->normal(
-        Left->Location,
-        "Type checking failed",
-        "Wrong type here",
-        std::format("No more information"),
-        diagnostics::EXPR_TYPE_CHECKING_FAILED);
-    }).unwrap();
-
-    type::Type::Ptr rightType = Right->TypeCheck(typeManager, typeEnvironment)
-                                  .or_else([&](const auto &err) {
-      return diagnostics::Reporter::REPORTER->normal(
-        Left->Location,
-        "Type checking failed",
-        "Wrong type here",
-        std::format("No more information"),
-        diagnostics::EXPR_TYPE_CHECKING_FAILED);
-    }).unwrap();
+    type::Type::Ptr   leftType =
+      Left->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr rightType =
+      Right->CommonTypeCheck(typeManager, typeEnvironment);
 
     type::Type::Ptr functionType = typeEnvironment.Lookup(operatorName)
                                      .or_else([&](const auto &err) {
@@ -148,25 +133,10 @@ namespace swallow::compiler::ast
     type::Manager &typeManager, const type::Environment &typeEnvironment)
     const noexcept -> Result<type::Type::Ptr, Void>
   {
-    type::Type::Ptr leftType = Left->TypeCheck(typeManager, typeEnvironment)
-                                 .or_else([&](const auto &err) {
-      return diagnostics::Reporter::REPORTER->normal(
-        Left->Location,
-        "Type checking failed",
-        "Wrong type here",
-        std::format("No more information"),
-        diagnostics::EXPR_TYPE_CHECKING_FAILED);
-    }).unwrap();
-
-    type::Type::Ptr rightType = Right->TypeCheck(typeManager, typeEnvironment)
-                                  .or_else([&](const auto &err) {
-      return diagnostics::Reporter::REPORTER->normal(
-        Left->Location,
-        "Type checking failed",
-        "Wrong type here",
-        std::format("No more information"),
-        diagnostics::EXPR_TYPE_CHECKING_FAILED);
-    }).unwrap();
+    type::Type::Ptr leftType =
+      Left->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr rightType =
+      Right->CommonTypeCheck(typeManager, typeEnvironment);
 
     type::Type::Ptr returnType = typeManager.NewType();
     type::Type::Ptr arrowType =
@@ -200,17 +170,7 @@ namespace swallow::compiler::ast
   {
     type::Variable *var = nullptr;
     type::Type::Ptr matchType = typeManager.Resolve(
-      With->TypeCheck(typeManager, typeEnvironment)
-        .or_else([&](const auto &err) {
-      return diagnostics::Reporter::REPORTER->normal(
-        With->Location,
-        "Type checking failed",
-        "Wrong type here",
-        std::format("No more information"),
-        diagnostics::MATCH_EXPR_TYPE_CHECKING_FAILED);
-    }).unwrap(),
-      var);
-
+      With->CommonTypeCheck(typeManager, typeEnvironment), var);
     type::Type::Ptr branchType = typeManager.NewType();
 
     for (const auto &branch : Branches)
@@ -219,15 +179,7 @@ namespace swallow::compiler::ast
         branch->Patt->Match(matchType, typeManager, newEnvironment);
 
         type::Type::Ptr currentBranchType =
-          branch->Expr->TypeCheck(typeManager, newEnvironment)
-            .or_else([&](const auto &err) {
-          return diagnostics::Reporter::REPORTER->normal(
-            branch->Location,
-            "Type checking failed",
-            "Wrong type here",
-            "No more information",
-            diagnostics::MATCH_EXPR_CURRENT_BRANCHE_TYPE_CHECKING_FAILED);
-        }).unwrap();
+          branch->Expr->CommonTypeCheck(typeManager, newEnvironment);
 
         typeManager.Unify(branchType, currentBranchType)
           .or_else([&](const auto &err) {
@@ -368,15 +320,7 @@ namespace swallow::compiler::ast
         typeIterator++;
       }
 
-    auto bodyType = Body->TypeCheck(typeManager, newEnvironment)
-                      .or_else([&](const auto &err) {
-      return diagnostics::Reporter::REPORTER->normal(
-        Location,
-        "Type checking failed for function body",
-        "Wrong type here",
-        "No more information",
-        diagnostics::FUNCTION_BODY_TYPE_CHECKING_FAILED);
-    }).unwrap();
+    auto bodyType = Body->CommonTypeCheck(typeManager, newEnvironment);
 
     typeManager.Unify(ReturnType, bodyType)
       .or_else([&](const auto &err) {
@@ -432,7 +376,16 @@ namespace swallow::compiler::ast
     type::Manager           &typeManager,
     const type::Environment &typeEnvironment) noexcept -> type::Type::Ptr
   {
-    NodeType = TypeCheck(typeManager, typeEnvironment).unwrap();
+    NodeType = TypeCheck(typeManager, typeEnvironment)
+                 .or_else([&](const auto &err) {
+      return diagnostics::Reporter::REPORTER->normal(
+        Location,
+        "Type checking failed",
+        "Wrong type here",
+        std::format("No more information"),
+        diagnostics::EXPR_TYPE_CHECKING_FAILED);
+    }).unwrap();
+    ;
     return NodeType;
   }
 
@@ -459,9 +412,19 @@ namespace swallow::compiler::ast
     Right->CommonResolve(typeManager);
   }
 
-  void Application::Resolve(const type::Manager &typeManager) const noexcept {}
+  void Application::Resolve(const type::Manager &typeManager) const noexcept
+  {
+    Left->CommonResolve(typeManager);
+    Right->CommonResolve(typeManager);
+  }
 
-  void Match::Resolve(const type::Manager &typeManager) const noexcept {}
+  void Match::Resolve(const type::Manager &typeManager) const noexcept
+  {
+    With->CommonResolve(typeManager);
+
+    for (const auto &branch : Branches)
+      branch->Expr->CommonResolve(typeManager);
+  }
 
   void Data::Resolve(const type::Manager &typeManager) const noexcept {}
 
