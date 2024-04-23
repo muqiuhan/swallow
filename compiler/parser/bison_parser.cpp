@@ -37,14 +37,15 @@
 // First part of user prologue.
 #line 7 "./parser/parser.y"
 
-#include <string>
-#include <iostream>
+#include <memory>
 #include "bison_parser.hpp"
-#include "diagnostics/reporter.hpp"
 #include "binop/binop.hpp"
+#include "diagnostics/reporter.hpp"
+#include <iostream>
+#include <string>
 
 std::vector<Definition::Ptr>   Program;
-extern yy::parser::symbol_type yylex();
+extern auto yylex() -> yy::parser::symbol_type;
 
 #line 53 "./parser/bison_parser.cpp"
 
@@ -154,11 +155,11 @@ namespace yy
 #else
 
 #endif
-  {}
+  = default;
 
-  parser::~parser() {}
+  parser::~parser() = default;
 
-  parser::syntax_error::~syntax_error() YY_NOEXCEPT YY_NOTHROW {}
+  parser::syntax_error::~syntax_error() YY_NOEXCEPT YY_NOTHROW = default;
 
   /*---------.
   | symbol.  |
@@ -168,8 +169,8 @@ namespace yy
   parser::by_state::by_state() YY_NOEXCEPT : state(empty_state) {}
 
   parser::by_state::by_state(const by_state& that) YY_NOEXCEPT
-    : state(that.state)
-  {}
+    : 
+  = default;
 
   void parser::by_state::clear() YY_NOEXCEPT { state = empty_state; }
 
@@ -181,18 +182,17 @@ namespace yy
 
   parser::by_state::by_state(state_type s) YY_NOEXCEPT : state(s) {}
 
-  parser::symbol_kind_type parser::by_state::kind() const YY_NOEXCEPT
+  auto parser::by_state::kind() const YY_NOEXCEPT -> parser::symbol_kind_type
   {
     if (state == empty_state)
       return symbol_kind::S_YYEMPTY;
-    else
-      return YY_CAST(symbol_kind_type, yystos_[+state]);
+          return YY_CAST(symbol_kind_type, yystos_[+state]);
   }
 
-  parser::stack_symbol_type::stack_symbol_type() {}
+  parser::stack_symbol_type::stack_symbol_type() = default;
 
   parser::stack_symbol_type::stack_symbol_type(YY_RVREF(stack_symbol_type) that)
-    : super_type(YY_MOVE(that.state), YY_MOVE(that.location))
+ noexcept     : super_type(that.state, YY_MOVE(that.location))
   {
     switch (that.kind())
       {
@@ -522,28 +522,27 @@ namespace yy
   void parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
 #endif // YYDEBUG
 
-  parser::state_type parser::yy_lr_goto_state_(state_type yystate, int yysym)
+  auto parser::yy_lr_goto_state_(state_type yystate, int yysym) -> parser::state_type
   {
     int yyr = yypgoto_[yysym - YYNTOKENS] + yystate;
     if (0 <= yyr && yyr <= yylast_ && yycheck_[yyr] == yystate)
       return yytable_[yyr];
-    else
-      return yydefgoto_[yysym - YYNTOKENS];
+          return yydefgoto_[yysym - YYNTOKENS];
   }
 
-  bool parser::yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT
+  auto parser::yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT -> bool
   {
     return yyvalue == yypact_ninf_;
   }
 
-  bool parser::yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT
+  auto parser::yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT -> bool
   {
     return yyvalue == yytable_ninf_;
   }
 
-  int parser::operator()() { return parse(); }
+  auto parser::operator()() -> int { return parse(); }
 
-  int parser::parse()
+  auto parser::parse() -> int
   {
     int               yyn;
     /// Length of the RHS of the rule being reduced.
@@ -1030,10 +1029,10 @@ namespace yy
                            // CCURLY
 #line 130 "./parser/parser.y"
                   {
-                    yylhs.value.as<Branch::Ptr>() = Branch::Ptr(new Branch(
+                    yylhs.value.as<Branch::Ptr>() = std::make_unique<Branch>(
                       yylhs.location,
                       std::move(yystack_[4].value.as<Pattern::Ptr>()),
-                      std::move(yystack_[1].value.as<AST::Ptr>())));
+                      std::move(yystack_[1].value.as<AST::Ptr>()));
                   }
 #line 970 "./parser/bison_parser.cpp"
                   break;
@@ -1116,11 +1115,11 @@ namespace yy
 #line 153 "./parser/parser.y"
                   {
                     yylhs.value.as<Constructor::Ptr>() =
-                      Constructor::Ptr(new Constructor(
+                      std::make_unique<Constructor>(
                         yylhs.location,
                         std::move(yystack_[1].value.as<std::string>()),
                         std::move(
-                          yystack_[0].value.as<std::vector<std::string> >())));
+                          yystack_[0].value.as<std::vector<std::string> >()));
                   }
 #line 1012 "./parser/bison_parser.cpp"
                   break;
@@ -1157,7 +1156,7 @@ namespace yy
           {
             ++yynerrs_;
             std::string msg = YY_("syntax error");
-            error(yyla.location, YY_MOVE(msg));
+            error(yyla.location, msg);
           }
 
         yyerror_range[1].location = yyla.location;

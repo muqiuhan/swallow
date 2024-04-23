@@ -17,10 +17,10 @@
 /* First, we deal with  platform-specific or compiler-specific issues. */
 
 /* begin standard C headers. */
-#include <stdio.h>
-#include <string.h>
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* end standard C headers. */
 
@@ -48,12 +48,12 @@ typedef uint16_t flex_uint16_t;
 typedef int32_t  flex_int32_t;
 typedef uint32_t flex_uint32_t;
 #else
-typedef signed char        flex_int8_t;
-typedef short int          flex_int16_t;
-typedef int                flex_int32_t;
-typedef unsigned char      flex_uint8_t;
-typedef unsigned short int flex_uint16_t;
-typedef unsigned int       flex_uint32_t;
+using flex_int8_t = signed char;
+using flex_int16_t = short;
+using flex_int32_t = int;
+using flex_uint8_t = unsigned char;
+using flex_uint16_t = unsigned short;
+using flex_uint32_t = unsigned int;
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -104,7 +104,9 @@ typedef unsigned int       flex_uint32_t;
 #endif
 
 /* Returned upon end-of-file. */
-#define YY_NULL               0
+enum {
+YY_NULL =               0
+};
 
 /* Promotes a possibly negative, possibly signed char to an
  *   integer in range [0..255] for use as an array index.
@@ -126,7 +128,9 @@ typedef unsigned int       flex_uint32_t;
 #define YY_STATE_EOF(state)   (YY_END_OF_BUFFER + state + 1)
 /* Special action meaning "start processing a new file". */
 #define YY_NEW_FILE           yyrestart(yyin)
-#define YY_END_OF_BUFFER_CHAR 0
+enum {
+YY_END_OF_BUFFER_CHAR = 0
+};
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
@@ -148,21 +152,23 @@ typedef unsigned int       flex_uint32_t;
 
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
-typedef struct yy_buffer_state *YY_BUFFER_STATE;
+using YY_BUFFER_STATE = struct yy_buffer_state *;
 #endif
 
 #ifndef YY_TYPEDEF_YY_SIZE_T
 #define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
+using yy_size_t = size_t;
 #endif
 
 extern int   yyleng;
 
 extern FILE *yyin, *yyout;
 
-#define EOB_ACT_CONTINUE_SCAN 0
-#define EOB_ACT_END_OF_FILE   1
-#define EOB_ACT_LAST_MATCH    2
+enum {
+EOB_ACT_CONTINUE_SCAN = 0,
+EOB_ACT_END_OF_FILE =   1,
+EOB_ACT_LAST_MATCH =    2
+};
 
 /* Note: We specifically omit the test for yy_rule_can_match_eol because it
  * requires access to the local variable yy_act. Since yyless() is a macro, it
@@ -270,7 +276,7 @@ struct yy_buffer_state
 /* Stack of input buffers. */
 static size_t           yy_buffer_stack_top = 0; /**< index of top of stack. */
 static size_t           yy_buffer_stack_max = 0; /**< capacity of stack. */
-static YY_BUFFER_STATE *yy_buffer_stack = NULL;  /**< Stack as an array. */
+static YY_BUFFER_STATE *yy_buffer_stack = nullptr;  /**< Stack as an array. */
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -291,7 +297,7 @@ static int      yy_n_chars; /* number of characters read into yy_ch_buf */
 int             yyleng;
 
 /* Points to current character in buffer. */
-static char    *yy_c_buf_p = NULL;
+static char    *yy_c_buf_p = nullptr;
 static int      yy_init = 0;  /* whether we need to initialize */
 static int      yy_start = 0; /* start state number */
 
@@ -302,23 +308,23 @@ static int      yy_did_buffer_switch_on_eof;
 
 void            yyrestart(FILE *input_file);
 void            yy_switch_to_buffer(YY_BUFFER_STATE new_buffer);
-YY_BUFFER_STATE yy_create_buffer(FILE *file, int size);
+auto yy_create_buffer(FILE *file, int size) -> YY_BUFFER_STATE;
 void            yy_delete_buffer(YY_BUFFER_STATE b);
 void            yy_flush_buffer(YY_BUFFER_STATE b);
 void            yypush_buffer_state(YY_BUFFER_STATE new_buffer);
-void            yypop_buffer_state(void);
+void            yypop_buffer_state();
 
-static void     yyensure_buffer_stack(void);
-static void     yy_load_buffer_state(void);
+static void     yyensure_buffer_stack();
+static void     yy_load_buffer_state();
 static void     yy_init_buffer(YY_BUFFER_STATE b, FILE *file);
 #define YY_FLUSH_BUFFER yy_flush_buffer(YY_CURRENT_BUFFER)
 
-YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size);
-YY_BUFFER_STATE yy_scan_string(const char *yy_str);
-YY_BUFFER_STATE yy_scan_bytes(const char *bytes, int len);
+auto yy_scan_buffer(char *base, yy_size_t size) -> YY_BUFFER_STATE;
+auto yy_scan_string(const char *yy_str) -> YY_BUFFER_STATE;
+auto yy_scan_bytes(const char *bytes, int len) -> YY_BUFFER_STATE;
 
-void           *yyalloc(yy_size_t);
-void           *yyrealloc(void *, yy_size_t);
+auto yyalloc(yy_size_t) -> void           *;
+auto yyrealloc(void *, yy_size_t) -> void           *;
 void            yyfree(void *);
 
 #define yy_new_buffer yy_create_buffer
@@ -346,11 +352,11 @@ void            yyfree(void *);
 
 #define yywrap()    (/*CONSTCOND*/ 1)
 #define YY_SKIP_YYWRAP
-typedef flex_uint8_t YY_CHAR;
+using YY_CHAR = flex_uint8_t;
 
-FILE                *yyin = NULL, *yyout = NULL;
+FILE                *yyin = nullptr, *yyout = nullptr;
 
-typedef int          yy_state_type;
+using yy_state_type = int;
 
 extern int           yylineno;
 int                  yylineno = 1;
@@ -361,9 +367,9 @@ extern char         *yytext;
 #endif
 #define yytext_ptr yytext
 
-static yy_state_type   yy_get_previous_state(void);
-static yy_state_type   yy_try_NUL_trans(yy_state_type current_state);
-static int             yy_get_next_buffer(void);
+static auto   yy_get_previous_state() -> yy_state_type;
+static auto   yy_try_NUL_trans(yy_state_type current_state) -> yy_state_type;
+static auto             yy_get_next_buffer() -> int;
 static void yynoreturn yy_fatal_error(const char *msg);
 
 /* Done after the current pattern has been matched and before the
@@ -488,34 +494,34 @@ static yy::location LOC;
 #define YY_EXTRA_TYPE void *
 #endif
 
-static int    yy_init_globals(void);
+static auto    yy_init_globals() -> int;
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
-int           yylex_destroy(void);
+auto           yylex_destroy() -> int;
 
-int           yyget_debug(void);
+auto           yyget_debug() -> int;
 
 void          yyset_debug(int debug_flag);
 
-YY_EXTRA_TYPE yyget_extra(void);
+auto yyget_extra() -> YY_EXTRA_TYPE;
 
 void          yyset_extra(YY_EXTRA_TYPE user_defined);
 
-FILE         *yyget_in(void);
+auto yyget_in() -> FILE         *;
 
 void          yyset_in(FILE *_in_str);
 
-FILE         *yyget_out(void);
+auto yyget_out() -> FILE         *;
 
 void          yyset_out(FILE *_out_str);
 
-int           yyget_leng(void);
+auto           yyget_leng() -> int;
 
-char         *yyget_text(void);
+auto yyget_text() -> char         *;
 
-int           yyget_lineno(void);
+auto           yyget_lineno() -> int;
 
 void          yyset_lineno(int _line_number);
 
@@ -547,7 +553,7 @@ static int yy_flex_strlen(const char *);
 
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
-static int yyinput(void);
+static auto yyinput() -> int;
 #else
 static int                 input(void);
 #endif
@@ -697,7 +703,7 @@ YY_DECL
 
 #line 729 "./lexer/flex_lexer.cpp"
 
-    while (/*CONSTCOND*/ 1) /* loops until end-of-file is reached */
+    while (/*CONSTCOND*/ true) /* loops until end-of-file is reached */
       {
         yy_cp = (yy_c_buf_p);
 
@@ -1069,7 +1075,7 @@ YY_DECL
  *	EOB_ACT_CONTINUE_SCAN - continue scanning from current position
  *	EOB_ACT_END_OF_FILE - end of file
  */
-static int yy_get_next_buffer(void)
+static auto yy_get_next_buffer() -> int
 {
   char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
   char *source = (yytext_ptr);
@@ -1089,13 +1095,12 @@ static int yy_get_next_buffer(void)
           return EOB_ACT_END_OF_FILE;
         }
 
-      else
-        {
-          /* We matched some text prior to the EOB, first
+      
+                  /* We matched some text prior to the EOB, first
            * process it.
            */
           return EOB_ACT_LAST_MATCH;
-        }
+       
     }
 
   /* Try to read more data. */
@@ -1141,7 +1146,7 @@ static int yy_get_next_buffer(void)
             }
           else
             /* Can't grow it, we don't own it. */
-            b->yy_ch_buf = NULL;
+            b->yy_ch_buf = nullptr;
 
           if (!b->yy_ch_buf)
             YY_FATAL_ERROR("fatal error - scanner input buffer overflow");
@@ -1205,7 +1210,7 @@ static int yy_get_next_buffer(void)
 
 /* yy_get_previous_state - get the state just before the EOB char was reached */
 
-static yy_state_type yy_get_previous_state(void)
+static auto yy_get_previous_state() -> yy_state_type
 {
   yy_state_type yy_current_state;
   char         *yy_cp;
@@ -1237,7 +1242,7 @@ static yy_state_type yy_get_previous_state(void)
  * synopsis
  *	next_state = yy_try_NUL_trans( current_state );
  */
-static yy_state_type yy_try_NUL_trans(yy_state_type yy_current_state)
+static auto yy_try_NUL_trans(yy_state_type yy_current_state) -> yy_state_type
 {
   int     yy_is_jam;
   char   *yy_cp = (yy_c_buf_p);
@@ -1305,9 +1310,9 @@ static void yyunput(int c, char *yy_bp)
 
 #ifndef YY_NO_INPUT
 #ifdef __cplusplus
-static int yyinput(void)
+static auto yyinput() -> int
 #else
-static int                 input(void)
+static int                 input()
 #endif
 
 {
@@ -1434,7 +1439,7 @@ void yy_switch_to_buffer(YY_BUFFER_STATE new_buffer)
   (yy_did_buffer_switch_on_eof) = 1;
 }
 
-static void yy_load_buffer_state(void)
+static void yy_load_buffer_state()
 {
   (yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
   (yytext_ptr) = (yy_c_buf_p) = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
@@ -1449,7 +1454,7 @@ static void yy_load_buffer_state(void)
  *
  * @return the allocated buffer state.
  */
-YY_BUFFER_STATE yy_create_buffer(FILE *file, int size)
+auto yy_create_buffer(FILE *file, int size) -> YY_BUFFER_STATE
 {
   YY_BUFFER_STATE b;
 
@@ -1484,7 +1489,7 @@ void yy_delete_buffer(YY_BUFFER_STATE b)
     return;
 
   if (b == YY_CURRENT_BUFFER) /* Not sure if we should pop here. */
-    YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE) 0;
+    YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE) nullptr;
 
   if (b->yy_is_our_buffer)
     yyfree((void *) b->yy_ch_buf);
@@ -1556,7 +1561,7 @@ void yy_flush_buffer(YY_BUFFER_STATE b)
  */
 void yypush_buffer_state(YY_BUFFER_STATE new_buffer)
 {
-  if (new_buffer == NULL)
+  if (new_buffer == nullptr)
     return;
 
   yyensure_buffer_stack();
@@ -1584,13 +1589,13 @@ void yypush_buffer_state(YY_BUFFER_STATE new_buffer)
  *  The next element becomes the new top.
  *
  */
-void yypop_buffer_state(void)
+void yypop_buffer_state()
 {
   if (!YY_CURRENT_BUFFER)
     return;
 
   yy_delete_buffer(YY_CURRENT_BUFFER);
-  YY_CURRENT_BUFFER_LVALUE = NULL;
+  YY_CURRENT_BUFFER_LVALUE = nullptr;
   if ((yy_buffer_stack_top) > 0)
     --(yy_buffer_stack_top);
 
@@ -1604,7 +1609,7 @@ void yypop_buffer_state(void)
 /* Allocates the stack if it does not exist.
  *  Guarantees space for at least one push.
  */
-static void yyensure_buffer_stack(void)
+static void yyensure_buffer_stack()
 {
   yy_size_t num_to_alloc;
 
@@ -1657,7 +1662,7 @@ static void yyensure_buffer_stack(void)
  *
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size)
+auto yy_scan_buffer(char *base, yy_size_t size) -> YY_BUFFER_STATE
 {
   YY_BUFFER_STATE b;
 
@@ -1665,7 +1670,7 @@ YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size)
     size < 2 || base[size - 2] != YY_END_OF_BUFFER_CHAR
     || base[size - 1] != YY_END_OF_BUFFER_CHAR)
     /* They forgot to leave room for the EOB's. */
-    return NULL;
+    return nullptr;
 
   b = (YY_BUFFER_STATE) yyalloc(sizeof(struct yy_buffer_state));
   if (!b)
@@ -1674,7 +1679,7 @@ YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size)
   b->yy_buf_size = (int) (size - 2); /* "- 2" to take care of EOB's */
   b->yy_buf_pos = b->yy_ch_buf = base;
   b->yy_is_our_buffer = 0;
-  b->yy_input_file = NULL;
+  b->yy_input_file = nullptr;
   b->yy_n_chars = b->yy_buf_size;
   b->yy_is_interactive = 0;
   b->yy_at_bol = 1;
@@ -1694,7 +1699,7 @@ YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size)
  * @note If you want to scan bytes that may contain NUL values, then use
  *       yy_scan_bytes() instead.
  */
-YY_BUFFER_STATE yy_scan_string(const char *yystr)
+auto yy_scan_string(const char *yystr) -> YY_BUFFER_STATE
 {
 
   return yy_scan_bytes(yystr, (int) strlen(yystr));
@@ -1707,7 +1712,7 @@ YY_BUFFER_STATE yy_scan_string(const char *yystr)
  *
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes(const char *yybytes, int _yybytes_len)
+auto yy_scan_bytes(const char *yybytes, int _yybytes_len) -> YY_BUFFER_STATE
 {
   YY_BUFFER_STATE b;
   char           *buf;
@@ -1768,28 +1773,28 @@ static void yynoreturn yy_fatal_error(const char *msg)
 /** Get the current line number.
  *
  */
-int        yyget_lineno(void) { return yylineno; }
+auto        yyget_lineno() -> int { return yylineno; }
 
 /** Get the input stream.
  *
  */
-FILE      *yyget_in(void) { return yyin; }
+auto yyget_in() -> FILE      * { return yyin; }
 
 /** Get the output stream.
  *
  */
-FILE      *yyget_out(void) { return yyout; }
+auto yyget_out() -> FILE      * { return yyout; }
 
 /** Get the length of the current token.
  *
  */
-int        yyget_leng(void) { return yyleng; }
+auto        yyget_leng() -> int { return yyleng; }
 
 /** Get the current token.
  *
  */
 
-char      *yyget_text(void) { return yytext; }
+auto yyget_text() -> char      * { return yytext; }
 
 /** Set the current line number.
  * @param _line_number line number
@@ -1807,11 +1812,11 @@ void       yyset_in(FILE *_in_str) { yyin = _in_str; }
 
 void       yyset_out(FILE *_out_str) { yyout = _out_str; }
 
-int        yyget_debug(void) { return yy_flex_debug; }
+auto        yyget_debug() -> int { return yy_flex_debug; }
 
 void       yyset_debug(int _bdebug) { yy_flex_debug = _bdebug; }
 
-static int yy_init_globals(void)
+static auto yy_init_globals() -> int
 {
   /* Initialization is the same as for the non-reentrant scanner.
    * This function is called from yylex_destroy(), so don't allocate here.
@@ -1820,10 +1825,10 @@ static int yy_init_globals(void)
   /* We do not touch yylineno unless the option is enabled. */
   yylineno = 1;
 
-  (yy_buffer_stack) = NULL;
+  (yy_buffer_stack) = nullptr;
   (yy_buffer_stack_top) = 0;
   (yy_buffer_stack_max) = 0;
-  (yy_c_buf_p) = NULL;
+  (yy_c_buf_p) = nullptr;
   (yy_init) = 0;
   (yy_start) = 0;
 
@@ -1832,8 +1837,8 @@ static int yy_init_globals(void)
   yyin = stdin;
   yyout = stdout;
 #else
-  yyin = NULL;
-  yyout = NULL;
+  yyin = nullptr;
+  yyout = nullptr;
 #endif
 
   /* For future reference: Set errno on error, since we are called by
@@ -1843,20 +1848,20 @@ static int yy_init_globals(void)
 }
 
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
-int yylex_destroy(void)
+auto yylex_destroy() -> int
 {
 
   /* Pop the buffer stack, destroying each element. */
   while (YY_CURRENT_BUFFER)
     {
       yy_delete_buffer(YY_CURRENT_BUFFER);
-      YY_CURRENT_BUFFER_LVALUE = NULL;
+      YY_CURRENT_BUFFER_LVALUE = nullptr;
       yypop_buffer_state();
     }
 
   /* Destroy the stack itself. */
   yyfree((yy_buffer_stack));
-  (yy_buffer_stack) = NULL;
+  (yy_buffer_stack) = nullptr;
 
   /* Reset the globals. This is important in a non-reentrant scanner so the next
    * time yylex() is called, initialization will occur. */
@@ -1890,9 +1895,9 @@ static int yy_flex_strlen(const char *s)
 }
 #endif
 
-void *yyalloc(yy_size_t size) { return malloc(size); }
+auto yyalloc(yy_size_t size) -> void * { return malloc(size); }
 
-void *yyrealloc(void *ptr, yy_size_t size)
+auto yyrealloc(void *ptr, yy_size_t size) -> void *
 {
 
   /* The cast to (char *) in the following accommodates both
