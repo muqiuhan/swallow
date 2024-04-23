@@ -104,32 +104,35 @@ using flex_uint32_t = unsigned int;
 #endif
 
 /* Returned upon end-of-file. */
-enum {
-YY_NULL =               0
+enum
+{
+  YY_NULL = 0
 };
 
 /* Promotes a possibly negative, possibly signed char to an
  *   integer in range [0..255] for use as an array index.
  */
-#define YY_SC_TO_UI(c)        ((YY_CHAR) (c))
+#define YY_SC_TO_UI(c)      ((YY_CHAR) (c))
 
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
  * definition of BEGIN.
  */
-#define BEGIN                 (yy_start) = 1 + 2 *
+#define BEGIN               (yy_start) = 1 + 2 *
 /* Translate the current start state into a value that can be later handed
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
-#define YY_START              (((yy_start) -1) / 2)
-#define YYSTATE               YY_START
+#define YY_START            (((yy_start) -1) / 2)
+#define YYSTATE             YY_START
 /* Action number for EOF rule of a given start state. */
-#define YY_STATE_EOF(state)   (YY_END_OF_BUFFER + state + 1)
+#define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
 /* Special action meaning "start processing a new file". */
-#define YY_NEW_FILE           yyrestart(yyin)
-enum {
-YY_END_OF_BUFFER_CHAR = 0
+#define YY_NEW_FILE         yyrestart(yyin)
+
+enum
+{
+  YY_END_OF_BUFFER_CHAR = 0
 };
 
 /* Size of default input buffer. */
@@ -164,10 +167,11 @@ extern int   yyleng;
 
 extern FILE *yyin, *yyout;
 
-enum {
-EOB_ACT_CONTINUE_SCAN = 0,
-EOB_ACT_END_OF_FILE =   1,
-EOB_ACT_LAST_MATCH =    2
+enum
+{
+  EOB_ACT_CONTINUE_SCAN = 0,
+  EOB_ACT_END_OF_FILE = 1,
+  EOB_ACT_LAST_MATCH = 2
 };
 
 /* Note: We specifically omit the test for yy_rule_can_match_eol because it
@@ -276,7 +280,7 @@ struct yy_buffer_state
 /* Stack of input buffers. */
 static size_t           yy_buffer_stack_top = 0; /**< index of top of stack. */
 static size_t           yy_buffer_stack_max = 0; /**< capacity of stack. */
-static YY_BUFFER_STATE *yy_buffer_stack = nullptr;  /**< Stack as an array. */
+static YY_BUFFER_STATE *yy_buffer_stack = nullptr; /**< Stack as an array. */
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -292,40 +296,40 @@ static YY_BUFFER_STATE *yy_buffer_stack = nullptr;  /**< Stack as an array. */
 #define YY_CURRENT_BUFFER_LVALUE (yy_buffer_stack)[(yy_buffer_stack_top)]
 
 /* yy_hold_char holds the character lost when yytext is formed. */
-static char     yy_hold_char;
-static int      yy_n_chars; /* number of characters read into yy_ch_buf */
-int             yyleng;
+static char  yy_hold_char;
+static int   yy_n_chars; /* number of characters read into yy_ch_buf */
+int          yyleng;
 
 /* Points to current character in buffer. */
-static char    *yy_c_buf_p = nullptr;
-static int      yy_init = 0;  /* whether we need to initialize */
-static int      yy_start = 0; /* start state number */
+static char *yy_c_buf_p = nullptr;
+static int   yy_init = 0;  /* whether we need to initialize */
+static int   yy_start = 0; /* start state number */
 
 /* Flag which is used to allow yywrap()'s to do buffer switches
  * instead of setting up a fresh yyin.  A bit of a hack ...
  */
-static int      yy_did_buffer_switch_on_eof;
+static int   yy_did_buffer_switch_on_eof;
 
-void            yyrestart(FILE *input_file);
-void            yy_switch_to_buffer(YY_BUFFER_STATE new_buffer);
-auto yy_create_buffer(FILE *file, int size) -> YY_BUFFER_STATE;
-void            yy_delete_buffer(YY_BUFFER_STATE b);
-void            yy_flush_buffer(YY_BUFFER_STATE b);
-void            yypush_buffer_state(YY_BUFFER_STATE new_buffer);
-void            yypop_buffer_state();
+void         yyrestart(FILE *input_file);
+void         yy_switch_to_buffer(YY_BUFFER_STATE new_buffer);
+auto         yy_create_buffer(FILE *file, int size) -> YY_BUFFER_STATE;
+void         yy_delete_buffer(YY_BUFFER_STATE b);
+void         yy_flush_buffer(YY_BUFFER_STATE b);
+void         yypush_buffer_state(YY_BUFFER_STATE new_buffer);
+void         yypop_buffer_state();
 
-static void     yyensure_buffer_stack();
-static void     yy_load_buffer_state();
-static void     yy_init_buffer(YY_BUFFER_STATE b, FILE *file);
+static void  yyensure_buffer_stack();
+static void  yy_load_buffer_state();
+static void  yy_init_buffer(YY_BUFFER_STATE b, FILE *file);
 #define YY_FLUSH_BUFFER yy_flush_buffer(YY_CURRENT_BUFFER)
 
 auto yy_scan_buffer(char *base, yy_size_t size) -> YY_BUFFER_STATE;
 auto yy_scan_string(const char *yy_str) -> YY_BUFFER_STATE;
 auto yy_scan_bytes(const char *bytes, int len) -> YY_BUFFER_STATE;
 
-auto yyalloc(yy_size_t) -> void           *;
-auto yyrealloc(void *, yy_size_t) -> void           *;
-void            yyfree(void *);
+auto yyalloc(yy_size_t) -> void *;
+auto yyrealloc(void *, yy_size_t) -> void *;
+void yyfree(void *);
 
 #define yy_new_buffer yy_create_buffer
 #define yy_set_interactive(is_interactive)                                     \
@@ -354,22 +358,22 @@ void            yyfree(void *);
 #define YY_SKIP_YYWRAP
 using YY_CHAR = flex_uint8_t;
 
-FILE                *yyin = nullptr, *yyout = nullptr;
+FILE *yyin = nullptr, *yyout = nullptr;
 
 using yy_state_type = int;
 
-extern int           yylineno;
-int                  yylineno = 1;
+extern int   yylineno;
+int          yylineno = 1;
 
-extern char         *yytext;
+extern char *yytext;
 #ifdef yytext_ptr
 #undef yytext_ptr
 #endif
 #define yytext_ptr yytext
 
-static auto   yy_get_previous_state() -> yy_state_type;
-static auto   yy_try_NUL_trans(yy_state_type current_state) -> yy_state_type;
-static auto             yy_get_next_buffer() -> int;
+static auto yy_get_previous_state() -> yy_state_type;
+static auto yy_try_NUL_trans(yy_state_type current_state) -> yy_state_type;
+static auto yy_get_next_buffer() -> int;
 static void yynoreturn yy_fatal_error(const char *msg);
 
 /* Done after the current pattern has been matched and before the
@@ -494,36 +498,36 @@ static yy::location LOC;
 #define YY_EXTRA_TYPE void *
 #endif
 
-static auto    yy_init_globals() -> int;
+static auto yy_init_globals() -> int;
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
-auto           yylex_destroy() -> int;
+auto        yylex_destroy() -> int;
 
-auto           yyget_debug() -> int;
+auto        yyget_debug() -> int;
 
-void          yyset_debug(int debug_flag);
+void        yyset_debug(int debug_flag);
 
-auto yyget_extra() -> YY_EXTRA_TYPE;
+auto        yyget_extra() -> YY_EXTRA_TYPE;
 
-void          yyset_extra(YY_EXTRA_TYPE user_defined);
+void        yyset_extra(YY_EXTRA_TYPE user_defined);
 
-auto yyget_in() -> FILE         *;
+auto        yyget_in() -> FILE *;
 
-void          yyset_in(FILE *_in_str);
+void        yyset_in(FILE *_in_str);
 
-auto yyget_out() -> FILE         *;
+auto        yyget_out() -> FILE *;
 
-void          yyset_out(FILE *_out_str);
+void        yyset_out(FILE *_out_str);
 
-auto           yyget_leng() -> int;
+auto        yyget_leng() -> int;
 
-auto yyget_text() -> char         *;
+auto        yyget_text() -> char *;
 
-auto           yyget_lineno() -> int;
+auto        yyget_lineno() -> int;
 
-void          yyset_lineno(int _line_number);
+void        yyset_lineno(int _line_number);
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -533,7 +537,7 @@ void          yyset_lineno(int _line_number);
 #ifdef __cplusplus
 extern "C" int yywrap(void);
 #else
-extern int                 yywrap(void);
+extern int yywrap(void);
 #endif
 #endif
 
@@ -555,7 +559,7 @@ static int yy_flex_strlen(const char *);
 #ifdef __cplusplus
 static auto yyinput() -> int;
 #else
-static int                 input(void);
+static int input(void);
 #endif
 
 #endif
@@ -1095,12 +1099,10 @@ static auto yy_get_next_buffer() -> int
           return EOB_ACT_END_OF_FILE;
         }
 
-      
-                  /* We matched some text prior to the EOB, first
-           * process it.
-           */
-          return EOB_ACT_LAST_MATCH;
-       
+      /* We matched some text prior to the EOB, first
+       * process it.
+       */
+      return EOB_ACT_LAST_MATCH;
     }
 
   /* Try to read more data. */
@@ -1312,7 +1314,7 @@ static void yyunput(int c, char *yy_bp)
 #ifdef __cplusplus
 static auto yyinput() -> int
 #else
-static int                 input()
+static int input()
 #endif
 
 {
@@ -1778,12 +1780,12 @@ auto        yyget_lineno() -> int { return yylineno; }
 /** Get the input stream.
  *
  */
-auto yyget_in() -> FILE      * { return yyin; }
+auto        yyget_in() -> FILE        *{ return yyin; }
 
 /** Get the output stream.
  *
  */
-auto yyget_out() -> FILE      * { return yyout; }
+auto        yyget_out() -> FILE        *{ return yyout; }
 
 /** Get the length of the current token.
  *
@@ -1794,13 +1796,13 @@ auto        yyget_leng() -> int { return yyleng; }
  *
  */
 
-auto yyget_text() -> char      * { return yytext; }
+auto        yyget_text() -> char        *{ return yytext; }
 
 /** Set the current line number.
  * @param _line_number line number
  *
  */
-void       yyset_lineno(int _line_number) { yylineno = _line_number; }
+void        yyset_lineno(int _line_number) { yylineno = _line_number; }
 
 /** Set the input stream. This does not discard the current
  * input buffer.
@@ -1808,13 +1810,13 @@ void       yyset_lineno(int _line_number) { yylineno = _line_number; }
  *
  * @see yy_switch_to_buffer
  */
-void       yyset_in(FILE *_in_str) { yyin = _in_str; }
+void        yyset_in(FILE *_in_str) { yyin = _in_str; }
 
-void       yyset_out(FILE *_out_str) { yyout = _out_str; }
+void        yyset_out(FILE *_out_str) { yyout = _out_str; }
 
 auto        yyget_debug() -> int { return yy_flex_debug; }
 
-void       yyset_debug(int _bdebug) { yy_flex_debug = _bdebug; }
+void        yyset_debug(int _bdebug) { yy_flex_debug = _bdebug; }
 
 static auto yy_init_globals() -> int
 {

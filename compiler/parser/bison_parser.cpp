@@ -44,8 +44,8 @@
 #include <iostream>
 #include <string>
 
-std::vector<Definition::Ptr>   Program;
-extern auto yylex() -> yy::parser::symbol_type;
+std::vector<Definition::Ptr> Program;
+extern auto                  yylex() -> yy::parser::symbol_type;
 
 #line 53 "./parser/bison_parser.cpp"
 
@@ -151,11 +151,12 @@ namespace yy
   /// Build a parser object.
   parser::parser()
 #if YYDEBUG
-    : yydebug_(false), yycdebug_(&std::cerr)
+    : yydebug_(false)
+    , yycdebug_(&std::cerr)
 #else
 
 #endif
-  = default;
+      = default;
 
   parser::~parser() = default;
 
@@ -168,9 +169,7 @@ namespace yy
   // by_state.
   parser::by_state::by_state() YY_NOEXCEPT : state(empty_state) {}
 
-  parser::by_state::by_state(const by_state& that) YY_NOEXCEPT
-    : 
-  = default;
+  parser::by_state::by_state(const by_state& that) YY_NOEXCEPT = default;
 
   void parser::by_state::clear() YY_NOEXCEPT { state = empty_state; }
 
@@ -182,17 +181,18 @@ namespace yy
 
   parser::by_state::by_state(state_type s) YY_NOEXCEPT : state(s) {}
 
-  auto parser::by_state::kind() const YY_NOEXCEPT -> parser::symbol_kind_type
+  auto parser::by_state::kind() const YY_NOEXCEPT->parser::symbol_kind_type
   {
     if (state == empty_state)
       return symbol_kind::S_YYEMPTY;
-          return YY_CAST(symbol_kind_type, yystos_[+state]);
+    return YY_CAST(symbol_kind_type, yystos_[+state]);
   }
 
   parser::stack_symbol_type::stack_symbol_type() = default;
 
-  parser::stack_symbol_type::stack_symbol_type(YY_RVREF(stack_symbol_type) that)
- noexcept     : super_type(that.state, YY_MOVE(that.location))
+  parser::stack_symbol_type::stack_symbol_type(YY_RVREF(stack_symbol_type)
+                                                 that) noexcept
+    : super_type(that.state, YY_MOVE(that.location))
   {
     switch (that.kind())
       {
@@ -522,20 +522,21 @@ namespace yy
   void parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
 #endif // YYDEBUG
 
-  auto parser::yy_lr_goto_state_(state_type yystate, int yysym) -> parser::state_type
+  auto parser::yy_lr_goto_state_(state_type yystate, int yysym)
+    -> parser::state_type
   {
     int yyr = yypgoto_[yysym - YYNTOKENS] + yystate;
     if (0 <= yyr && yyr <= yylast_ && yycheck_[yyr] == yystate)
       return yytable_[yyr];
-          return yydefgoto_[yysym - YYNTOKENS];
+    return yydefgoto_[yysym - YYNTOKENS];
   }
 
-  auto parser::yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT -> bool
+  auto parser::yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT->bool
   {
     return yyvalue == yypact_ninf_;
   }
 
-  auto parser::yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT -> bool
+  auto parser::yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT->bool
   {
     return yyvalue == yytable_ninf_;
   }
