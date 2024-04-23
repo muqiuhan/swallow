@@ -42,8 +42,8 @@ namespace swallow::compiler::diagnostics
 
   auto get_color_by_name(const std::string &name) -> ColorType;
 
-  auto
-    print_formatted_text(std::ostream &output, const std::string &text) -> void;
+  auto print_formatted_text(std::ostream &output, const std::string &text)
+    -> void;
 
   class Label;
 
@@ -84,7 +84,8 @@ namespace swallow::compiler::diagnostics
       const Span                &span,
       ColorType                  color_type);
 
-    [[nodiscard]] auto get_message() const -> const std::optional<std::string> &;
+    [[nodiscard]] auto get_message() const
+      -> const std::optional<std::string> &;
 
     [[nodiscard]] auto get_span() const -> const Span &;
 
@@ -137,8 +138,8 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_label_line(const Label &label) const -> size_t;
 
-    [[nodiscard]] auto
-      get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
+    [[nodiscard]] auto get_line_spans() const
+      -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -168,15 +169,14 @@ namespace swallow::compiler::diagnostics
       const std::string         &spaces_prefix) -> void;
 
     auto print_colored_source_line(
-      std::ostream &output,
-      const Span   &label_span,
-      const Labels &labels) const -> void;
+      std::ostream &output, const Span &label_span, const Labels &labels) const
+      -> void;
 
-    [[nodiscard]] static auto
-      find_label_levels(const Labels &labels) -> std::vector<Labels>;
+    [[nodiscard]] static auto find_label_levels(const Labels &labels)
+      -> std::vector<Labels>;
 
-    [[nodiscard]] static auto
-                       find_remove_overlapping_labels(Labels &labels) -> Labels;
+    [[nodiscard]] static auto find_remove_overlapping_labels(Labels &labels)
+      -> Labels;
 
     [[nodiscard]] auto find_labels_in_line(size_t line_index) const -> Labels;
 
@@ -205,8 +205,8 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_biggest_displayed_number() const -> size_t;
 
-    [[nodiscard]] auto
-      get_label_groups() const -> const std::vector<LabelGroup> &;
+    [[nodiscard]] auto get_label_groups() const
+      -> const std::vector<LabelGroup> &;
 
     [[nodiscard]] auto get_details() const -> Details *;
 

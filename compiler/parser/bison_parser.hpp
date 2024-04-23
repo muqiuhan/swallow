@@ -309,7 +309,7 @@ namespace yy
       /// Non copyable.
       value_type(const self_type&);
       /// Non copyable.
-      self_type& operator=(const self_type&);
+      self_type&               operator=(const self_type&);
 #endif
 
       /// Accessor to raw memory as \a T.

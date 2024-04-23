@@ -30,6 +30,7 @@ namespace swallow::compiler::diagnostics
   {
     switch (type)
       {
+#undef ERROR
       case ReportType::ERROR:
         return "E";
       case ReportType::INFO:
@@ -54,10 +55,11 @@ namespace swallow::compiler::diagnostics
       default:
         utils::Panic("This report type is not implemented yet.");
       }
+#define ERROR 0
   }
 
-  auto
-    color_by_type(std::ostream &stream, const ColorType type) -> std::ostream &
+  auto color_by_type(std::ostream &stream, const ColorType type)
+    -> std::ostream &
   {
     switch (type)
       {
@@ -142,8 +144,8 @@ namespace swallow::compiler::diagnostics
       }
   }
 
-  auto AscendingLabels::operator()(
-    const Label *first, const Label *second) const -> bool
+  auto AscendingLabels::operator()(const Label *first, const Label *second) const
+    -> bool
   {
     auto difference = (int) first->get_span().get_start_index()
                       - (int) second->get_span().get_start_index();
@@ -154,8 +156,9 @@ namespace swallow::compiler::diagnostics
     return difference < 0;
   }
 
-  auto DescendingLabels::operator()(
-    const Label *first, const Label *second) const -> bool
+  auto
+    DescendingLabels::operator()(const Label *first, const Label *second) const
+    -> bool
   {
     auto difference = (int) first->get_span().get_start_index()
                       - (int) second->get_span().get_start_index();
@@ -541,7 +544,8 @@ namespace swallow::compiler::diagnostics
     output << termcolor::reset << "\n";
   }
 
-  auto LabelGroup::find_label_levels(const Labels &labels) -> std::vector<Labels>
+  auto LabelGroup::find_label_levels(const Labels &labels)
+    -> std::vector<Labels>
   {
     auto descending_labels(labels);
     std::sort(
@@ -815,7 +819,8 @@ namespace swallow::compiler::diagnostics
 
   ReportBuilder::ReportBuilder() = default;
 
-  auto ReportBuilder::with_message(const std::string &message) -> ReportBuilder &
+  auto ReportBuilder::with_message(const std::string &message)
+    -> ReportBuilder &
   {
     this->message_ = message;
     return *this;

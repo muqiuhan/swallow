@@ -82,8 +82,8 @@ namespace swallow::compiler::gmachine::instruction
       {
         std::for_each(
           branch.begin(), branch.end(), [&](const auto& instruction) {
-          instruction->Dump(2, to);
-        });
+            instruction->Dump(2, to);
+          });
       }
   }
 
