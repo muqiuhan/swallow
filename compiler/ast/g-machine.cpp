@@ -85,8 +85,8 @@ namespace swallow::compiler::ast
     Right->Compile(machineEnvironment, into);
     Left->Compile(machineEnvironment, into);
 
-    into.push_back(Instruction::Ptr(
-      new instruction::PushGlobal(gmachine::Binop::Action(Operator))));
+    into.push_back(
+      Instruction::Ptr(new instruction::PushGlobal(gmachine::Binop::Action(Operator))));
     into.push_back(Instruction::Ptr(new instruction::MakeApplication()));
     into.push_back(Instruction::Ptr(new instruction::MakeApplication()));
   }
@@ -95,8 +95,7 @@ namespace swallow::compiler::ast
     instruction::Jump      *jump,
     const type::Data       *type,
     const Branch::Ptr      &branch,
-    const Environment::Ptr &machineEnvironment) noexcept
-    -> std::vector<Instruction::Ptr>
+    const Environment::Ptr &machineEnvironment) noexcept -> std::vector<Instruction::Ptr>
   {
     std::vector<Instruction::Ptr> branchInstructions;
 
@@ -105,9 +104,7 @@ namespace swallow::compiler::ast
 
     for (const auto &constructorPair : type->Constructors)
       {
-        if (
-          jump->TagMappings.find(constructorPair.second.Tag)
-          != jump->TagMappings.end())
+        if (jump->TagMappings.find(constructorPair.second.Tag) != jump->TagMappings.end())
           break;
 
         jump->TagMappings[constructorPair.second.Tag] = jump->Branches.size();
@@ -122,7 +119,7 @@ namespace swallow::compiler::ast
     const Branch::Ptr        &branch,
     const Environment::Ptr   &machineEnvironment,
     const ConstructorPattern *constructorPattern,
-    const yy::location &Location) noexcept -> std::vector<Instruction::Ptr>
+    const yy::location       &Location) noexcept -> std::vector<Instruction::Ptr>
   {
     auto                          newEnvironment = machineEnvironment;
     std::vector<Instruction::Ptr> branchInstructions;
@@ -136,17 +133,15 @@ namespace swallow::compiler::ast
 
     branchInstructions.push_back(Instruction::Ptr(new instruction::Split()));
     branch->Expr->Compile(newEnvironment, branchInstructions);
-    branchInstructions.push_back(Instruction::Ptr(
-      new instruction::Slide(constructorPattern->Params.size())));
+    branchInstructions.push_back(
+      Instruction::Ptr(new instruction::Slide(constructorPattern->Params.size())));
 
-    uint8_t newTag =
-      type->Constructors[constructorPattern->ConstructorName].Tag;
+    uint8_t newTag = type->Constructors[constructorPattern->ConstructorName].Tag;
     if (jump->TagMappings.find(newTag) != jump->TagMappings.end())
       {
         diagnostics::Reporter::REPORTER->normal(
           Location,
-          std::format(
-            "Duplicate pattern {}", constructorPattern->ConstructorName),
+          std::format("Duplicate pattern {}", constructorPattern->ConstructorName),
           "This constructor already exists in context",
           "Consider remove this pattern",
           diagnostics::PATTERN_CONSTRUCTOR_IS_DUPLICATED);
@@ -158,15 +153,11 @@ namespace swallow::compiler::ast
   }
 
   static void CheckCompileResult(
-    const instruction::Jump *jump,
-    const type::Data        *type,
-    const yy::location      &Location)
+    const instruction::Jump *jump, const type::Data *type, const yy::location &Location)
   {
     for (const auto &constructorPair : type->Constructors)
       {
-        if (
-          jump->TagMappings.find(constructorPair.second.Tag)
-          == jump->TagMappings.end())
+        if (jump->TagMappings.find(constructorPair.second.Tag) != jump->TagMappings.end())
           {
             diagnostics::Reporter::REPORTER->normal(
               Location,
@@ -187,8 +178,7 @@ namespace swallow::compiler::ast
   {
 
     auto *variablePattern = dynamic_cast<VariablePattern *>(branch->Patt.get());
-    auto *constructorPattern =
-      dynamic_cast<ConstructorPattern *>(branch->Patt.get());
+    auto *constructorPattern = dynamic_cast<ConstructorPattern *>(branch->Patt.get());
 
     if (nullptr != variablePattern)
       CompileVariablePattern(jump, type, branch, machineEnvironment);
@@ -228,7 +218,7 @@ namespace swallow::compiler::ast
     into.push_back(Instruction::Ptr(jump));
 
     for (const auto &branch : Branches)
-      CompileBranch(branch, jump, type, machineEnvironment, this->Location);
+      CompileBranch(branch, jump, type, machineEnvironment, this->With->Location);
   }
 
   void Fn::Compile() noexcept
@@ -239,10 +229,8 @@ namespace swallow::compiler::ast
     });
 
     Body->Compile(newEnvironment, Instructions);
-    Instructions.push_back(
-      Instruction::Ptr(new instruction::Update(Params.size())));
-    Instructions.push_back(
-      Instruction::Ptr(new instruction::Pop(Params.size())));
+    Instructions.push_back(Instruction::Ptr(new instruction::Update(Params.size())));
+    Instructions.push_back(Instruction::Ptr(new instruction::Pop(Params.size())));
   }
 
   void Data::Compile() noexcept {}

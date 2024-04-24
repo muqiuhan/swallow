@@ -97,10 +97,7 @@ namespace swallow::compiler::ast
     to << ">" << '\n';
   }
 
-  void VariablePattern::Dump(std::ostream &to) const noexcept
-  {
-    to << Variable;
-  }
+  void VariablePattern::Dump(std::ostream &to) const noexcept { to << Variable; }
 
   void ConstructorPattern::Dump(std::ostream &to) const noexcept
   {
