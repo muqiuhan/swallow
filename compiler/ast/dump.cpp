@@ -30,36 +30,32 @@
 #include "ast.hpp"
 #include <cstdint>
 #include <format>
+#include "utils/dump.h"
+using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::ast
 {
-  static void printIndent(uint8_t n, std::ostream &to) noexcept
-  {
-    while ((n--) != 0U)
-      to << "  ";
-  }
-
   void Int::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    printIndent(indent, to);
+    dump::dumpIndent(indent, to);
     to << std::format("<Int: {}>", Value) << '\n';
   }
 
   void LID::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    printIndent(indent, to);
+    dump::dumpIndent(indent, to);
     to << std::format("<LID: {}>", ID) << '\n';
   }
 
   void UID::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    printIndent(indent, to);
+    dump::dumpIndent(indent, to);
     to << std::format("<UID: {}>", ID) << '\n';
   }
 
   void Binop::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    printIndent(indent, to);
+    dump::dumpIndent(indent, to);
 
     to << std::format("<Binop: {}", OperatorToString(Operator)) << '\n';
 
@@ -71,7 +67,7 @@ namespace swallow::compiler::ast
 
   void Application::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    printIndent(indent, to);
+    dump::dumpIndent(indent, to);
 
     to << "<Application: " << '\n';
 
@@ -82,13 +78,13 @@ namespace swallow::compiler::ast
 
   void Match::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    printIndent(indent, to);
+    dump::dumpIndent(indent, to);
 
     to << "<Match: " << '\n';
 
     for (const auto &branch : Branches)
       {
-        printIndent(indent + 1, to);
+        dump::dumpIndent(indent + 1, to);
         branch->Patt->Dump(to);
         to << '\n';
         branch->Expr->Dump(indent + 2, to);

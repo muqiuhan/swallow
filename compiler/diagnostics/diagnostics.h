@@ -133,8 +133,8 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_label_line(const Label &label) const -> size_t;
 
-    [[nodiscard]] auto get_line_spans() const
-      -> const std::vector<std::shared_ptr<Span>> &;
+    [[nodiscard]] auto
+      get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -165,8 +165,8 @@ namespace swallow::compiler::diagnostics
     auto print_colored_source_line(
       std::ostream &output, const Span &label_span, const Labels &labels) const -> void;
 
-    [[nodiscard]] static auto find_label_levels(const Labels &labels)
-      -> std::vector<Labels>;
+    [[nodiscard]] static auto
+      find_label_levels(const Labels &labels) -> std::vector<Labels>;
 
     [[nodiscard]] static auto find_remove_overlapping_labels(Labels &labels) -> Labels;
 
