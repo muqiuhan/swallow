@@ -5,7 +5,7 @@ set_xmakever("2.8.1")
 includes("../base")
 
 target("swc")
-    set_kind("binary")
+    set_kind("static")
     set_languages("c++20")
     add_files("*.cpp", "**/*.cpp")
     add_includedirs(".", "ast", "type", "lexer", "parser", "diagnostics", "utils")
