@@ -7,6 +7,6 @@
 namespace swallow::compiler::utils::dump
 {
   void dumpIndent(uint8_t n, std::ostream &to) noexcept;
-} // namespace swallow::compiler::utils
+} // namespace swallow::compiler::utils::dump
 
 #endif

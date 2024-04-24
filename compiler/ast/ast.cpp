@@ -97,6 +97,8 @@ namespace swallow::compiler::type
 
     for (const auto &definition : program)
       definition->Resolve(typeManager);
+
+    // typeEnvironment.Dump(std::cout, typeManager);
   }
 } // namespace swallow::compiler::type
 

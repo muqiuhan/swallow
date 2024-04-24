@@ -7,4 +7,4 @@ namespace swallow::compiler::utils::dump
     while ((n--) != 0U)
       to << "  ";
   }
-} // namespace swallow::compiler::utils
+} // namespace swallow::compiler::utils::dump
