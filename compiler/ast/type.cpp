@@ -201,7 +201,7 @@ namespace swallow::compiler::ast
       }
 
     matchType = typeManager.Resolve(matchType, var);
-    if (nullptr == dynamic_cast<type::Base *>(matchType.get()))
+    if (nullptr == dynamic_cast<type::Data *>(matchType.get()))
       {
         return diagnostics::Reporter::REPORTER->normal(
           Location,
@@ -233,9 +233,9 @@ namespace swallow::compiler::ast
           return diagnostics::Reporter::REPORTER->normal(
             Location,
             std::format("'{}' was not declared", ConstructorName),
-            "The definition of this constructor cannot be found in the "
+            "The definition of bthis constructor cannot be found in the "
             "context",
-            "ConstructorName is undefined",
+            "Constructor is undefined",
             diagnostics::CONSTRUCTOR_NOT_DECLARED);
         })
         .unwrap();
@@ -249,7 +249,7 @@ namespace swallow::compiler::ast
             Location,
             "Illegal Pattern",
             "This identifier is not a constructor",
-            "ConstructorName must be a function type",
+            "Constructor must be a function type",
             diagnostics::PATTERN_CONSTRUCTOR_IS_NOT_FUNCTION);
         }
 
