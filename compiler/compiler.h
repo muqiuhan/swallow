@@ -39,8 +39,8 @@ namespace swallow::compiler
   class CompileUnit
   {
   public:
-    const std::string          FileValue;
-    const std::string          FilePath;
+    const std::string FileValue;
+    const std::string FilePath;
 
     inline static CompileUnit *FILE = nullptr;
 

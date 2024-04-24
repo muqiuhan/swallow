@@ -51,8 +51,8 @@ namespace swallow::compiler::type
 
     [[nodiscard]] auto Scope() const noexcept -> Environment;
 
-    void               Bind(const std::string &name, Type::Ptr type) noexcept;
-    void               Dump(std::ostream &to, const Manager &typeManager) noexcept;
+    void Bind(const std::string &name, Type::Ptr type) noexcept;
+    void Dump(std::ostream &to, const Manager &typeManager) noexcept;
   };
 
 } // namespace swallow::compiler::type

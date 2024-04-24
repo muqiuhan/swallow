@@ -506,13 +506,13 @@ namespace yy
   void parser::yypop_(int n) YY_NOEXCEPT { yystack_.pop(n); }
 
 #if YYDEBUG
-  std::ostream&            parser::debug_stream() const { return *yycdebug_; }
+  std::ostream& parser::debug_stream() const { return *yycdebug_; }
 
-  void                     parser::set_debug_stream(std::ostream& o) { yycdebug_ = &o; }
+  void parser::set_debug_stream(std::ostream& o) { yycdebug_ = &o; }
 
   parser::debug_level_type parser::debug_level() const { return yydebug_; }
 
-  void                     parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
+  void parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
 #endif // YYDEBUG
 
   parser::state_type parser::yy_lr_goto_state_(state_type yystate, int yysym)
@@ -538,22 +538,22 @@ namespace yy
 
   int parser::parse()
   {
-    int               yyn;
+    int yyn;
     /// Length of the RHS of the rule being reduced.
-    int               yylen = 0;
+    int yylen = 0;
 
     // Error handling.
-    int               yynerrs_ = 0;
-    int               yyerrstatus_ = 0;
+    int yynerrs_ = 0;
+    int yyerrstatus_ = 0;
 
     /// The lookahead symbol.
-    symbol_type       yyla;
+    symbol_type yyla;
 
     /// The locations where the error started and ended.
     stack_symbol_type yyerror_range[3];
 
     /// The return value of parse ().
-    int               yyresult;
+    int yyresult;
 
 #if YY_EXCEPTIONS
     try

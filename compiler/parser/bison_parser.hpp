@@ -234,14 +234,14 @@ namespace yy
 
       /// Instantiate an empty \a T in here.
       /// Obsolete, use emplace.
-      template <typename T> T&       build() { return emplace<T>(); }
+      template <typename T> T& build() { return emplace<T>(); }
 
       /// Instantiate a \a T in here from \a t.
       /// Obsolete, use emplace.
-      template <typename T> T&       build(const T& t) { return emplace<T>(t); }
+      template <typename T> T& build(const T& t) { return emplace<T>(t); }
 
       /// Accessor to a built \a T.
-      template <typename T> T&       as() YY_NOEXCEPT { return *yyas_<T>(); }
+      template <typename T> T& as() YY_NOEXCEPT { return *yyas_<T>(); }
 
       /// Const accessor to a built \a T (for %printer).
       template <typename T> const T& as() const YY_NOEXCEPT { return *yyas_<T>(); }
@@ -254,7 +254,7 @@ namespace yy
       /// should not be the variant's responsibility.
       /// Swapping between built and (possibly) non-built is done with
       /// self_type::move ().
-      template <typename T> void     swap(self_type& that) YY_NOEXCEPT
+      template <typename T> void swap(self_type& that) YY_NOEXCEPT
       {
         std::swap(as<T>(), that.as<T>());
       }
@@ -293,7 +293,7 @@ namespace yy
       /// Non copyable.
       value_type(const self_type&);
       /// Non copyable.
-      self_type&               operator=(const self_type&);
+      self_type& operator=(const self_type&);
 #endif
 
       /// Accessor to raw memory as \a T.
@@ -368,7 +368,7 @@ namespace yy
         /// Strongest alignment constraints.
         long double yyalign_me_;
         /// A buffer large enough to store any of the semantic values.
-        char        yyraw_[size];
+        char yyraw_[size];
       };
     };
 
@@ -377,7 +377,7 @@ namespace yy
     typedef value_type semantic_type;
 
     /// Symbol locations.
-    typedef location   location_type;
+    typedef location location_type;
 
     /// Syntax errors thrown from user actions.
     struct syntax_error : std::runtime_error
@@ -437,7 +437,7 @@ namespace yy
     typedef token::token_kind_type token_kind_type;
 
     /// Backward compatibility alias (Bison 3.6).
-    typedef token_kind_type        token_type;
+    typedef token_kind_type token_type;
 
     /// Symbol kinds.
     struct symbol_kind
@@ -497,7 +497,7 @@ namespace yy
     typedef symbol_kind::symbol_kind_type symbol_kind_type;
 
     /// The number of tokens.
-    static const symbol_kind_type         YYNTOKENS = symbol_kind::YYNTOKENS;
+    static const symbol_kind_type YYNTOKENS = symbol_kind::YYNTOKENS;
 
     /// A complete symbol.
     ///
@@ -812,16 +812,16 @@ namespace yy
       symbol_kind_type type_get() const YY_NOEXCEPT;
 
       /// Whether empty.
-      bool             empty() const YY_NOEXCEPT;
+      bool empty() const YY_NOEXCEPT;
 
       /// Destructive move, \a s is emptied into this.
-      void             move(basic_symbol& s);
+      void move(basic_symbol& s);
 
       /// The semantic value.
-      value_type       value;
+      value_type value;
 
       /// The location.
-      location_type    location;
+      location_type location;
 
     private:
 #if YY_CPLUSPLUS < 201103L
@@ -851,10 +851,10 @@ namespace yy
       by_kind(kind_type t) YY_NOEXCEPT;
 
       /// Record that this symbol is empty.
-      void             clear() YY_NOEXCEPT;
+      void clear() YY_NOEXCEPT;
 
       /// Steal the symbol kind from \a that.
-      void             move(by_kind& that);
+      void move(by_kind& that);
 
       /// The (internal) type number (corresponding to \a type).
       /// \a empty when empty.
@@ -919,7 +919,7 @@ namespace yy
 
     /// Parse.  An alias for parse ().
     /// \returns  0 iff parsing succeeded.
-    int         operator()();
+    int operator()();
 
     /// Parse.
     /// \returns  0 iff parsing succeeded.
@@ -927,16 +927,16 @@ namespace yy
 
 #if YYDEBUG
     /// The current debugging stream.
-    std::ostream&    debug_stream() const YY_ATTRIBUTE_PURE;
+    std::ostream& debug_stream() const YY_ATTRIBUTE_PURE;
     /// Set the current debugging stream.
-    void             set_debug_stream(std::ostream&);
+    void set_debug_stream(std::ostream&);
 
     /// Type for debugging levels.
-    typedef int      debug_level_type;
+    typedef int debug_level_type;
     /// The current debugging level.
     debug_level_type debug_level() const YY_ATTRIBUTE_PURE;
     /// Set the current debugging level.
-    void             set_debug_level(debug_level_type l);
+    void set_debug_level(debug_level_type l);
 #endif
 
     /// Report a syntax error.
@@ -945,7 +945,7 @@ namespace yy
     virtual void error(const location_type& loc, const std::string& msg);
 
     /// Report a syntax error.
-    void         error(const syntax_error& err);
+    void error(const syntax_error& err);
 
 #if YYDEBUG || 0
     /// The user-facing name of the symbol whose (internal) number is
@@ -1250,20 +1250,20 @@ namespace yy
 #endif
 
     /// Stored state numbers (used for stacks).
-    typedef signed char      state_type;
+    typedef signed char state_type;
 
     /// Compute post-reduction state.
     /// \param yystate   the current state
     /// \param yysym     the nonterminal to push on the stack
-    static state_type        yy_lr_goto_state_(state_type yystate, int yysym);
+    static state_type yy_lr_goto_state_(state_type yystate, int yysym);
 
     /// Whether the given \c yypact_ value indicates a defaulted state.
     /// \param yyvalue   the value to check
-    static bool              yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT;
+    static bool yy_pact_value_is_default_(int yyvalue) YY_NOEXCEPT;
 
     /// Whether the given \c yytable_ value indicates a syntax error.
     /// \param yyvalue   the value to check
-    static bool              yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT;
+    static bool yy_table_value_is_error_(int yyvalue) YY_NOEXCEPT;
 
     static const signed char yypact_ninf_;
     static const signed char yytable_ninf_;
@@ -1271,7 +1271,7 @@ namespace yy
     /// Convert a scanner token kind \a t to a symbol kind.
     /// In theory \a t should be a token_kind_type, but character literals
     /// are valid, yet not members of the token_kind_type enum.
-    static symbol_kind_type  yytranslate_(int t) YY_NOEXCEPT;
+    static symbol_kind_type yytranslate_(int t) YY_NOEXCEPT;
 
 #if YYDEBUG || 0
     /// For a symbol, its name in clear.
@@ -1315,14 +1315,14 @@ namespace yy
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
     static const unsigned char yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
-    virtual void               yy_reduce_print_(int r) const;
+    virtual void yy_reduce_print_(int r) const;
     /// Print the state stack on the debug stream.
-    virtual void               yy_stack_print_() const;
+    virtual void yy_stack_print_() const;
 
     /// Debugging level.
-    int                        yydebug_;
+    int yydebug_;
     /// Debug stream.
-    std::ostream*              yycdebug_;
+    std::ostream* yycdebug_;
 
     /// \brief Display a symbol kind, value and location.
     /// \param yyo    The output stream.
@@ -1355,10 +1355,10 @@ namespace yy
       by_state(const by_state& that) YY_NOEXCEPT;
 
       /// Record that this symbol is empty.
-      void             clear() YY_NOEXCEPT;
+      void clear() YY_NOEXCEPT;
 
       /// Steal the symbol kind from \a that.
-      void             move(by_state& that);
+      void move(by_state& that);
 
       /// The symbol kind (corresponding to \a state).
       /// \a symbol_kind::S_YYEMPTY when empty.
@@ -1425,12 +1425,12 @@ namespace yy
       /// Random access.
       ///
       /// Index 0 returns the topmost element.
-      T&       operator[](index_type i) { return seq_[size_type(size() - 1 - i)]; }
+      T& operator[](index_type i) { return seq_[size_type(size() - 1 - i)]; }
 
       /// Steal the contents of \a t.
       ///
       /// Close to move-semantics.
-      void     push(YY_MOVE_REF(T) t)
+      void push(YY_MOVE_REF(T) t)
       {
         seq_.push_back(T());
         operator[](0).move(t);
@@ -1444,10 +1444,10 @@ namespace yy
       }
 
       /// Pop all elements from the stack.
-      void           clear() YY_NOEXCEPT { seq_.clear(); }
+      void clear() YY_NOEXCEPT { seq_.clear(); }
 
       /// Number of elements on the stack.
-      index_type     size() const YY_NOEXCEPT { return index_type(seq_.size()); }
+      index_type size() const YY_NOEXCEPT { return index_type(seq_.size()); }
 
       /// Iterator on top of the stack (going downwards).
       const_iterator begin() const YY_NOEXCEPT { return seq_.begin(); }
@@ -1485,7 +1485,7 @@ namespace yy
     typedef stack<stack_symbol_type> stack_type;
 
     /// The stack.
-    stack_type                       yystack_;
+    stack_type yystack_;
 
     /// Push a new state on the stack.
     /// \param m    a debug message to display

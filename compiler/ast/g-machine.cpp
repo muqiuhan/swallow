@@ -57,7 +57,7 @@ namespace swallow::compiler::ast
     into.push_back(Instruction::Ptr(
       machineEnvironment->HasVariable(ID)
         ? dynamic_cast<Instruction *>(
-          new instruction::Push(machineEnvironment->GetOffset(ID).value()))
+            new instruction::Push(machineEnvironment->GetOffset(ID).value()))
 
         : dynamic_cast<Instruction *>(new instruction::PushGlobal(ID))));
   }
@@ -129,7 +129,7 @@ namespace swallow::compiler::ast
       constructorPattern->Params.rend(),
       [&](const auto &param) {
       newEnvironment = Environment::Ptr(new Variable(param, newEnvironment));
-      });
+    });
 
     branchInstructions.push_back(Instruction::Ptr(new instruction::Split()));
     branch->Expr->Compile(newEnvironment, branchInstructions);

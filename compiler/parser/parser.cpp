@@ -53,7 +53,7 @@ namespace yy
 
 extern std::vector<swallow::compiler::ast::Definition::Ptr> Program;
 
-extern FILE                                                *yyin, *yyout;
+extern FILE *yyin, *yyout;
 
 namespace swallow::compiler::parser
 {

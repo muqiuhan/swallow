@@ -64,7 +64,7 @@ namespace yy
     /// Type for file name.
     typedef const std::string filename_type;
     /// Type for line and column numbers.
-    typedef int               counter_type;
+    typedef int counter_type;
 
     /// Construct a position.
     explicit position(
@@ -93,16 +93,16 @@ namespace yy
     }
 
     /// (column related) Advance to the COUNT next columns.
-    void           columns(counter_type count = 1) { column = add_(column, count, 1); }
+    void columns(counter_type count = 1) { column = add_(column, count, 1); }
 
     /** \} */
 
     /// File name to which this position refers.
     filename_type* filename;
     /// Current line number.
-    counter_type   line;
+    counter_type line;
     /// Current column number.
-    counter_type   column;
+    counter_type column;
 
   private:
     /// Compute max (min, lhs+rhs).
@@ -157,7 +157,7 @@ namespace yy
     /// Type for file name.
     typedef position::filename_type filename_type;
     /// Type for line and column numbers.
-    typedef position::counter_type  counter_type;
+    typedef position::counter_type counter_type;
 
     /// Construct a location from \a b to \a e.
     location(const position& b, const position& e) : begin(b), end(e) {}
@@ -206,7 +206,7 @@ namespace yy
   }
 
   /// Join two locations.
-  inline location  operator+(location res, const location& end) { return res += end; }
+  inline location operator+(location res, const location& end) { return res += end; }
 
   /// Add \a width columns to the end position, in place.
   inline location& operator+=(location& res, location::counter_type width)

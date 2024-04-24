@@ -373,28 +373,28 @@ namespace swallow::compiler::utils::variadicTable
     }
 
     /// The column headers
-    std::vector<std::string>               _headers;
+    std::vector<std::string> _headers;
 
     /// Number of columns in the table
-    unsigned int                           _num_columns;
+    unsigned int _num_columns;
 
     /// Size of columns that we can't get the size of
-    unsigned int                           _static_column_size;
+    unsigned int _static_column_size;
 
     /// Size of the cell padding
-    unsigned int                           _cell_padding;
+    unsigned int _cell_padding;
 
     /// The actual data
-    std::vector<DataTuple>                 _data;
+    std::vector<DataTuple> _data;
 
     /// Holds the printable width of each column
-    std::vector<size_t>                    _column_sizes;
+    std::vector<size_t> _column_sizes;
 
     /// Column Format
     std::vector<VariadicTableColumnFormat> _column_format;
 
     /// Precision For each column
-    std::vector<int>                       _precision;
+    std::vector<int> _precision;
   };
 
 } // namespace swallow::compiler::utils::variadicTable
