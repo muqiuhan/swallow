@@ -44,11 +44,11 @@ namespace swallow::compiler::gmachine
 
     virtual ~Environment() = default;
 
-    [[nodiscard]] virtual auto
-      GetOffset(const std::string &name) const noexcept -> tl::optional<int> = 0;
+    [[nodiscard]] virtual auto GetOffset(const std::string &name) const noexcept
+      -> tl::optional<int> = 0;
 
-    [[nodiscard]] virtual auto
-      HasVariable(const std::string &name) const noexcept -> bool = 0;
+    [[nodiscard]] virtual auto HasVariable(const std::string &name) const noexcept
+      -> bool = 0;
   };
 
   class Variable : public Environment
@@ -61,11 +61,11 @@ namespace swallow::compiler::gmachine
       : Name(std::move(Name)), Parent(std::move(Parent))
     {}
 
-    [[nodiscard]] auto
-      GetOffset(const std::string &name) const noexcept -> tl::optional<int> override;
+    [[nodiscard]] auto GetOffset(const std::string &name) const noexcept
+      -> tl::optional<int> override;
 
-    [[nodiscard]] auto
-      HasVariable(const std::string &name) const noexcept -> bool override;
+    [[nodiscard]] auto HasVariable(const std::string &name) const noexcept
+      -> bool override;
   };
 
   class Offset : public Environment
@@ -76,11 +76,11 @@ namespace swallow::compiler::gmachine
 
     Offset(uint32_t Value, Ptr Parent) : Value(Value), Parent(std::move(Parent)) {}
 
-    [[nodiscard]] auto
-      GetOffset(const std::string &name) const noexcept -> tl::optional<int> override;
+    [[nodiscard]] auto GetOffset(const std::string &name) const noexcept
+      -> tl::optional<int> override;
 
-    [[nodiscard]] auto
-      HasVariable(const std::string &name) const noexcept -> bool override;
+    [[nodiscard]] auto HasVariable(const std::string &name) const noexcept
+      -> bool override;
   };
 
 } // namespace swallow::compiler::gmachine

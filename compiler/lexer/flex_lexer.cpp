@@ -120,7 +120,7 @@ typedef unsigned int       flex_uint32_t;
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
-#define YY_START              (((yy_start) - 1) / 2)
+#define YY_START              (((yy_start) -1) / 2)
 #define YYSTATE               YY_START
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state)   (YY_END_OF_BUFFER + state + 1)
@@ -521,7 +521,7 @@ void          yyset_lineno(int _line_number);
 #ifdef __cplusplus
 extern "C" int yywrap(void);
 #else
-extern int yywrap(void);
+extern int                 yywrap(void);
 #endif
 #endif
 
@@ -543,7 +543,7 @@ static int yy_flex_strlen(const char *);
 #ifdef __cplusplus
 static int yyinput(void);
 #else
-static int input(void);
+static int                 input(void);
 #endif
 
 #endif
@@ -1057,8 +1057,8 @@ YY_DECL
           default:
             YY_FATAL_ERROR("fatal flex scanner internal error--no action found");
           } /* end of action switch */
-      } /* end of scanning one token */
-  } /* end of user's declarations */
+      }     /* end of scanning one token */
+  }         /* end of user's declarations */
 } /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -1301,7 +1301,7 @@ static void yyunput(int c, char *yy_bp)
 #ifdef __cplusplus
 static int yyinput(void)
 #else
-static int input(void)
+static int                 input(void)
 #endif
 
 {

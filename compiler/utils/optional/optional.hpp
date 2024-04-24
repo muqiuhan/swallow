@@ -610,9 +610,9 @@ namespace tl
 #ifndef TL_OPTIONAL_GCC49
     template <
       class T,
-      bool = std::is_trivially_destructible<T>::value
-             && std::is_trivially_move_constructible<T>::value
-             && std::is_trivially_move_assignable<T>::value>
+      bool =
+        std::is_trivially_destructible<T>::value &&std::is_trivially_move_constructible<
+          T>::value &&std::is_trivially_move_assignable<T>::value>
     struct optional_move_assign_base : optional_copy_assign_base<T>
     {
       using optional_copy_assign_base<T>::optional_copy_assign_base;
@@ -635,7 +635,7 @@ namespace tl
 
       optional_move_assign_base &operator=(optional_move_assign_base &&rhs) noexcept(
         std::is_nothrow_move_constructible<T>::value
-        && std::is_nothrow_move_assignable<T>::value)
+          &&std::is_nothrow_move_assignable<T>::value)
       {
         this->assign(std::move(rhs));
         return *this;
@@ -1377,9 +1377,8 @@ namespace tl
     /// If both have a value, the values are swapped.
     /// If one has a value, it is moved to the other and the movee is left
     /// valueless.
-    void swap(optional &rhs) noexcept(
-      std::is_nothrow_move_constructible<T>::value
-      && detail::is_nothrow_swappable<T>::value)
+    void swap(optional &rhs) noexcept(std::is_nothrow_move_constructible<T>::value
+                                        &&detail::is_nothrow_swappable<T>::value)
     {
       using std::swap;
       if (has_value())
@@ -1419,7 +1418,7 @@ namespace tl
 #endif
 
     /// Returns whether or not the optional has a value
-    constexpr bool     has_value() const noexcept { return this->m_has_value; }
+    constexpr bool has_value() const noexcept { return this->m_has_value; }
 
     constexpr explicit operator bool() const noexcept { return this->m_has_value; }
 

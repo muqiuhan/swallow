@@ -33,8 +33,8 @@
 namespace swallow::compiler::gmachine
 {
 
-  [[nodiscard]] auto
-    Variable::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
+  [[nodiscard]] auto Variable::GetOffset(const std::string &name) const noexcept
+    -> tl::optional<int>
   {
     if (name == Name)
       return tl::make_optional(0);
@@ -64,8 +64,8 @@ namespace swallow::compiler::gmachine
     return false;
   }
 
-  [[nodiscard]] auto
-    Offset::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
+  [[nodiscard]] auto Offset::GetOffset(const std::string &name) const noexcept
+    -> tl::optional<int>
   {
     if (Parent != nullptr)
       return Parent->GetOffset(name).map(

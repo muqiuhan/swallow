@@ -20,7 +20,7 @@ To build and run with xmake:
 Features
 ----------
 o- Typechecking
-o- Pattern Match
+o- Pattern Matching
 o- Garbage Collection
 o- Polymorphism
 
