@@ -27,6 +27,7 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "type.hpp"
 #include "ast.hpp"
 #include "code.hpp"
 #include "diagnostics/reporter.hpp"
@@ -43,16 +44,14 @@ namespace swallow::compiler::ast
 {
 
   auto Int::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
     return Ok(type::Type::Ptr(new type::Base("Int")));
   }
 
   auto LID::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
     return typeEnvironment.Lookup(ID).or_else([&](const auto &err) {
@@ -66,8 +65,7 @@ namespace swallow::compiler::ast
   }
 
   auto UID::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
     return typeEnvironment.Lookup(ID).or_else([&](const auto &err) {
@@ -81,18 +79,15 @@ namespace swallow::compiler::ast
   }
 
   auto Binop::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
     const std::string operatorName = OperatorToString(Operator);
 
-    type::Type::Ptr   leftType =
-      Left->CommonTypeCheck(typeManager, typeEnvironment);
-    type::Type::Ptr rightType =
-      Right->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr   leftType = Left->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr   rightType = Right->CommonTypeCheck(typeManager, typeEnvironment);
 
-    type::Type::Ptr functionType =
+    type::Type::Ptr   functionType =
       typeEnvironment.Lookup(operatorName)
         .or_else([&](const auto &err) {
           return diagnostics::Reporter::REPORTER->normal(
@@ -106,10 +101,8 @@ namespace swallow::compiler::ast
         .unwrap();
 
     type::Type::Ptr returnType = typeManager.NewType();
-    type::Type::Ptr arrowOne =
-      type::Type::Ptr(new type::Arrow(rightType, returnType));
-    type::Type::Ptr arrowTwo =
-      type::Type::Ptr(new type::Arrow(leftType, arrowOne));
+    type::Type::Ptr arrowOne = type::Type::Ptr(new type::Arrow(rightType, returnType));
+    type::Type::Ptr arrowTwo = type::Type::Ptr(new type::Arrow(leftType, arrowOne));
 
     typeManager.Unify(arrowTwo, functionType)
       .or_else([&](const auto &err) {
@@ -137,18 +130,14 @@ namespace swallow::compiler::ast
   }
 
   auto Application::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
-    type::Type::Ptr leftType =
-      Left->CommonTypeCheck(typeManager, typeEnvironment);
-    type::Type::Ptr rightType =
-      Right->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr leftType = Left->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr rightType = Right->CommonTypeCheck(typeManager, typeEnvironment);
 
     type::Type::Ptr returnType = typeManager.NewType();
-    type::Type::Ptr arrowType =
-      type::Type::Ptr(new type::Arrow(rightType, returnType));
+    type::Type::Ptr arrowType = type::Type::Ptr(new type::Arrow(rightType, returnType));
 
     typeManager.Unify(arrowType, leftType)
       .or_else([&](const auto &err) {
@@ -174,13 +163,12 @@ namespace swallow::compiler::ast
   }
 
   auto Match::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
     type::Variable *var = nullptr;
-    type::Type::Ptr matchType = typeManager.Resolve(
-      With->CommonTypeCheck(typeManager, typeEnvironment), var);
+    type::Type::Ptr matchType =
+      typeManager.Resolve(With->CommonTypeCheck(typeManager, typeEnvironment), var);
     type::Type::Ptr branchType = typeManager.NewType();
 
     for (const auto &branch : Branches)
@@ -206,8 +194,7 @@ namespace swallow::compiler::ast
                 "This branch has type '{}', but here may need a '{}'",
                 actual.str(),
                 expected.str()),
-              std::format(
-                "'{}' conflicts with '{}'", expected.str(), actual.str()),
+              std::format("'{}' conflicts with '{}'", expected.str(), actual.str()),
               diagnostics::MATCH_EXPR_BRANCHE_TYPE_CONFLICTS);
           })
           .ignore();
@@ -290,8 +277,7 @@ namespace swallow::compiler::ast
       })
       .ignore();
 
-    if (auto *const resultType =
-          dynamic_cast<type::Base *>(constructorType.get());
+    if (auto *const resultType = dynamic_cast<type::Base *>(constructorType.get());
         resultType == nullptr)
       {
         diagnostics::Reporter::REPORTER->normal(
@@ -309,19 +295,17 @@ namespace swallow::compiler::ast
     ReturnType = typeManager.NewType();
     type::Type::Ptr fullType = ReturnType;
 
-    std::for_each(
-      Params.rbegin(), Params.rend(), [&](const std::string &param) {
-        type::Type::Ptr paramType = typeManager.NewType();
-        fullType = type::Type::Ptr(new type::Arrow(paramType, fullType));
-        ParamTypes.push_back(paramType);
-      });
+    std::for_each(Params.rbegin(), Params.rend(), [&](const std::string &param) {
+      type::Type::Ptr paramType = typeManager.NewType();
+      fullType = type::Type::Ptr(new type::Arrow(paramType, fullType));
+      ParamTypes.push_back(paramType);
+    });
 
     typeEnvironment.Bind(Name, fullType);
   }
 
   void Fn::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
   {
     type::Environment newEnvironment = typeEnvironment.Scope();
 
@@ -374,8 +358,8 @@ namespace swallow::compiler::ast
           constructor->Types.rbegin(),
           constructor->Types.rend(),
           [&](const auto &typeName) {
-          fullType = type::Type::Ptr(new type::Arrow(
-            type::Type::Ptr(new type::Base(typeName)), fullType));
+          fullType = type::Type::Ptr(
+            new type::Arrow(type::Type::Ptr(new type::Base(typeName)), fullType));
           });
 
         typeEnvironment.Bind(constructor->Name, fullType);
@@ -383,13 +367,12 @@ namespace swallow::compiler::ast
   }
 
   void Data::TypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) const noexcept
+    type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
   {}
 
   auto AST::CommonTypeCheck(
-    type::Manager           &typeManager,
-    const type::Environment &typeEnvironment) noexcept -> type::Type::Ptr
+    type::Manager &typeManager, const type::Environment &typeEnvironment) noexcept
+    -> type::Type::Ptr
   {
     NodeType = TypeCheck(typeManager, typeEnvironment)
                  .or_else([&](const auto &err) {
@@ -410,7 +393,7 @@ namespace swallow::compiler::ast
     type::Variable *variable;
     type::Type::Ptr resolveType = typeManager.Resolve(NodeType, variable);
 
-    if (nullptr == variable)
+    if (nullptr != variable)
       diagnostics::Reporter::REPORTER->normal(
         Location,
         "Ambiguously type here",
@@ -422,19 +405,19 @@ namespace swallow::compiler::ast
     NodeType = std::move(resolveType);
   }
 
-  void Binop::Resolve(const type::Manager &typeManager) const noexcept
+  void Binop::Resolve(const type::Manager &typeManager) noexcept
   {
     Left->CommonResolve(typeManager);
     Right->CommonResolve(typeManager);
   }
 
-  void Application::Resolve(const type::Manager &typeManager) const noexcept
+  void Application::Resolve(const type::Manager &typeManager) noexcept
   {
     Left->CommonResolve(typeManager);
     Right->CommonResolve(typeManager);
   }
 
-  void Match::Resolve(const type::Manager &typeManager) const noexcept
+  void Match::Resolve(const type::Manager &typeManager) noexcept
   {
     With->CommonResolve(typeManager);
 
@@ -442,14 +425,40 @@ namespace swallow::compiler::ast
       branch->Expr->CommonResolve(typeManager);
   }
 
-  void Data::Resolve(const type::Manager &typeManager) const noexcept {}
+  void Data::Resolve(const type::Manager &typeManager) noexcept {}
 
-  void Fn::Resolve(const type::Manager &typeManager) const noexcept {}
+  void Fn::Resolve(const type::Manager &typeManager) noexcept
+  {
+    type::Variable *var = nullptr;
+    Body->CommonResolve(typeManager);
 
-  void UID::Resolve(const type::Manager &typeManager) const noexcept {}
+    ReturnType = typeManager.Resolve(ReturnType, var);
+    if (nullptr != var)
+      diagnostics::Reporter::REPORTER->normal(
+        Location,
+        "Ambiguously type here",
+        "Ambiguously typed program",
+        "No more information",
+        diagnostics::AMBIGUOUSLY_TYPE);
 
-  void LID::Resolve(const type::Manager &typeManager) const noexcept {}
+    for (auto &paramType : ParamTypes)
+      {
+        paramType = typeManager.Resolve(paramType, var);
 
-  void Int::Resolve(const type::Manager &typeManager) const noexcept {}
+        if (nullptr != var)
+          diagnostics::Reporter::REPORTER->normal(
+            Location,
+            "Ambiguously type here",
+            "Ambiguously typed program",
+            "No more information",
+            diagnostics::AMBIGUOUSLY_TYPE);
+      }
+  }
+
+  void UID::Resolve(const type::Manager &typeManager) noexcept {}
+
+  void LID::Resolve(const type::Manager &typeManager) noexcept {}
+
+  void Int::Resolve(const type::Manager &typeManager) noexcept {}
 
 } // namespace swallow::compiler::ast
