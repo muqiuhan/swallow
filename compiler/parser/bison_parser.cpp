@@ -77,17 +77,17 @@ extern yy::parser::symbol_type yylex();
    the previous symbol: RHS[0] (always defined).  */
 
 #ifndef YYLLOC_DEFAULT
-#define YYLLOC_DEFAULT(Current, Rhs, N)                                        \
-  do                                                                           \
-    if (N)                                                                     \
-      {                                                                        \
-        (Current).begin = YYRHSLOC(Rhs, 1).begin;                              \
-        (Current).end = YYRHSLOC(Rhs, N).end;                                  \
-      }                                                                        \
-    else                                                                       \
-      {                                                                        \
-        (Current).begin = (Current).end = YYRHSLOC(Rhs, 0).end;                \
-      }                                                                        \
+#define YYLLOC_DEFAULT(Current, Rhs, N)                                                  \
+  do                                                                                     \
+    if (N)                                                                               \
+      {                                                                                  \
+        (Current).begin = YYRHSLOC(Rhs, 1).begin;                                        \
+        (Current).end = YYRHSLOC(Rhs, N).end;                                            \
+      }                                                                                  \
+    else                                                                                 \
+      {                                                                                  \
+        (Current).begin = (Current).end = YYRHSLOC(Rhs, 0).end;                          \
+      }                                                                                  \
   while (false)
 #endif
 
@@ -95,39 +95,39 @@ extern yy::parser::symbol_type yylex();
 #if YYDEBUG
 
 // A pseudo ostream that takes yydebug_ into account.
-#define YYCDEBUG                                                               \
-  if (yydebug_)                                                                \
+#define YYCDEBUG                                                                         \
+  if (yydebug_)                                                                          \
   (*yycdebug_)
 
-#define YY_SYMBOL_PRINT(Title, Symbol)                                         \
-  do                                                                           \
-    {                                                                          \
-      if (yydebug_)                                                            \
-        {                                                                      \
-          *yycdebug_ << Title << ' ';                                          \
-          yy_print_(*yycdebug_, Symbol);                                       \
-          *yycdebug_ << '\n';                                                  \
-        }                                                                      \
+#define YY_SYMBOL_PRINT(Title, Symbol)                                                   \
+  do                                                                                     \
+    {                                                                                    \
+      if (yydebug_)                                                                      \
+        {                                                                                \
+          *yycdebug_ << Title << ' ';                                                    \
+          yy_print_(*yycdebug_, Symbol);                                                 \
+          *yycdebug_ << '\n';                                                            \
+        }                                                                                \
   } while (false)
 
-#define YY_REDUCE_PRINT(Rule)                                                  \
-  do                                                                           \
-    {                                                                          \
-      if (yydebug_)                                                            \
-        yy_reduce_print_(Rule);                                                \
+#define YY_REDUCE_PRINT(Rule)                                                            \
+  do                                                                                     \
+    {                                                                                    \
+      if (yydebug_)                                                                      \
+        yy_reduce_print_(Rule);                                                          \
   } while (false)
 
-#define YY_STACK_PRINT()                                                       \
-  do                                                                           \
-    {                                                                          \
-      if (yydebug_)                                                            \
-        yy_stack_print_();                                                     \
+#define YY_STACK_PRINT()                                                                 \
+  do                                                                                     \
+    {                                                                                    \
+      if (yydebug_)                                                                      \
+        yy_stack_print_();                                                               \
   } while (false)
 
 #else // !YYDEBUG
 
-#define YYCDEBUG                                                               \
-  if (false)                                                                   \
+#define YYCDEBUG                                                                         \
+  if (false)                                                                             \
   std::cerr
 #define YY_SYMBOL_PRINT(Title, Symbol) YY_USE(Symbol)
 #define YY_REDUCE_PRINT(Rule)          static_cast<void>(0)
@@ -167,9 +167,7 @@ namespace yy
   // by_state.
   parser::by_state::by_state() YY_NOEXCEPT : state(empty_state) {}
 
-  parser::by_state::by_state(const by_state& that) YY_NOEXCEPT
-    : state(that.state)
-  {}
+  parser::by_state::by_state(const by_state& that) YY_NOEXCEPT : state(that.state) {}
 
   void parser::by_state::clear() YY_NOEXCEPT { state = empty_state; }
 
@@ -236,14 +234,12 @@ namespace yy
         break;
 
       case symbol_kind::S_Constructors: // Constructors
-        value.YY_MOVE_OR_COPY<std::vector<Constructor::Ptr> >(
-          YY_MOVE(that.value));
+        value.YY_MOVE_OR_COPY<std::vector<Constructor::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_Program:     // Program
       case symbol_kind::S_Definitions: // Definitions
-        value.YY_MOVE_OR_COPY<std::vector<Definition::Ptr> >(
-          YY_MOVE(that.value));
+        value.YY_MOVE_OR_COPY<std::vector<Definition::Ptr> >(YY_MOVE(that.value));
         break;
 
       case symbol_kind::S_LowercaseParams: // LowercaseParams
@@ -261,8 +257,7 @@ namespace yy
 #endif
   }
 
-  parser::stack_symbol_type::stack_symbol_type(
-    state_type s, YY_MOVE_REF(symbol_type) that)
+  parser::stack_symbol_type::stack_symbol_type(state_type s, YY_MOVE_REF(symbol_type) that)
     : super_type(s, YY_MOVE(that.location))
   {
     switch (that.kind())
@@ -396,8 +391,7 @@ namespace yy
     return *this;
   }
 
-  parser::stack_symbol_type&
-    parser::stack_symbol_type::operator=(stack_symbol_type& that)
+  parser::stack_symbol_type& parser::stack_symbol_type::operator=(stack_symbol_type& that)
   {
     state = that.state;
     switch (that.kind())
@@ -475,8 +469,7 @@ namespace yy
 
 #if YYDEBUG
   template <typename Base>
-  void
-    parser::yy_print_(std::ostream& yyo, const basic_symbol<Base>& yysym) const
+  void parser::yy_print_(std::ostream& yyo, const basic_symbol<Base>& yysym) const
   {
     std::ostream& yyoutput = yyo;
     YY_USE(yyoutput);
@@ -485,8 +478,8 @@ namespace yy
     else
       {
         symbol_kind_type yykind = yysym.kind();
-        yyo << (yykind < YYNTOKENS ? "token" : "nterm") << ' ' << yysym.name()
-            << " (" << yysym.location << ": ";
+        yyo << (yykind < YYNTOKENS ? "token" : "nterm") << ' ' << yysym.name() << " ("
+            << yysym.location << ": ";
         YY_USE(yykind);
         yyo << ')';
       }
@@ -513,13 +506,13 @@ namespace yy
   void parser::yypop_(int n) YY_NOEXCEPT { yystack_.pop(n); }
 
 #if YYDEBUG
-  std::ostream& parser::debug_stream() const { return *yycdebug_; }
+  std::ostream&            parser::debug_stream() const { return *yycdebug_; }
 
-  void          parser::set_debug_stream(std::ostream& o) { yycdebug_ = &o; }
+  void                     parser::set_debug_stream(std::ostream& o) { yycdebug_ = &o; }
 
   parser::debug_level_type parser::debug_level() const { return yydebug_; }
 
-  void parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
+  void                     parser::set_debug_level(debug_level_type l) { yydebug_ = l; }
 #endif // YYDEBUG
 
   parser::state_type parser::yy_lr_goto_state_(state_type yystate, int yysym)
@@ -748,19 +741,19 @@ namespace yy
               switch (yyn)
                 {
                   case 2: // Program: Definitions
-#line 63 "./parser/parser.y"
+#line 64 "./parser/parser.y"
                   {
-                    Program = std::move(
-                      yystack_[0].value.as<std::vector<Definition::Ptr> >());
+                    Program =
+                      std::move(yystack_[0].value.as<std::vector<Definition::Ptr> >());
                   }
 #line 808 "./parser/bison_parser.cpp"
                   break;
 
                   case 3: // Definitions: Definitions Definition
-#line 67 "./parser/parser.y"
+#line 68 "./parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Definition::Ptr> >() = std::move(
-                      yystack_[1].value.as<std::vector<Definition::Ptr> >());
+                    yylhs.value.as<std::vector<Definition::Ptr> >() =
+                      std::move(yystack_[1].value.as<std::vector<Definition::Ptr> >());
                     yylhs.value.as<std::vector<Definition::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Definition::Ptr>()));
                   }
@@ -768,7 +761,7 @@ namespace yy
                   break;
 
                   case 4: // Definitions: Definition
-#line 68 "./parser/parser.y"
+#line 69 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Definition::Ptr> >() =
                       std::vector<Definition::Ptr>();
@@ -779,7 +772,7 @@ namespace yy
                   break;
 
                   case 5: // Definition: Fn
-#line 72 "./parser/parser.y"
+#line 73 "./parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() =
                       std::move(yystack_[0].value.as<Definition::Ptr>());
@@ -788,7 +781,7 @@ namespace yy
                   break;
 
                   case 6: // Definition: Data
-#line 73 "./parser/parser.y"
+#line 74 "./parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() =
                       std::move(yystack_[0].value.as<Definition::Ptr>());
@@ -796,22 +789,21 @@ namespace yy
 #line 832 "./parser/bison_parser.cpp"
                   break;
 
-                  case 7: // Fn: FN LID OPAREN LowercaseParams CPAREN EQUAL
-                          // OCURLY Add CCURLY
-#line 78 "./parser/parser.y"
+                  case 7: // Fn: FN LID OPAREN LowercaseParams CPAREN EQUAL OCURLY Add
+                          // CCURLY
+#line 79 "./parser/parser.y"
                   {
                     yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Fn(
                       yylhs.location,
                       std::move(yystack_[7].value.as<std::string>()),
-                      std::move(
-                        yystack_[5].value.as<std::vector<std::string> >()),
+                      std::move(yystack_[5].value.as<std::vector<std::string> >()),
                       std::move(yystack_[1].value.as<AST::Ptr>())));
                   }
 #line 838 "./parser/bison_parser.cpp"
                   break;
 
                   case 8: // LowercaseParams: %empty
-#line 83 "./parser/parser.y"
+#line 84 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >() =
                       std::vector<std::string>();
@@ -820,7 +812,7 @@ namespace yy
                   break;
 
                   case 9: // LowercaseParams: LID
-#line 84 "./parser/parser.y"
+#line 85 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
@@ -829,10 +821,10 @@ namespace yy
                   break;
 
                   case 10: // LowercaseParams: LowercaseParams COMMA LID
-#line 85 "./parser/parser.y"
+#line 86 "./parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<std::string> >() = std::move(
-                      yystack_[2].value.as<std::vector<std::string> >());
+                    yylhs.value.as<std::vector<std::string> >() =
+                      std::move(yystack_[2].value.as<std::vector<std::string> >());
                     yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
@@ -840,7 +832,7 @@ namespace yy
                   break;
 
                   case 11: // UppercaseParams: %empty
-#line 89 "./parser/parser.y"
+#line 90 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<std::string> >() =
                       std::vector<std::string>();
@@ -849,10 +841,10 @@ namespace yy
                   break;
 
                   case 12: // UppercaseParams: UppercaseParams UID
-#line 90 "./parser/parser.y"
+#line 91 "./parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<std::string> >() = std::move(
-                      yystack_[1].value.as<std::vector<std::string> >());
+                    yylhs.value.as<std::vector<std::string> >() =
+                      std::move(yystack_[1].value.as<std::vector<std::string> >());
                     yylhs.value.as<std::vector<std::string> >().push_back(
                       std::move(yystack_[0].value.as<std::string>()));
                   }
@@ -860,7 +852,7 @@ namespace yy
                   break;
 
                   case 13: // Add: Add PLUS Mul
-#line 94 "./parser/parser.y"
+#line 95 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Binop(
                       yylhs.location,
@@ -872,7 +864,7 @@ namespace yy
                   break;
 
                   case 14: // Add: Add MINUS Mul
-#line 95 "./parser/parser.y"
+#line 96 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Binop(
                       yylhs.location,
@@ -884,7 +876,7 @@ namespace yy
                   break;
 
                   case 15: // Add: Mul
-#line 96 "./parser/parser.y"
+#line 97 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
@@ -893,7 +885,7 @@ namespace yy
                   break;
 
                   case 16: // Mul: Mul TIMES Application
-#line 100 "./parser/parser.y"
+#line 101 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Binop(
                       yylhs.location,
@@ -905,7 +897,7 @@ namespace yy
                   break;
 
                   case 17: // Mul: Mul DIVIDE Application
-#line 101 "./parser/parser.y"
+#line 102 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Binop(
                       yylhs.location,
@@ -917,7 +909,7 @@ namespace yy
                   break;
 
                   case 18: // Mul: Application
-#line 102 "./parser/parser.y"
+#line 103 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
@@ -926,7 +918,7 @@ namespace yy
                   break;
 
                   case 19: // Application: Application ApplicationBase
-#line 106 "./parser/parser.y"
+#line 107 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Application(
                       yylhs.location,
@@ -937,7 +929,7 @@ namespace yy
                   break;
 
                   case 20: // Application: ApplicationBase
-#line 107 "./parser/parser.y"
+#line 108 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
@@ -946,36 +938,34 @@ namespace yy
                   break;
 
                   case 21: // ApplicationBase: INT
-#line 111 "./parser/parser.y"
+#line 112 "./parser/parser.y"
                   {
-                    yylhs.value.as<AST::Ptr>() = AST::Ptr(
-                      new Int(yylhs.location, yystack_[0].value.as<int>()));
+                    yylhs.value.as<AST::Ptr>() =
+                      AST::Ptr(new Int(yylhs.location, yystack_[0].value.as<int>()));
                   }
 #line 922 "./parser/bison_parser.cpp"
                   break;
 
                   case 22: // ApplicationBase: LID
-#line 112 "./parser/parser.y"
+#line 113 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new LID(
-                      yylhs.location,
-                      std::move(yystack_[0].value.as<std::string>())));
+                      yylhs.location, std::move(yystack_[0].value.as<std::string>())));
                   }
 #line 928 "./parser/bison_parser.cpp"
                   break;
 
                   case 23: // ApplicationBase: UID
-#line 113 "./parser/parser.y"
+#line 114 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new UID(
-                      yylhs.location,
-                      std::move(yystack_[0].value.as<std::string>())));
+                      yylhs.location, std::move(yystack_[0].value.as<std::string>())));
                   }
 #line 934 "./parser/bison_parser.cpp"
                   break;
 
                   case 24: // ApplicationBase: OPAREN Add CPAREN
-#line 114 "./parser/parser.y"
+#line 115 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[1].value.as<AST::Ptr>());
@@ -984,7 +974,7 @@ namespace yy
                   break;
 
                   case 25: // ApplicationBase: Match
-#line 115 "./parser/parser.y"
+#line 116 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() =
                       std::move(yystack_[0].value.as<AST::Ptr>());
@@ -993,22 +983,21 @@ namespace yy
                   break;
 
                   case 26: // Match: MATCH Add WITH OCURLY Branches CCURLY
-#line 120 "./parser/parser.y"
+#line 121 "./parser/parser.y"
                   {
                     yylhs.value.as<AST::Ptr>() = AST::Ptr(new Match(
                       yylhs.location,
                       std::move(yystack_[4].value.as<AST::Ptr>()),
-                      std::move(
-                        yystack_[1].value.as<std::vector<Branch::Ptr> >())));
+                      std::move(yystack_[1].value.as<std::vector<Branch::Ptr> >())));
                   }
 #line 952 "./parser/bison_parser.cpp"
                   break;
 
                   case 27: // Branches: Branches Branch
-#line 124 "./parser/parser.y"
+#line 125 "./parser/parser.y"
                   {
-                    yylhs.value.as<std::vector<Branch::Ptr> >() = std::move(
-                      yystack_[1].value.as<std::vector<Branch::Ptr> >());
+                    yylhs.value.as<std::vector<Branch::Ptr> >() =
+                      std::move(yystack_[1].value.as<std::vector<Branch::Ptr> >());
                     yylhs.value.as<std::vector<Branch::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Branch::Ptr>()));
                   }
@@ -1016,7 +1005,7 @@ namespace yy
                   break;
 
                   case 28: // Branches: Branch
-#line 125 "./parser/parser.y"
+#line 126 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Branch::Ptr> >() =
                       std::vector<Branch::Ptr>();
@@ -1026,9 +1015,8 @@ namespace yy
 #line 964 "./parser/bison_parser.cpp"
                   break;
 
-                  case 29: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add
-                           // CCURLY
-#line 130 "./parser/parser.y"
+                  case 29: // Branch: VERTIAL Pattern DOUBLEARROW OCURLY Add CCURLY
+#line 131 "./parser/parser.y"
                   {
                     yylhs.value.as<Branch::Ptr>() = Branch::Ptr(new Branch(
                       yylhs.location,
@@ -1039,62 +1027,52 @@ namespace yy
                   break;
 
                   case 30: // Pattern: LID
-#line 134 "./parser/parser.y"
+#line 135 "./parser/parser.y"
                   {
-                    yylhs.value.as<Pattern::Ptr>() =
-                      Pattern::Ptr(new VariablePattern(
-                        yylhs.location,
-                        std::move(yystack_[0].value.as<std::string>())));
+                    yylhs.value.as<Pattern::Ptr>() = Pattern::Ptr(new VariablePattern(
+                      yylhs.location, std::move(yystack_[0].value.as<std::string>())));
                   }
 #line 976 "./parser/bison_parser.cpp"
                   break;
 
                   case 31: // Pattern: UID
-#line 135 "./parser/parser.y"
+#line 136 "./parser/parser.y"
                   {
-                    yylhs.value.as<Pattern::Ptr>() =
-                      Pattern::Ptr(new ConstructorPattern(
-                        yylhs.location,
-                        std::move(yystack_[0].value.as<std::string>()),
-                        std::vector<std::string>()));
+                    yylhs.value.as<Pattern::Ptr>() = Pattern::Ptr(new ConstructorPattern(
+                      yylhs.location,
+                      std::move(yystack_[0].value.as<std::string>()),
+                      std::vector<std::string>()));
                   }
 #line 982 "./parser/bison_parser.cpp"
                   break;
 
                   case 32: // Pattern: UID OPAREN LowercaseParams CPAREN
-#line 137 "./parser/parser.y"
+#line 138 "./parser/parser.y"
                   {
-                    yylhs.value.as<Pattern::Ptr>() =
-                      Pattern::Ptr(new ConstructorPattern(
-                        yylhs.location,
-                        std::move(yystack_[3].value.as<std::string>()),
-                        std::move(
-                          yystack_[1].value.as<std::vector<std::string> >())));
+                    yylhs.value.as<Pattern::Ptr>() = Pattern::Ptr(new ConstructorPattern(
+                      yylhs.location,
+                      std::move(yystack_[3].value.as<std::string>()),
+                      std::move(yystack_[1].value.as<std::vector<std::string> >())));
                   }
 #line 988 "./parser/bison_parser.cpp"
                   break;
 
-                  case 33: // Data: DATA UID EQUAL OBRACKET Constructors
-                           // CBRACKET
-#line 142 "./parser/parser.y"
+                  case 33: // Data: DATA UID EQUAL OBRACKET Constructors CBRACKET
+#line 143 "./parser/parser.y"
                   {
-                    yylhs.value.as<Definition::Ptr>() =
-                      Definition::Ptr(new Data(
-                        yylhs.location,
-                        std::move(yystack_[4].value.as<std::string>()),
-                        std::move(
-                          yystack_[1]
-                            .value.as<std::vector<Constructor::Ptr> >())));
+                    yylhs.value.as<Definition::Ptr>() = Definition::Ptr(new Data(
+                      yylhs.location,
+                      std::move(yystack_[4].value.as<std::string>()),
+                      std::move(yystack_[1].value.as<std::vector<Constructor::Ptr> >())));
                   }
 #line 994 "./parser/bison_parser.cpp"
                   break;
 
                   case 34: // Constructors: Constructors COMMA Constructor
-#line 146 "./parser/parser.y"
+#line 147 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Constructor::Ptr> >() =
-                      std::move(
-                        yystack_[2].value.as<std::vector<Constructor::Ptr> >());
+                      std::move(yystack_[2].value.as<std::vector<Constructor::Ptr> >());
                     yylhs.value.as<std::vector<Constructor::Ptr> >().push_back(
                       std::move(yystack_[0].value.as<Constructor::Ptr>()));
                   }
@@ -1102,7 +1080,7 @@ namespace yy
                   break;
 
                   case 35: // Constructors: Constructor
-#line 148 "./parser/parser.y"
+#line 149 "./parser/parser.y"
                   {
                     yylhs.value.as<std::vector<Constructor::Ptr> >() =
                       std::vector<Constructor::Ptr>();
@@ -1113,14 +1091,12 @@ namespace yy
                   break;
 
                   case 36: // Constructor: UID UppercaseParams
-#line 153 "./parser/parser.y"
+#line 154 "./parser/parser.y"
                   {
-                    yylhs.value.as<Constructor::Ptr>() =
-                      Constructor::Ptr(new Constructor(
-                        yylhs.location,
-                        std::move(yystack_[1].value.as<std::string>()),
-                        std::move(
-                          yystack_[0].value.as<std::vector<std::string> >())));
+                    yylhs.value.as<Constructor::Ptr>() = Constructor::Ptr(new Constructor(
+                      yylhs.location,
+                      std::move(yystack_[1].value.as<std::string>()),
+                      std::move(yystack_[0].value.as<std::vector<std::string> >())));
                   }
 #line 1012 "./parser/bison_parser.cpp"
                   break;
@@ -1176,8 +1152,7 @@ namespace yy
               }
           }
 
-        // Else will try to reuse lookahead token after shifting the error
-        // token.
+        // Else will try to reuse lookahead token after shifting the error token.
         goto yyerrlab1;
 
       /*---------------------------------------------------.
@@ -1208,9 +1183,7 @@ namespace yy
             if (!yy_pact_value_is_default_(yyn))
               {
                 yyn += symbol_kind::S_YYerror;
-                if (
-                  0 <= yyn && yyn <= yylast_
-                  && yycheck_[yyn] == symbol_kind::S_YYerror)
+                if (0 <= yyn && yyn <= yylast_ && yycheck_[yyn] == symbol_kind::S_YYerror)
                   {
                     yyn = yytable_[yyn];
                     if (0 < yyn)
@@ -1291,10 +1264,7 @@ namespace yy
 #endif // YY_EXCEPTIONS
   }
 
-  void parser::error(const syntax_error& yyexc)
-  {
-    error(yyexc.location, yyexc.what());
-  }
+  void parser::error(const syntax_error& yyexc) { error(yyexc.location, yyexc.what()); }
 
 #if YYDEBUG || 0
   const char* parser::symbol_name(symbol_kind_type yysymbol)
@@ -1308,11 +1278,10 @@ namespace yy
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char parser::yypact_[] = {
-    28,  -20, -16, 15, 28, -32, -32, -32, 16, 11,  -32, -32, 20, 30,
-    -32, -1,  23,  29, 27, -32, 22,  -32, 26, -32, 31,  -32, 23, -5,
-    -32, -32, -32, -5, -5, -32, -32, 7,   25, -5,  -32, -32, 21, 1,
-    -5,  -5,  -32, -5, -5, -32, 40,  -32, 25, 25,  -5,  -5,  33, 18,
-    14,  -32, -32, 42, 36, -32, -32, 20,  46, 10,  -5,  -32, 8,  -32};
+    28, -21, 0,   29,  28,  -32, -32, -32, 19,  15, -32, -32, 7,   27,  -32, -3,  25,  23,
+    30, -32, 22,  -32, 35,  -32, 26,  -32, 25,  -5, -32, -32, -32, -5,  -5,  -32, -32, 5,
+    24, -5,  -32, -32, 21,  1,   -5,  -5,  -32, -5, -5,  -32, 40,  -32, 24,  24,  -5,  -5,
+    33, 17,  14,  -32, -32, 41,  34,  -32, -32, 7,  45,  -1,  -5,  -32, 8,   -32};
 
   const signed char parser::yydefact_[] = {
     0,  0,  0,  0,  2,  4,  5,  6,  0,  0, 1,  3,  8,  0,  9,  0,  0,  0,
@@ -1321,49 +1290,30 @@ namespace yy
     0,  0,  0,  28, 30, 31, 0,  26, 27, 8, 0,  0,  0,  32, 0,  29};
 
   const signed char parser::yypgoto_[] = {
-    -32,
-    -32,
-    -32,
-    50,
-    -32,
-    -4,
-    -32,
-    -31,
-    2,
-    3,
-    -30,
-    -32,
-    -32,
-    4,
-    -32,
-    -32,
-    -32,
-    35};
+    -32, -32, -32, 54, -32, -4, -32, -31, 2, 3, -30, -32, -32, 4, -32, -32, -32, 36};
 
   const signed char parser::yydefgoto_[] = {
     0, 3, 4, 5, 6, 15, 24, 35, 36, 37, 38, 39, 56, 57, 60, 7, 20, 21};
 
   const signed char parser::yytable_[] = {
-    40, 41, 30, 8,  42, 31, 43, 47, 9,  32, 42, 42, 43, 43, 17, 10,
-    49, 18, 33, 34, 44, 69, 47, 47, 42, 67, 43, 61, 18, 45, 12, 46,
-    48, 13, 55, 68, 1,  2,  27, 25, 26, 58, 59, 14, 50, 51, 16, 19,
-    52, 53, 23, 22, 54, 55, 11, 28, 63, 64, 66, 65, 62, 29};
+    40, 41, 30, 8,  42, 31, 43, 47, 42, 32, 43, 42, 17, 43, 67, 18, 49, 18, 44, 33, 34,
+    69, 47, 47, 42, 9,  43, 61, 45, 10, 46, 14, 48, 12, 55, 68, 1,  2,  13, 25, 26, 58,
+    59, 16, 50, 51, 22, 27, 52, 53, 19, 28, 54, 55, 23, 63, 64, 66, 11, 65, 62, 0,  29};
 
   const signed char parser::yycheck_[] = {
-    31, 32, 7,  23, 3,  10, 5,  37, 24, 14, 3,  3,  5,  5,  15, 0,
-    15, 18, 23, 24, 13, 13, 52, 53, 3,  15, 5,  13, 18, 4,  14, 6,
-    11, 22, 20, 66, 8,  9,  12, 17, 18, 23, 24, 23, 42, 43, 16, 24,
-    45, 46, 23, 22, 12, 20, 4,  24, 14, 21, 12, 63, 56, 26};
+    31, 32, 7,  24, 3,  10, 5,  37, 3,  14, 5,  3,  15, 5,  15, 18, 15, 18, 13, 24, 25,
+    13, 52, 53, 3,  25, 5,  13, 4,  0,  6,  24, 11, 14, 20, 66, 8,  9,  23, 17, 18, 24,
+    25, 16, 42, 43, 23, 12, 45, 46, 25, 25, 12, 20, 24, 14, 22, 12, 4,  63, 56, -1, 26};
 
   const signed char parser::yystos_[] = {
-    0,  8,  9,  26, 27, 28, 29, 40, 23, 24, 0,  28, 14, 22, 23, 30, 16, 15,
-    18, 24, 41, 42, 22, 23, 31, 17, 18, 12, 24, 42, 7,  10, 14, 23, 24, 32,
-    33, 34, 35, 36, 32, 32, 3,  5,  13, 4,  6,  35, 11, 15, 33, 33, 34, 34,
-    12, 20, 37, 38, 23, 24, 39, 13, 38, 14, 21, 30, 12, 15, 32, 13};
+    0,  8,  9,  27, 28, 29, 30, 41, 24, 25, 0,  29, 14, 23, 24, 31, 16, 15,
+    18, 25, 42, 43, 23, 24, 32, 17, 18, 12, 25, 43, 7,  10, 14, 24, 25, 33,
+    34, 35, 36, 37, 33, 33, 3,  5,  13, 4,  6,  36, 11, 15, 34, 34, 35, 35,
+    12, 20, 38, 39, 24, 25, 40, 13, 39, 14, 22, 31, 12, 15, 33, 13};
 
-  const signed char parser::yyr1_[] = {
-    0,  25, 26, 27, 27, 28, 28, 29, 30, 30, 30, 31, 31, 32, 32, 32, 33, 33, 33,
-    34, 34, 35, 35, 35, 35, 35, 36, 37, 37, 38, 39, 39, 39, 40, 41, 41, 42};
+  const signed char parser::yyr1_[] = {0,  26, 27, 28, 28, 29, 29, 30, 31, 31, 31, 32, 32,
+                                       33, 33, 33, 34, 34, 34, 35, 35, 36, 36, 36, 36, 36,
+                                       37, 38, 38, 39, 40, 40, 40, 41, 42, 42, 43};
 
   const signed char parser::yyr2_[] = {0, 2, 1, 2, 1, 1, 1, 9, 0, 1, 3, 0, 2,
                                        3, 3, 1, 3, 3, 1, 2, 1, 1, 1, 1, 3, 1,
@@ -1394,6 +1344,7 @@ namespace yy
     "COMMA",
     "ARROW",
     "VERTIAL",
+    "SEMICOLON",
     "DOUBLEARROW",
     "EQUAL",
     "LID",
@@ -1421,15 +1372,14 @@ namespace yy
 
 #if YYDEBUG
   const unsigned char parser::yyrline_[] = {
-    0,   63,  63,  67,  68,  72,  73,  77,  83,  84,  85,  89,  90,
-    94,  95,  96,  100, 101, 102, 106, 107, 111, 112, 113, 114, 115,
-    119, 124, 125, 129, 134, 135, 136, 141, 146, 147, 152};
+    0,   64,  64,  68,  69,  73,  74,  78,  84,  85,  86,  90,  91,
+    95,  96,  97,  101, 102, 103, 107, 108, 112, 113, 114, 115, 116,
+    120, 125, 126, 130, 135, 136, 137, 142, 147, 148, 153};
 
   void parser::yy_stack_print_() const
   {
     *yycdebug_ << "Stack now";
-    for (stack_type::const_iterator i = yystack_.begin(),
-                                    i_end = yystack_.end();
+    for (stack_type::const_iterator i = yystack_.begin(), i_end = yystack_.end();
          i != i_end;
          ++i)
       *yycdebug_ << ' ' << int(i->state);
@@ -1441,15 +1391,13 @@ namespace yy
     int yylno = yyrline_[yyrule];
     int yynrhs = yyr2_[yyrule];
     // Print the symbols being reduced, and their result.
-    *yycdebug_ << "Reducing stack by rule " << yyrule - 1 << " (line " << yylno
-               << "):\n";
+    *yycdebug_ << "Reducing stack by rule " << yyrule - 1 << " (line " << yylno << "):\n";
     // The symbols being reduced.
     for (int yyi = 0; yyi < yynrhs; yyi++)
-      YY_SYMBOL_PRINT(
-        "   $" << yyi + 1 << " =", yystack_[(yynrhs) - (yyi + 1)]);
+      YY_SYMBOL_PRINT("   $" << yyi + 1 << " =", yystack_[(yynrhs) - (yyi + 1)]);
   }
 #endif // YYDEBUG
 
 } // namespace yy
 
-#line 1362 "./parser/bison_parser.cpp"
+#line 1363 "./parser/bison_parser.cpp"

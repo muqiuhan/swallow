@@ -59,8 +59,7 @@ namespace swallow::compiler::type
     return Type::Ptr(new Arrow(NewType(), NewType()));
   }
 
-  auto
-    Manager::Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr
+  auto Manager::Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr
   {
     Variable *cast = nullptr;
     var = nullptr;
@@ -79,8 +78,7 @@ namespace swallow::compiler::type
     return type;
   }
 
-  auto Manager::Unify(Type::Ptr left, Type::Ptr right) noexcept
-    -> Result<Void, Void>
+  auto Manager::Unify(Type::Ptr left, Type::Ptr right) noexcept -> Result<Void, Void>
   {
     Variable *leftVar = nullptr;
     Variable *rightVar = nullptr;
@@ -104,8 +102,7 @@ namespace swallow::compiler::type
         *rightArrow = dynamic_cast<Arrow *>(right.get());
         leftArrow != nullptr && rightArrow != nullptr)
       {
-        return Unify(leftArrow->Left, rightArrow->Left)
-          .and_then([&](const auto &ok) {
+        return Unify(leftArrow->Left, rightArrow->Left).and_then([&](const auto &ok) {
           return Unify(leftArrow->Right, rightArrow->Right);
         });
       }

@@ -1,4 +1,4 @@
-data List = [ Nil; Cons Int List ]
+data List = [ Nil, Cons Int List ]
 
 let length(l) = {
     match l with {

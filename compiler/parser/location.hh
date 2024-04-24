@@ -73,8 +73,7 @@ namespace yy
     {}
 
     /// Initialization.
-    void initialize(
-      filename_type* fn = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    void initialize(filename_type* fn = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
     {
       filename = fn;
       line = l;
@@ -94,7 +93,7 @@ namespace yy
     }
 
     /// (column related) Advance to the COUNT next columns.
-    void columns(counter_type count = 1) { column = add_(column, count, 1); }
+    void           columns(counter_type count = 1) { column = add_(column, count, 1); }
 
     /** \} */
 
@@ -107,8 +106,7 @@ namespace yy
 
   private:
     /// Compute max (min, lhs+rhs).
-    static counter_type
-      add_(counter_type lhs, counter_type rhs, counter_type min)
+    static counter_type add_(counter_type lhs, counter_type rhs, counter_type min)
     {
       return lhs + rhs < min ? min : lhs + rhs;
     }
@@ -173,8 +171,7 @@ namespace yy
     {}
 
     /// Initialization.
-    void initialize(
-      filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    void initialize(filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
     {
       begin.initialize(f, l, c);
       end = begin;
@@ -209,10 +206,7 @@ namespace yy
   }
 
   /// Join two locations.
-  inline location operator+(location res, const location& end)
-  {
-    return res += end;
-  }
+  inline location  operator+(location res, const location& end) { return res += end; }
 
   /// Add \a width columns to the end position, in place.
   inline location& operator+=(location& res, location::counter_type width)
@@ -249,12 +243,9 @@ namespace yy
   std::basic_ostream<YYChar>&
     operator<<(std::basic_ostream<YYChar>& ostr, const location& loc)
   {
-    location::counter_type end_col =
-      0 < loc.end.column ? loc.end.column - 1 : 0;
+    location::counter_type end_col = 0 < loc.end.column ? loc.end.column - 1 : 0;
     ostr << loc.begin;
-    if (
-      loc.end.filename
-      && (!loc.begin.filename || *loc.begin.filename != *loc.end.filename))
+    if (loc.end.filename && (!loc.begin.filename || *loc.begin.filename != *loc.end.filename))
       ostr << '-' << loc.end.filename << ':' << loc.end.line << '.' << end_col;
     else if (loc.begin.line < loc.end.line)
       ostr << '-' << loc.end.line << '.' << end_col;
