@@ -34,6 +34,7 @@ extern yy::parser::symbol_type yylex();
 %token COMMA
 %token ARROW
 %token VERTIAL
+%token SEMICOLON
 %token DOUBLEARROW
 %token EQUAL
 %token <std::string> LID

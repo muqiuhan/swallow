@@ -34,6 +34,7 @@ with    { return yy::parser::make_WITH(LOC); }
 \[      { return yy::parser::make_OBRACKET(LOC); }
 \]      { return yy::parser::make_CBRACKET(LOC); }
 ,       { return yy::parser::make_COMMA(LOC); }
+;       { return yy::parser::make_SEMICOLON(LOC); }
 ->      { return yy::parser::make_ARROW(LOC); }
 \|      { return yy::parser::make_VERTIAL(LOC); }
 =>      { return yy::parser::make_DOUBLEARROW(LOC); }

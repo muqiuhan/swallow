@@ -293,7 +293,7 @@ namespace yy
       /// Non copyable.
       value_type(const self_type&);
       /// Non copyable.
-      self_type&               operator=(const self_type&);
+      self_type& operator=(const self_type&);
 #endif
 
       /// Accessor to raw memory as \a T.
@@ -422,10 +422,11 @@ namespace yy
         COMMA = 273,       // COMMA
         ARROW = 274,       // ARROW
         VERTIAL = 275,     // VERTIAL
-        DOUBLEARROW = 276, // DOUBLEARROW
-        EQUAL = 277,       // EQUAL
-        LID = 278,         // LID
-        UID = 279          // UID
+        SEMICOLON = 276,   // SEMICOLON
+        DOUBLEARROW = 277, // DOUBLEARROW
+        EQUAL = 278,       // EQUAL
+        LID = 279,         // LID
+        UID = 280          // UID
       };
 
       /// Backward compatibility alias (Bison 3.6).
@@ -443,7 +444,7 @@ namespace yy
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 25, ///< Number of tokens.
+        YYNTOKENS = 26, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,            // "end of file"
         S_YYerror = 1,          // error
@@ -466,28 +467,29 @@ namespace yy
         S_COMMA = 18,           // COMMA
         S_ARROW = 19,           // ARROW
         S_VERTIAL = 20,         // VERTIAL
-        S_DOUBLEARROW = 21,     // DOUBLEARROW
-        S_EQUAL = 22,           // EQUAL
-        S_LID = 23,             // LID
-        S_UID = 24,             // UID
-        S_YYACCEPT = 25,        // $accept
-        S_Program = 26,         // Program
-        S_Definitions = 27,     // Definitions
-        S_Definition = 28,      // Definition
-        S_Fn = 29,              // Fn
-        S_LowercaseParams = 30, // LowercaseParams
-        S_UppercaseParams = 31, // UppercaseParams
-        S_Add = 32,             // Add
-        S_Mul = 33,             // Mul
-        S_Application = 34,     // Application
-        S_ApplicationBase = 35, // ApplicationBase
-        S_Match = 36,           // Match
-        S_Branches = 37,        // Branches
-        S_Branch = 38,          // Branch
-        S_Pattern = 39,         // Pattern
-        S_Data = 40,            // Data
-        S_Constructors = 41,    // Constructors
-        S_Constructor = 42      // Constructor
+        S_SEMICOLON = 21,       // SEMICOLON
+        S_DOUBLEARROW = 22,     // DOUBLEARROW
+        S_EQUAL = 23,           // EQUAL
+        S_LID = 24,             // LID
+        S_UID = 25,             // UID
+        S_YYACCEPT = 26,        // $accept
+        S_Program = 27,         // Program
+        S_Definitions = 28,     // Definitions
+        S_Definition = 29,      // Definition
+        S_Fn = 30,              // Fn
+        S_LowercaseParams = 31, // LowercaseParams
+        S_UppercaseParams = 32, // UppercaseParams
+        S_Add = 33,             // Add
+        S_Mul = 34,             // Mul
+        S_Application = 35,     // Application
+        S_ApplicationBase = 36, // ApplicationBase
+        S_Match = 37,           // Match
+        S_Branches = 38,        // Branches
+        S_Branch = 39,          // Branch
+        S_Pattern = 40,         // Pattern
+        S_Data = 41,            // Data
+        S_Constructors = 42,    // Constructors
+        S_Constructor = 43      // Constructor
       };
     };
 
@@ -1184,6 +1186,17 @@ namespace yy
     }
 #endif
 #if 201103L <= YY_CPLUSPLUS
+    static symbol_type make_SEMICOLON(location_type l)
+    {
+      return symbol_type(token::SEMICOLON, std::move(l));
+    }
+#else
+    static symbol_type make_SEMICOLON(const location_type& l)
+    {
+      return symbol_type(token::SEMICOLON, l);
+    }
+#endif
+#if 201103L <= YY_CPLUSPLUS
     static symbol_type make_DOUBLEARROW(location_type l)
     {
       return symbol_type(token::DOUBLEARROW, std::move(l));
@@ -1295,8 +1308,7 @@ namespace yy
     // YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.
     static const signed char yyr1_[];
 
-    // YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule
-    // RULE-NUM.
+    // YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.
     static const signed char yyr2_[];
 
 #if YYDEBUG
@@ -1372,7 +1384,7 @@ namespace yy
       /// Construct an empty symbol.
       stack_symbol_type();
       /// Move or copy construction.
-      stack_symbol_type(YY_RVREF(stack_symbol_type) that) noexcept;
+      stack_symbol_type(YY_RVREF(stack_symbol_type) that);
       /// Steal the contents from \a sym to build this.
       stack_symbol_type(state_type s, YY_MOVE_REF(symbol_type) sym);
 #if YY_CPLUSPLUS < 201103L
@@ -1496,7 +1508,7 @@ namespace yy
     /// Constants.
     enum
     {
-      yylast_ = 61, ///< Last index in yytable_.
+      yylast_ = 62, ///< Last index in yytable_.
       yynnts_ = 18, ///< Number of nonterminal symbols.
       yyfinal_ = 10 ///< Termination state number.
     };
@@ -1507,21 +1519,21 @@ namespace yy
     // YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to
     // TOKEN-NUM as returned by yylex.
     static const signed char translate_table[] = {
-      0, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2, 2,
-      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  1,  2, 3, 4, 5, 6, 7, 8,
-      9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+      0, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 2, 2, 2, 2, 2,
+      2, 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  1,  2,  3, 4, 5, 6, 7, 8,
+      9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
     // Last valid token kind.
-    const int code_max = 279;
+    const int code_max = 280;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -1707,6 +1719,6 @@ namespace yy
 
 } // namespace yy
 
-#line 2018 "./parser/bison_parser.hpp"
+#line 2036 "./parser/bison_parser.hpp"
 
 #endif // !YY_YY_PARSER_BISON_PARSER_HPP_INCLUDED
