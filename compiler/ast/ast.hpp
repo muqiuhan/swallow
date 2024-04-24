@@ -37,6 +37,7 @@
 #include "result/result.hpp"
 #include "type/environment.hpp"
 #include "type/type.hpp"
+#include "compiler.h"
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -379,12 +380,16 @@ namespace swallow::compiler::ast
 
 namespace swallow::compiler::type
 {
-  void TypeCheck(const std::vector<ast::Definition::Ptr> &program) noexcept;
+  void TypeCheck(
+    const std::vector<ast::Definition::Ptr> &program,
+    const CompilerOptions                   &options) noexcept;
 } // namespace swallow::compiler::type
 
 namespace swallow::compiler::gmachine
 {
-  void Compile(const std::vector<ast::Definition::Ptr> &program) noexcept;
+  void Compile(
+    const std::vector<ast::Definition::Ptr> &program,
+    const CompilerOptions                   &options) noexcept;
 }
 
 #endif

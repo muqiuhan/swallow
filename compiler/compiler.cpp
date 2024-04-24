@@ -30,21 +30,33 @@
 #include "compiler.h"
 #include "ast/ast.hpp"
 #include "parser.h"
-
 #include "diagnostics/reporter.hpp"
+#include <chrono>
 
 using namespace swallow::compiler;
 
-auto main(int argc, char **argv) -> int
+namespace swallow::compiler
 {
-  CompileUnit::FILE = new CompileUnit(argv[1]);
-  diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 
-  auto &program = parser::Parse();
-  type::TypeCheck(program);
-  gmachine::Compile(program);
+  auto Compiler(const CompilerOptions &options) noexcept -> int
+  {
+    CompileUnit::FILE = new CompileUnit(options.file);
+    diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 
-  delete CompileUnit::FILE;
-  delete diagnostics::Reporter::REPORTER;
-  return 0;
-}
+    const auto start = std::chrono::system_clock::now();
+    auto      &program = parser::Parse();
+    type::TypeCheck(program, options);
+    gmachine::Compile(program, options);
+    const auto end = std::chrono::system_clock::now();
+
+    std::cout
+      << "compiling " << options.file << " ..."
+      << double(
+           std::chrono::duration_cast<std::chrono::microseconds>(end - start).count())
+      << "ms\n";
+
+    delete CompileUnit::FILE;
+    delete diagnostics::Reporter::REPORTER;
+    return 0;
+  }
+} // namespace swallow::compiler

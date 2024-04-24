@@ -75,7 +75,9 @@ namespace swallow::compiler::ast
 
 namespace swallow::compiler::type
 {
-  void TypeCheck(const std::vector<ast::Definition::Ptr> &program) noexcept
+  void TypeCheck(
+    const std::vector<ast::Definition::Ptr> &program,
+    const CompilerOptions                   &options) noexcept
   {
     Manager     typeManager;
     Environment typeEnvironment;
@@ -98,13 +100,16 @@ namespace swallow::compiler::type
     for (const auto &definition : program)
       definition->Resolve(typeManager);
 
-    // typeEnvironment.Dump(std::cout, typeManager);
+    if (options.dump_types.has_value())
+      typeEnvironment.Dump(std::cout, typeManager);
   }
 } // namespace swallow::compiler::type
 
 namespace swallow::compiler::gmachine
 {
-  void Compile(const std::vector<ast::Definition::Ptr> &program) noexcept
+  void Compile(
+    const std::vector<ast::Definition::Ptr> &program,
+    const CompilerOptions                   &options) noexcept
   {
     for (const auto &definition : program)
       {
@@ -114,8 +119,9 @@ namespace swallow::compiler::gmachine
         if (nullptr == fn)
           continue;
 
-        for (const auto &instruction : fn->Instructions)
-          instruction->Dump(0, std::cout);
+        if (options.dump_gmachine_ir.has_value())
+          for (const auto &instruction : fn->Instructions)
+            instruction->Dump(0, std::cout);
       }
   }
 } // namespace swallow::compiler::gmachine
