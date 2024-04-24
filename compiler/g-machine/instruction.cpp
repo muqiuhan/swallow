@@ -48,10 +48,7 @@ namespace swallow::compiler::gmachine::instruction
     to << std::format("Pack\t\tTag = {}, Size = {}\n", Tag, Size);
   }
 
-  void Split::Dump(uint8_t indent, std::ostream& to) const noexcept
-  {
-    to << "Split\n";
-  }
+  void Split::Dump(uint8_t indent, std::ostream& to) const noexcept { to << "Split\n"; }
 
   void Slide::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
@@ -60,8 +57,7 @@ namespace swallow::compiler::gmachine::instruction
 
   void Binop::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
-    to << std::format(
-      "Binop\t\tOperator = {}\n", ast::Binop::OperatorToString(Operator));
+    to << std::format("Binop\t\tOperator = {}\n", ast::Binop::OperatorToString(Operator));
   }
 
   void Allocation::Dump(uint8_t indent, std::ostream& to) const noexcept
@@ -69,10 +65,7 @@ namespace swallow::compiler::gmachine::instruction
     to << std::format("Allocation\t\tAmount = {}\n", Amount);
   }
 
-  void Unwind::Dump(uint8_t indent, std::ostream& to) const noexcept
-  {
-    to << "Unwind";
-  }
+  void Unwind::Dump(uint8_t indent, std::ostream& to) const noexcept { to << "Unwind"; }
 
   void Jump::Dump(uint8_t indent, std::ostream& to) const noexcept
   {
@@ -80,10 +73,9 @@ namespace swallow::compiler::gmachine::instruction
 
     for (const auto& branch : Branches)
       {
-        std::for_each(
-          branch.begin(), branch.end(), [&](const auto& instruction) {
-            instruction->Dump(2, to);
-          });
+        std::for_each(branch.begin(), branch.end(), [&](const auto& instruction) {
+          instruction->Dump(2, to);
+        });
       }
   }
 
@@ -102,10 +94,7 @@ namespace swallow::compiler::gmachine::instruction
     to << std::format("Push\t\tOffset = {}\n", Offset);
   }
 
-  void Eval::Dump(uint8_t indent, std::ostream& to) const noexcept
-  {
-    to << "Eval\n";
-  }
+  void Eval::Dump(uint8_t indent, std::ostream& to) const noexcept { to << "Eval\n"; }
 
   void Update::Dump(uint8_t indent, std::ostream& to) const noexcept
   {

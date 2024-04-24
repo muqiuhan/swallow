@@ -42,8 +42,7 @@ namespace swallow::compiler::utils
     template <class T>
     consteval PanicFormat(
 
-      const T             &s,
-      std::source_location loc = std::source_location::current()) noexcept
+      const T &s, std::source_location loc = std::source_location::current()) noexcept
       : fmt{s}, loc{loc}
     {}
 
@@ -52,8 +51,8 @@ namespace swallow::compiler::utils
   };
 
   template <class... Args>
-  [[noreturn]] void Panic(
-    PanicFormat<std::type_identity_t<Args>...> fmt, Args &&...args) noexcept
+  [[noreturn]] void
+    Panic(PanicFormat<std::type_identity_t<Args>...> fmt, Args &&...args) noexcept
   {
     auto msg = std::format(
       "{}:{} Panic: {}\n",

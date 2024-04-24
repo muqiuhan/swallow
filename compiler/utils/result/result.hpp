@@ -92,10 +92,7 @@ namespace swallow::compiler::utils
         || (is_err() && rhs.is_err() && unwrap_err() == rhs.unwrap_err()));
     }
 
-    auto operator!=(const Result<T, E> &rhs) const -> bool
-    {
-      return !(*this == rhs);
-    }
+    auto operator!=(const Result<T, E> &rhs) const -> bool { return !(*this == rhs); }
 
     // Returns true if the result is Ok.
     [[nodiscard]] auto is_ok() const -> bool
@@ -134,8 +131,7 @@ namespace swallow::compiler::utils
     }
 
     // Synonymous with Result.and_(res)
-    template <typename U>
-    auto operator&&(const Result<U, E> &res) -> Result<U, E>
+    template <typename U> auto operator&&(const Result<U, E> &res) -> Result<U, E>
     {
       if (is_ok())
         return res;
@@ -209,12 +205,10 @@ namespace swallow::compiler::utils
     // leaving an Err value untouched.
     //
     // This function can be used to compose the results of two functions.
-    template <typename Function>
-    auto map(Function fn) -> Result<decltype(fn(T())), E>
+    template <typename Function> auto map(Function fn) -> Result<decltype(fn(T())), E>
     {
       if (is_ok())
-        return Result<decltype(fn(T())), E>(
-          Ok<decltype(fn(T()))>(fn(unwrap())));
+        return Result<decltype(fn(T())), E>(Ok<decltype(fn(T()))>(fn(unwrap())));
       return Result<decltype(fn(T())), E>(Err<E>(unwrap_err()));
     }
 
@@ -234,8 +228,7 @@ namespace swallow::compiler::utils
     // This function can be used to unpack a successful result while handling an
     // error.
     template <typename ErrorFunction, typename OkFunction>
-    auto map_or_else(ErrorFunction err_fn, OkFunction ok_fn)
-      -> decltype(ok_fn(T()))
+    auto map_or_else(ErrorFunction err_fn, OkFunction ok_fn) -> decltype(ok_fn(T()))
     {
       if (is_ok())
         return ok_fn(unwrap());
@@ -248,12 +241,10 @@ namespace swallow::compiler::utils
     //
     // This function can be used to pass
     // through a successful result while handling an error.
-    template <typename Function>
-    auto map_err(Function fn) -> Result<T, decltype(fn(E()))>
+    template <typename Function> auto map_err(Function fn) -> Result<T, decltype(fn(E()))>
     {
       if (is_err())
-        return Result<T, decltype(fn(E()))>(
-          Err<decltype(fn(E()))>(fn(unwrap_err())));
+        return Result<T, decltype(fn(E()))>(Err<decltype(fn(E()))>(fn(unwrap_err())));
       return Result<T, decltype(fn(E()))>(Ok<T>(unwrap()));
     }
 

@@ -40,14 +40,12 @@ namespace swallow::compiler::gmachine
       return tl::make_optional(0);
 
     if (Parent != nullptr)
-      return Parent->GetOffset(name).map(
-        [](const auto &offset) { return offset + 1; });
+      return Parent->GetOffset(name).map([](const auto &offset) { return offset + 1; });
 
     return tl::nullopt;
   }
 
-  [[nodiscard]] auto
-    Variable::HasVariable(const std::string &name) const noexcept -> bool
+  [[nodiscard]] auto Variable::HasVariable(const std::string &name) const noexcept -> bool
   {
     if (name == Name)
       return true;
@@ -58,8 +56,7 @@ namespace swallow::compiler::gmachine
     return false;
   }
 
-  [[nodiscard]] auto Offset::HasVariable(const std::string &name) const noexcept
-    -> bool
+  [[nodiscard]] auto Offset::HasVariable(const std::string &name) const noexcept -> bool
   {
     if (Parent != nullptr)
       return Parent->HasVariable(name);

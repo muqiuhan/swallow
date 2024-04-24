@@ -35,8 +35,7 @@
 namespace swallow::compiler::parser
 {
 
-  auto Parse() noexcept
-    -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
+  auto Parse() noexcept -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
 
 } // namespace swallow::compiler::parser
 

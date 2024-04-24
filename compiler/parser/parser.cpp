@@ -63,10 +63,7 @@ namespace swallow::compiler::parser
     FILE *file = std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
 
     if (file == nullptr)
-      {
-        utils::Panic(
-          "Cannot open file {}", compiler::CompileUnit::FILE->FilePath);
-      }
+      utils::Panic("Cannot open file {}", compiler::CompileUnit::FILE->FilePath);
 
     yyin = file;
     yy::parser().parse();

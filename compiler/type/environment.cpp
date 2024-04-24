@@ -53,9 +53,6 @@ namespace swallow::compiler::type
     Names[name] = std::move(type);
   }
 
-  auto Environment::Scope() const noexcept -> Environment
-  {
-    return Environment(this);
-  }
+  auto Environment::Scope() const noexcept -> Environment { return Environment(this); }
 
 } // namespace swallow::compiler::type

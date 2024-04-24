@@ -33,8 +33,7 @@
 
 namespace swallow::compiler::type
 {
-  void
-    Variable::Dump(const Manager &typeManager, std::ostream &to) const noexcept
+  void Variable::Dump(const Manager &typeManager, std::ostream &to) const noexcept
   {
     const auto it = typeManager.Types.find(Name);
 
