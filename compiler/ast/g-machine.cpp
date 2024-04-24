@@ -157,12 +157,12 @@ namespace swallow::compiler::ast
   {
     for (const auto &constructorPair : type->Constructors)
       {
-        if (jump->TagMappings.find(constructorPair.second.Tag) != jump->TagMappings.end())
+        if (jump->TagMappings.find(constructorPair.second.Tag) == jump->TagMappings.end())
           {
             diagnostics::Reporter::REPORTER->normal(
               Location,
               "This pattern-matching is not exhaustive",
-              "There may be other patterns",
+              "There may be other possible patterns for this expression",
               "Please try to match all cases",
               diagnostics::MATCH_EXPR_IS_NON_EXHAUSTIVE);
           }
@@ -186,9 +186,7 @@ namespace swallow::compiler::ast
       CompileConstructorPattern(
         jump, type, branch, machineEnvironment, constructorPattern, Location);
     else
-      utils::Panic("WTF");
-
-    CheckCompileResult(jump, type, Location);
+      utils::Panic("ICE: Cannot compile pattern-matching branch");
   }
 
   void Match::Compile(
@@ -219,6 +217,8 @@ namespace swallow::compiler::ast
 
     for (const auto &branch : Branches)
       CompileBranch(branch, jump, type, machineEnvironment, this->With->Location);
+
+    CheckCompileResult(jump, type, Location);
   }
 
   void Fn::Compile() noexcept
