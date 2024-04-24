@@ -57,16 +57,16 @@ namespace swallow::compiler::ast
     virtual ~AST() = default;
 
     auto CommonTypeCheck(
-      type::Manager           &typeManager,
-      const type::Environment &typeEnvironment) noexcept -> type::Type::Ptr;
+      type::Manager &typeManager, const type::Environment &typeEnvironment) noexcept
+      -> type::Type::Ptr;
 
     void         CommonResolve(const type::Manager &typeManager) noexcept;
 
     virtual void Resolve(const type::Manager &typeManager) noexcept = 0;
 
-    virtual auto
-      TypeCheck(type::Manager &typeManager, const type::Environment &typeEnvironment)
-        const noexcept -> utils::Result<type::Type::Ptr, utils::Void> = 0;
+    virtual auto TypeCheck(
+      type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
+      -> utils::Result<type::Type::Ptr, utils::Void> = 0;
 
     virtual void Dump(uint8_t indent, std::ostream &to) const noexcept = 0;
 
