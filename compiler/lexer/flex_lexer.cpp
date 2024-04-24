@@ -120,7 +120,7 @@ typedef unsigned int       flex_uint32_t;
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
-#define YY_START              (((yy_start) -1) / 2)
+#define YY_START              (((yy_start) - 1) / 2)
 #define YYSTATE               YY_START
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state)   (YY_END_OF_BUFFER + state + 1)
@@ -155,7 +155,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 typedef size_t yy_size_t;
 #endif
 
-extern int   yyleng;
+extern int yyleng;
 
 extern FILE *yyin, *yyout;
 
@@ -214,41 +214,41 @@ struct yy_buffer_state
   /* Size of input buffer in bytes, not including room for EOB
    * characters.
    */
-  int   yy_buf_size;
+  int yy_buf_size;
 
   /* Number of characters read into yy_ch_buf, not including EOB
    * characters.
    */
-  int   yy_n_chars;
+  int yy_n_chars;
 
   /* Whether we "own" the buffer - i.e., we know we created it,
    * and can realloc() it to grow it, and should free() it to
    * delete it.
    */
-  int   yy_is_our_buffer;
+  int yy_is_our_buffer;
 
   /* Whether this is an "interactive" input source; if so, and
    * if we're using stdio for input, then we want to use getc()
    * instead of fread(), to make sure we stop fetching input after
    * each newline.
    */
-  int   yy_is_interactive;
+  int yy_is_interactive;
 
   /* Whether we're considered to be at the beginning of a line.
    * If so, '^' rules will be active on the next match, otherwise
    * not.
    */
-  int   yy_at_bol;
+  int yy_at_bol;
 
-  int   yy_bs_lineno; /**< The line count. */
-  int   yy_bs_column; /**< The column count. */
+  int yy_bs_lineno; /**< The line count. */
+  int yy_bs_column; /**< The column count. */
 
   /* Whether to try to fill the input buffer when we reach the
    * end of it.
    */
-  int   yy_fill_buffer;
+  int yy_fill_buffer;
 
-  int   yy_buffer_status;
+  int yy_buffer_status;
 
 #define YY_BUFFER_NEW         0
 #define YY_BUFFER_NORMAL      1
@@ -285,19 +285,19 @@ static YY_BUFFER_STATE *yy_buffer_stack = NULL;  /**< Stack as an array. */
 #define YY_CURRENT_BUFFER_LVALUE (yy_buffer_stack)[(yy_buffer_stack_top)]
 
 /* yy_hold_char holds the character lost when yytext is formed. */
-static char     yy_hold_char;
-static int      yy_n_chars; /* number of characters read into yy_ch_buf */
-int             yyleng;
+static char yy_hold_char;
+static int  yy_n_chars; /* number of characters read into yy_ch_buf */
+int         yyleng;
 
 /* Points to current character in buffer. */
-static char    *yy_c_buf_p = NULL;
-static int      yy_init = 0;  /* whether we need to initialize */
-static int      yy_start = 0; /* start state number */
+static char *yy_c_buf_p = NULL;
+static int   yy_init = 0;  /* whether we need to initialize */
+static int   yy_start = 0; /* start state number */
 
 /* Flag which is used to allow yywrap()'s to do buffer switches
  * instead of setting up a fresh yyin.  A bit of a hack ...
  */
-static int      yy_did_buffer_switch_on_eof;
+static int yy_did_buffer_switch_on_eof;
 
 void            yyrestart(FILE *input_file);
 void            yy_switch_to_buffer(YY_BUFFER_STATE new_buffer);
@@ -307,18 +307,18 @@ void            yy_flush_buffer(YY_BUFFER_STATE b);
 void            yypush_buffer_state(YY_BUFFER_STATE new_buffer);
 void            yypop_buffer_state(void);
 
-static void     yyensure_buffer_stack(void);
-static void     yy_load_buffer_state(void);
-static void     yy_init_buffer(YY_BUFFER_STATE b, FILE *file);
+static void yyensure_buffer_stack(void);
+static void yy_load_buffer_state(void);
+static void yy_init_buffer(YY_BUFFER_STATE b, FILE *file);
 #define YY_FLUSH_BUFFER yy_flush_buffer(YY_CURRENT_BUFFER)
 
 YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size);
 YY_BUFFER_STATE yy_scan_string(const char *yy_str);
 YY_BUFFER_STATE yy_scan_bytes(const char *bytes, int len);
 
-void           *yyalloc(yy_size_t);
-void           *yyrealloc(void *, yy_size_t);
-void            yyfree(void *);
+void *yyalloc(yy_size_t);
+void *yyrealloc(void *, yy_size_t);
+void  yyfree(void *);
 
 #define yy_new_buffer yy_create_buffer
 #define yy_set_interactive(is_interactive)                                               \
@@ -347,14 +347,14 @@ void            yyfree(void *);
 #define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
 
-FILE                *yyin = NULL, *yyout = NULL;
+FILE *yyin = NULL, *yyout = NULL;
 
-typedef int          yy_state_type;
+typedef int yy_state_type;
 
-extern int           yylineno;
-int                  yylineno = 1;
+extern int yylineno;
+int        yylineno = 1;
 
-extern char         *yytext;
+extern char *yytext;
 #ifdef yytext_ptr
 #undef yytext_ptr
 #endif
@@ -390,7 +390,7 @@ static const flex_int16_t yy_accept[46] = {0,  0,  0,  26, 25, 1,  13, 14, 3,  2
                                            11, 20, 12, 1,  19, 6,  21, 24, 23, 23, 23, 23,
                                            23, 23, 7,  23, 23, 8,  23, 10, 9,  0};
 
-static const YY_CHAR      yy_ec[256] = {
+static const YY_CHAR yy_ec[256] = {
   0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  1,  1,  1,  3,  4,
   5,  6,  7,  8,  1,  9,  10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 1,  11, 1,  12, 13,
@@ -407,8 +407,8 @@ static const YY_CHAR      yy_ec[256] = {
   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
   1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1};
 
-static const YY_CHAR      yy_meta[31] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1,
-                                         1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1};
+static const YY_CHAR yy_meta[31] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1,
+                                    1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1};
 
 static const flex_int16_t yy_base[48] = {0,  0,  0,  51, 52, 48, 52, 52, 52, 52, 52, 36,
                                          52, 38, 52, 34, 0,  52, 52, 0,  29, 24, 27, 20,
@@ -440,8 +440,8 @@ static const flex_int32_t yy_rule_can_match_eol[26] = {
 static yy_state_type yy_last_accepting_state;
 static char         *yy_last_accepting_cpos;
 
-extern int           yy_flex_debug;
-int                  yy_flex_debug = 0;
+extern int yy_flex_debug;
+int        yy_flex_debug = 0;
 
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
@@ -482,36 +482,36 @@ static yy::location LOC;
 #define YY_EXTRA_TYPE void *
 #endif
 
-static int    yy_init_globals(void);
+static int yy_init_globals(void);
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
-int           yylex_destroy(void);
+int yylex_destroy(void);
 
-int           yyget_debug(void);
+int yyget_debug(void);
 
-void          yyset_debug(int debug_flag);
+void yyset_debug(int debug_flag);
 
 YY_EXTRA_TYPE yyget_extra(void);
 
-void          yyset_extra(YY_EXTRA_TYPE user_defined);
+void yyset_extra(YY_EXTRA_TYPE user_defined);
 
-FILE         *yyget_in(void);
+FILE *yyget_in(void);
 
-void          yyset_in(FILE *_in_str);
+void yyset_in(FILE *_in_str);
 
-FILE         *yyget_out(void);
+FILE *yyget_out(void);
 
-void          yyset_out(FILE *_out_str);
+void yyset_out(FILE *_out_str);
 
-int           yyget_leng(void);
+int yyget_leng(void);
 
-char         *yyget_text(void);
+char *yyget_text(void);
 
-int           yyget_lineno(void);
+int yyget_lineno(void);
 
-void          yyset_lineno(int _line_number);
+void yyset_lineno(int _line_number);
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -521,7 +521,7 @@ void          yyset_lineno(int _line_number);
 #ifdef __cplusplus
 extern "C" int yywrap(void);
 #else
-extern int                 yywrap(void);
+extern int yywrap(void);
 #endif
 #endif
 
@@ -543,7 +543,7 @@ static int yy_flex_strlen(const char *);
 #ifdef __cplusplus
 static int yyinput(void);
 #else
-static int                 input(void);
+static int input(void);
 #endif
 
 #endif
@@ -1057,8 +1057,8 @@ YY_DECL
           default:
             YY_FATAL_ERROR("fatal flex scanner internal error--no action found");
           } /* end of action switch */
-      }     /* end of scanning one token */
-  }         /* end of user's declarations */
+      } /* end of scanning one token */
+  } /* end of user's declarations */
 } /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -1121,7 +1121,7 @@ static int yy_get_next_buffer(void)
           /* just a shorter name for the current buffer */
           YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
-          int             yy_c_buf_p_offset = (int) ((yy_c_buf_p) -b->yy_ch_buf);
+          int yy_c_buf_p_offset = (int) ((yy_c_buf_p) -b->yy_ch_buf);
 
           if (b->yy_is_our_buffer)
             {
@@ -1233,8 +1233,8 @@ static yy_state_type yy_get_previous_state(void)
  */
 static yy_state_type yy_try_NUL_trans(yy_state_type yy_current_state)
 {
-  int     yy_is_jam;
-  char   *yy_cp = (yy_c_buf_p);
+  int   yy_is_jam;
+  char *yy_cp = (yy_c_buf_p);
 
   YY_CHAR yy_c = 1;
   if (yy_accept[yy_current_state])
@@ -1301,7 +1301,7 @@ static void yyunput(int c, char *yy_bp)
 #ifdef __cplusplus
 static int yyinput(void)
 #else
-static int                 input(void)
+static int input(void)
 #endif
 
 {
@@ -1759,34 +1759,34 @@ static void yynoreturn yy_fatal_error(const char *msg)
 /** Get the current line number.
  *
  */
-int        yyget_lineno(void) { return yylineno; }
+int yyget_lineno(void) { return yylineno; }
 
 /** Get the input stream.
  *
  */
-FILE      *yyget_in(void) { return yyin; }
+FILE *yyget_in(void) { return yyin; }
 
 /** Get the output stream.
  *
  */
-FILE      *yyget_out(void) { return yyout; }
+FILE *yyget_out(void) { return yyout; }
 
 /** Get the length of the current token.
  *
  */
-int        yyget_leng(void) { return yyleng; }
+int yyget_leng(void) { return yyleng; }
 
 /** Get the current token.
  *
  */
 
-char      *yyget_text(void) { return yytext; }
+char *yyget_text(void) { return yytext; }
 
 /** Set the current line number.
  * @param _line_number line number
  *
  */
-void       yyset_lineno(int _line_number) { yylineno = _line_number; }
+void yyset_lineno(int _line_number) { yylineno = _line_number; }
 
 /** Set the input stream. This does not discard the current
  * input buffer.
@@ -1794,13 +1794,13 @@ void       yyset_lineno(int _line_number) { yylineno = _line_number; }
  *
  * @see yy_switch_to_buffer
  */
-void       yyset_in(FILE *_in_str) { yyin = _in_str; }
+void yyset_in(FILE *_in_str) { yyin = _in_str; }
 
-void       yyset_out(FILE *_out_str) { yyout = _out_str; }
+void yyset_out(FILE *_out_str) { yyout = _out_str; }
 
-int        yyget_debug(void) { return yy_flex_debug; }
+int yyget_debug(void) { return yy_flex_debug; }
 
-void       yyset_debug(int _bdebug) { yy_flex_debug = _bdebug; }
+void yyset_debug(int _bdebug) { yy_flex_debug = _bdebug; }
 
 static int yy_init_globals(void)
 {

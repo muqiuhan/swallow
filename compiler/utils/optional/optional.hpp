@@ -259,8 +259,8 @@ namespace tl
       struct tag
       {};
 
-      template <class T> tag                  swap(T &, T &);
-      template <class T, std::size_t N> tag   swap(T (&a)[N], T (&b)[N]);
+      template <class T> tag                swap(T &, T &);
+      template <class T, std::size_t N> tag swap(T (&a)[N], T (&b)[N]);
 
       // helper functions to test if an unqualified swap is possible, and if it
       // becomes std::swap
@@ -498,13 +498,13 @@ namespace tl
           }
       }
 
-      bool                              has_value() const { return this->m_has_value; }
+      bool has_value() const { return this->m_has_value; }
 
-      TL_OPTIONAL_11_CONSTEXPR T       &get()       &{ return this->m_value; }
+      TL_OPTIONAL_11_CONSTEXPR T &get() & { return this->m_value; }
 
       TL_OPTIONAL_11_CONSTEXPR const T &get() const & { return this->m_value; }
 
-      TL_OPTIONAL_11_CONSTEXPR T      &&get()      &&{ return std::move(this->m_value); }
+      TL_OPTIONAL_11_CONSTEXPR T &&get() && { return std::move(this->m_value); }
 #ifndef TL_OPTIONAL_NO_CONSTRR
       constexpr const T &&get() const && { return std::move(this->m_value); }
 #endif
@@ -610,9 +610,9 @@ namespace tl
 #ifndef TL_OPTIONAL_GCC49
     template <
       class T,
-      bool =
-        std::is_trivially_destructible<T>::value &&std::is_trivially_move_constructible<
-          T>::value &&std::is_trivially_move_assignable<T>::value>
+      bool = std::is_trivially_destructible<T>::value
+             && std::is_trivially_move_constructible<T>::value
+             && std::is_trivially_move_assignable<T>::value>
     struct optional_move_assign_base : optional_copy_assign_base<T>
     {
       using optional_copy_assign_base<T>::optional_copy_assign_base;
@@ -635,7 +635,7 @@ namespace tl
 
       optional_move_assign_base &operator=(optional_move_assign_base &&rhs) noexcept(
         std::is_nothrow_move_constructible<T>::value
-          &&std::is_nothrow_move_assignable<T>::value)
+        && std::is_nothrow_move_assignable<T>::value)
       {
         this->assign(std::move(rhs));
         return *this;
@@ -1377,8 +1377,9 @@ namespace tl
     /// If both have a value, the values are swapped.
     /// If one has a value, it is moved to the other and the movee is left
     /// valueless.
-    void swap(optional &rhs) noexcept(std::is_nothrow_move_constructible<T>::value
-                                        &&detail::is_nothrow_swappable<T>::value)
+    void swap(optional &rhs) noexcept(
+      std::is_nothrow_move_constructible<T>::value
+      && detail::is_nothrow_swappable<T>::value)
     {
       using std::swap;
       if (has_value())
@@ -1404,12 +1405,12 @@ namespace tl
     /// Returns a pointer to the stored value
     constexpr const T *operator->() const { return std::addressof(this->m_value); }
 
-    TL_OPTIONAL_11_CONSTEXPR T  *operator->() { return std::addressof(this->m_value); }
+    TL_OPTIONAL_11_CONSTEXPR T *operator->() { return std::addressof(this->m_value); }
 
     /// Returns the stored value
-    TL_OPTIONAL_11_CONSTEXPR T  &operator*()  &{ return this->m_value; }
+    TL_OPTIONAL_11_CONSTEXPR T &operator*() & { return this->m_value; }
 
-    constexpr const T           &operator*() const           &{ return this->m_value; }
+    constexpr const T &operator*() const & { return this->m_value; }
 
     TL_OPTIONAL_11_CONSTEXPR T &&operator*() && { return std::move(this->m_value); }
 
@@ -2243,7 +2244,7 @@ namespace tl
       return *this = std::forward<U>(u);
     }
 
-    void               swap(optional &rhs) noexcept { std::swap(m_value, rhs.m_value); }
+    void swap(optional &rhs) noexcept { std::swap(m_value, rhs.m_value); }
 
     /// Returns a pointer to the stored value
     constexpr const T *operator->() const noexcept { return m_value; }
@@ -2253,9 +2254,9 @@ namespace tl
     /// Returns the stored value
     TL_OPTIONAL_11_CONSTEXPR T &operator*() noexcept { return *m_value; }
 
-    constexpr const T          &operator*() const noexcept { return *m_value; }
+    constexpr const T &operator*() const noexcept { return *m_value; }
 
-    constexpr bool              has_value() const noexcept { return m_value != nullptr; }
+    constexpr bool has_value() const noexcept { return m_value != nullptr; }
 
     constexpr explicit operator bool() const noexcept { return m_value != nullptr; }
 

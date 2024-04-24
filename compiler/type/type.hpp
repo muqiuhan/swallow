@@ -100,12 +100,12 @@ namespace swallow::compiler::type
     int32_t                          LastID = 0;
     std::map<std::string, Type::Ptr> Types;
 
-    auto                             NewTypeName() noexcept -> std::string;
-    auto                             NewType() noexcept -> Type::Ptr;
-    auto                             NewArrowType() noexcept -> Type::Ptr;
+    auto NewTypeName() noexcept -> std::string;
+    auto NewType() noexcept -> Type::Ptr;
+    auto NewArrowType() noexcept -> Type::Ptr;
 
     /** Find values for placeholder variables such that they can equal. */
-    auto                             Unify(Type::Ptr left, Type::Ptr right) noexcept
+    auto Unify(Type::Ptr left, Type::Ptr right) noexcept
       -> utils::Result<utils::Void, utils::Void>;
 
     /** Get to the bottom of a chain of equations. */

@@ -329,7 +329,7 @@ namespace swallow::compiler::diagnostics
       {
         const auto &line_span = this->details_->get_line_spans()[line_index];
 
-        auto        line_number = line_index + 1;
+        auto line_number = line_index + 1;
         output << "  "
                << COLOR_RGB(
                     std::setw(spaces_prefix.length() - 3)
@@ -368,7 +368,7 @@ namespace swallow::compiler::diagnostics
           }
       }
 
-    const auto                     &current_labels = level_labels.at(current_level);
+    const auto &current_labels = level_labels.at(current_level);
 
     std::map<size_t, const Label *> current_label_startings;
     for (const auto &label : current_labels)
@@ -475,7 +475,7 @@ namespace swallow::compiler::diagnostics
   void LabelGroup::print_colored_source_line(
     std::ostream &output, const Span &label_span, const Labels &labels) const
   {
-    const auto                      source = this->details_->get_line_source(label_span);
+    const auto source = this->details_->get_line_source(label_span);
 
     std::map<size_t, const Label *> mapped_labels;
     for (const auto &label : labels)
@@ -529,7 +529,7 @@ namespace swallow::compiler::diagnostics
 
     std::vector<Labels> level_labels;
 
-    auto                current_labels = descending_labels;
+    auto current_labels = descending_labels;
     while (true)
       {
         auto overlapping_labels = find_remove_overlapping_labels(current_labels);
@@ -549,7 +549,7 @@ namespace swallow::compiler::diagnostics
     if (labels.empty())
       return {};
 
-    Labels      overlapping_labels;
+    Labels overlapping_labels;
 
     const auto *current_label = labels.front();
     for (auto iterator = labels.begin() + 1; iterator < labels.end(); iterator++)
@@ -572,7 +572,7 @@ namespace swallow::compiler::diagnostics
 
   auto LabelGroup::find_labels_in_line(size_t line_index) const -> Labels
   {
-    Labels      result;
+    Labels result;
 
     const auto &line_span = this->details_->get_line_spans().at(line_index);
     for (const auto &label : this->labels_)
@@ -600,7 +600,7 @@ namespace swallow::compiler::diagnostics
     std::vector<Labels> labels_collection;
     auto               *current_labels = &labels_collection.emplace_back();
 
-    auto                ascending_labels(labels);
+    auto ascending_labels(labels);
     std::sort(ascending_labels.begin(), ascending_labels.end(), AscendingLabels());
 
     auto last_line = labels.front()->get_line();

@@ -65,7 +65,7 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_end_index() const -> size_t;
 
-    void               set_end_index(size_t end_index);
+    void set_end_index(size_t end_index);
 
     [[nodiscard]] auto get_width() const -> size_t;
 
@@ -133,8 +133,8 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_label_line(const Label &label) const -> size_t;
 
-    [[nodiscard]] auto get_line_spans() const
-      -> const std::vector<std::shared_ptr<Span>> &;
+    [[nodiscard]] auto
+      get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -165,20 +165,20 @@ namespace swallow::compiler::diagnostics
     auto print_colored_source_line(
       std::ostream &output, const Span &label_span, const Labels &labels) const -> void;
 
-    [[nodiscard]] static auto find_label_levels(const Labels &labels)
-      -> std::vector<Labels>;
+    [[nodiscard]] static auto
+      find_label_levels(const Labels &labels) -> std::vector<Labels>;
 
     [[nodiscard]] static auto find_remove_overlapping_labels(Labels &labels) -> Labels;
 
-    [[nodiscard]] auto        find_labels_in_line(size_t line_index) const -> Labels;
+    [[nodiscard]] auto find_labels_in_line(size_t line_index) const -> Labels;
 
-    [[nodiscard]] auto        get_first_label() const -> const Label *;
+    [[nodiscard]] auto get_first_label() const -> const Label *;
 
-    [[nodiscard]] auto        get_labels() const -> const Labels &;
+    [[nodiscard]] auto get_labels() const -> const Labels &;
 
-    [[nodiscard]] auto        get_details() const -> Details *;
+    [[nodiscard]] auto get_details() const -> Details *;
 
-    [[nodiscard]] auto        get_last_label() const -> const Label *;
+    [[nodiscard]] auto get_last_label() const -> const Label *;
 
   private:
     const Label *first_label_;
@@ -215,7 +215,7 @@ namespace swallow::compiler::diagnostics
       std::vector<Label>         labels,
       std::optional<std::string> note);
 
-    auto               print(std::ostream &output) const -> void;
+    auto print(std::ostream &output) const -> void;
 
     [[nodiscard]] auto find_file_groups() const -> std::vector<FileGroup>;
 
