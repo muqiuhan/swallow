@@ -1,5 +1,5 @@
 #include <string>
-#include <structopt/app.hpp>
+#include "utils/structopt.hpp"
 #include "compiler.h"
 
 STRUCTOPT(
