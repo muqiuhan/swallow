@@ -27,16 +27,4 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_PARSER_H
-#define SWALLOW_COMPILER_PARSER_H
-
-#include "ast/ast.hpp"
-
-namespace swallow::compiler::parser
-{
-
-  auto Parse() noexcept -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
-
-} // namespace swallow::compiler::parser
-
-#endif
+#include "runtime.h"

@@ -27,16 +27,84 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_PARSER_H
-#define SWALLOW_COMPILER_PARSER_H
+#ifndef SWALLOW_COMPILER_RUNTIME_HPP
+#define SWALLOW_COMPILER_RUNTIME_HPP
 
-#include "ast/ast.hpp"
+#include <cstdint>
+#include <functional>
+#include <vector>
 
-namespace swallow::compiler::parser
+namespace swallow::compiler::runtime
 {
+  enum class Tag
+  {
+    NODE_APP,
+    NODE_INT,
+    NODE_GLOBAL,
+    NODE_IND,
+    NODE_DATA
+  };
 
-  auto Parse() noexcept -> std::vector<swallow::compiler::ast::Definition::Ptr> &;
+  class Base
+  {
+  public:
+    enum Tag tag;
 
-} // namespace swallow::compiler::parser
+  public:
+    [[nodiscard]] auto Allocate() const noexcept -> class Base *;
+  };
 
-#endif
+  class Application
+  {
+  public:
+    class Base  Base;
+    class Base *Left;
+    class Base *Right;
+
+  public:
+    [[nodiscard]] auto Allocate() const noexcept -> class Application *;
+  };
+
+  class Int
+  {
+  public:
+    class Base Base;
+    int32_t    Value;
+
+  public:
+    [[nodiscard]] auto Allocate() const noexcept -> class Int *;
+  };
+
+  class Global
+  {
+  public:
+    class Base Base;
+    int32_t    Arity;
+
+    std::function<void(class Stack *)> function;
+
+  public:
+    [[nodiscard]] auto Allocate() const noexcept -> class Global *;
+  };
+
+  class Ind
+  {
+  public:
+    class Base  Base;
+    class Base *Next;
+
+  public:
+    [[nodiscard]] auto Allocate() const noexcept -> class Ind *;
+  };
+
+  class Data
+  {
+  public:
+    class Base                           Base;
+    int8_t                               Tag;
+    std::vector<std::vector<class Base>> array;
+  };
+
+} // namespace swallow::compiler::runtime
+
+#endif /* SWALLOW_COMPILER_RUNTIME_HPP*/
