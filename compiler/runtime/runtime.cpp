@@ -28,3 +28,56 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "runtime.h"
+#include <cstdlib>
+#include "utils/panic/panic.hpp"
+
+namespace swallow::compiler::runtime
+{
+  [[nodiscard]] auto Base::Allocate() noexcept -> class Base *
+  {
+    auto *node = reinterpret_cast<class Base *>(malloc(sizeof(class Application)));
+
+    if (nullptr == node)
+      utils::Panic("ICE: Cannot allocate Base node");
+    else
+      return node;
+  }
+
+  [[nodiscard]] auto Application::Allocate(
+    const class Base *Left, const class Base *Right) noexcept -> class Application *
+  {
+    auto *node = reinterpret_cast<class Application *>(Base::Allocate());
+    node->Base.Tag = Tag::APPLICATION;
+    node->Left = Left;
+    node->Right = Right;
+    return node;
+  }
+
+  [[nodiscard]] auto Int::Allocate(int32_t Value) noexcept -> class Int *
+  {
+    auto *node = reinterpret_cast<class Int *>(Base::Allocate());
+    node->Base.Tag = Tag::INT;
+    node->Value = Value;
+    return node;
+  }
+
+  [[nodiscard]] auto Global::Allocate(
+    const std::function<void(class Stack *)> &Function,
+    int32_t                                   Arity) noexcept -> class Global *
+  {
+    auto *node = reinterpret_cast<class Global *>(Base::Allocate());
+    node->Base.Tag = Tag::GLOBAL;
+    node->Arity = Arity;
+    node->Function = Function;
+    return node;
+  }
+
+  [[nodiscard]] auto Ind::Allocate(const class Base *Next) noexcept -> class Ind *
+  {
+    auto *node = reinterpret_cast<class Ind *>(Base::Allocate());
+    node->Base.Tag = Tag::IND;
+    node->Next = Next;
+    return node;
+  }
+
+} // namespace swallow::compiler::runtime

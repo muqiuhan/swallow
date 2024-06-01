@@ -38,31 +38,32 @@ namespace swallow::compiler::runtime
 {
   enum class Tag
   {
-    NODE_APP,
-    NODE_INT,
-    NODE_GLOBAL,
-    NODE_IND,
-    NODE_DATA
+    APPLICATION,
+    INT,
+    GLOBAL,
+    IND,
+    DATA
   };
 
   class Base
   {
   public:
-    enum Tag tag;
+    enum Tag Tag;
 
   public:
-    [[nodiscard]] auto Allocate() const noexcept -> class Base *;
+    [[nodiscard]] static auto Allocate() noexcept -> class Base *;
   };
 
   class Application
   {
   public:
-    class Base  Base;
-    class Base *Left;
-    class Base *Right;
+    class Base        Base;
+    const class Base *Left;
+    const class Base *Right;
 
   public:
-    [[nodiscard]] auto Allocate() const noexcept -> class Application *;
+    [[nodiscard]] static auto Allocate(
+      const class Base *Left, const class Base *Right) noexcept -> class Application *;
   };
 
   class Int
@@ -72,7 +73,7 @@ namespace swallow::compiler::runtime
     int32_t    Value;
 
   public:
-    [[nodiscard]] auto Allocate() const noexcept -> class Int *;
+    [[nodiscard]] static auto Allocate(int32_t Value) noexcept -> class Int *;
   };
 
   class Global
@@ -81,20 +82,22 @@ namespace swallow::compiler::runtime
     class Base Base;
     int32_t    Arity;
 
-    std::function<void(class Stack *)> function;
+    std::function<void(class Stack *)> Function;
 
   public:
-    [[nodiscard]] auto Allocate() const noexcept -> class Global *;
+    [[nodiscard]] static auto Allocate(
+      const std::function<void(class Stack *)> &Function,
+      int32_t                                   Arity) noexcept -> class Global *;
   };
 
   class Ind
   {
   public:
-    class Base  Base;
-    class Base *Next;
+    class Base        Base;
+    const class Base *Next;
 
   public:
-    [[nodiscard]] auto Allocate() const noexcept -> class Ind *;
+    [[nodiscard]] static auto Allocate(const class Base *Next) noexcept -> class Ind *;
   };
 
   class Data
