@@ -103,9 +103,9 @@ namespace swallow::compiler::runtime::node
   class Data
   {
   public:
-    class Base                           Base;
-    int8_t                               Tag;
-    std::vector<std::vector<class Base>> array;
+    class Base   Base;
+    enum Tag     Tag;
+    class Base **Array;
   };
 
 } // namespace swallow::compiler::runtime::node

@@ -34,7 +34,7 @@ namespace swallow::compiler::runtime::node
 {
   [[nodiscard]] auto Base::Allocate() noexcept -> class Base *
   {
-    auto *node = reinterpret_cast<class Base *>(malloc(sizeof(class Application)));
+    auto *node = reinterpret_cast<class Base *>(std::malloc(sizeof(class Application)));
 
     if (nullptr == node)
       utils::Panic("ICE: Cannot allocate Base node");

@@ -27,57 +27,38 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "runtime.h"
-#include <cstdlib>
-#include "utils/panic/panic.hpp"
+#ifndef SWALLOW_COMPILER_RUNTIME_STACK_H
+#define SWALLOW_COMPILER_RUNTIME_STACK_H
 
-namespace swallow::compiler::runtime
+#include "runtime/node.h"
+#include <cstdint>
+
+namespace swallow::compiler::runtime::stack
 {
-  [[nodiscard]] auto Base::Allocate() noexcept -> class Base *
+  class Stack
   {
-    auto *node = reinterpret_cast<class Base *>(malloc(sizeof(class Application)));
+  public:
+    uint64_t           Size;
+    uint64_t           Count;
+    class node::Base **Data;
 
-    if (nullptr == node)
-      utils::Panic("ICE: Cannot allocate Base node");
-    else
-      return node;
-  }
+  public:
+    static void Initialize(class Stack *stack) noexcept;
+    static void Free(class Stack *stack) noexcept;
+    static void Push(class Stack *stack, class node::Base *node) noexcept;
 
-  [[nodiscard]] auto Application::Allocate(
-    const class Base *Left, const class Base *Right) noexcept -> class Application *
-  {
-    auto *node = reinterpret_cast<class Application *>(Base::Allocate());
-    node->Base.Tag = Tag::APPLICATION;
-    node->Left = Left;
-    node->Right = Right;
-    return node;
-  }
+    [[nodiscard]]
+    static auto Pop(class Stack *stack) noexcept -> class node::Base *;
+    [[nodiscard]]
+    static auto Peek(class Stack *stack, uint64_t o) noexcept -> class node::Base *;
 
-  [[nodiscard]] auto Int::Allocate(int32_t Value) noexcept -> class Int *
-  {
-    auto *node = reinterpret_cast<class Int *>(Base::Allocate());
-    node->Base.Tag = Tag::INT;
-    node->Value = Value;
-    return node;
-  }
+    static void PopN(class Stack *stack, uint64_t n) noexcept;
+    static void Slide(class Stack *stack, uint64_t n) noexcept;
+    static void Update(class Stack *stack, uint64_t o) noexcept;
+    static void Allocate(class Stack *stack, uint64_t o) noexcept;
+    static void Pack(class Stack *stack, uint64_t n, node::Tag) noexcept;
+    static void Split(class Stack *stack, uint64_t n) noexcept;
+  };
+} // namespace swallow::compiler::runtime::stack
 
-  [[nodiscard]] auto Global::Allocate(
-    const std::function<void(class Stack *)> &Function,
-    int32_t                                   Arity) noexcept -> class Global *
-  {
-    auto *node = reinterpret_cast<class Global *>(Base::Allocate());
-    node->Base.Tag = Tag::GLOBAL;
-    node->Arity = Arity;
-    node->Function = Function;
-    return node;
-  }
-
-  [[nodiscard]] auto Ind::Allocate(const class Base *Next) noexcept -> class Ind *
-  {
-    auto *node = reinterpret_cast<class Ind *>(Base::Allocate());
-    node->Base.Tag = Tag::IND;
-    node->Next = Next;
-    return node;
-  }
-
-} // namespace swallow::compiler::runtime
+#endif /* SWALLOW_COMPILER_RUNTIME_STACK_H */
