@@ -27,39 +27,29 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_RUNTIME_STACK_H
-#define SWALLOW_COMPILER_RUNTIME_STACK_H
+#ifndef SWALLOW_COMPILER_RUNTIME_H
+#define SWALLOW_COMPILER_RUNTIME_H
 
 #include "node.h"
-#include <cstdint>
+#include "stack.h"
 
-namespace swallow::compiler::runtime::stack
+namespace swallow::compiler::runtime
 {
-  class Stack
+  using stack::Stack;
+
+  extern void EntryPoint(Stack *stack);
+
+  class Runtime
   {
   public:
-    uint64_t     Size;
-    uint64_t     Count;
-    node::Base **Data;
+    class Stack       stack;
+    node::Global     *firstNode = node::Global::Allocate(EntryPoint, 0);
+    class node::Base *result = Eval(reinterpret_cast<runtime::node::Base *>(firstNode));
 
   public:
-    static void Initialize(Stack *stack) noexcept;
-    static void Free(Stack *stack) noexcept;
-    static void Push(Stack *stack, node::Base *node) noexcept;
-
-    [[nodiscard]]
-    static auto Pop(Stack *stack) noexcept -> node::Base *;
-
-    [[nodiscard]]
-    static auto Peek(Stack *stack, uint64_t o) noexcept -> node::Base *;
-
-    static void PopN(Stack *stack, uint64_t n) noexcept;
-    static void Slide(Stack *stack, uint64_t n) noexcept;
-    static void Update(Stack *stack, uint64_t o) noexcept;
-    static void Allocate(Stack *stack, uint64_t o) noexcept;
-    static void Pack(Stack *stack, uint64_t n, node::Tag) noexcept;
-    static void Split(Stack *stack, uint64_t n) noexcept;
+    [[nodiscard]] auto Eval(node::Base *node) noexcept -> node::Base *;
+    void               Unwind(Stack *stack) noexcept;
   };
-} // namespace swallow::compiler::runtime::stack
+} // namespace swallow::compiler::runtime
 
-#endif /* SWALLOW_COMPILER_RUNTIME_STACK_H */
+#endif

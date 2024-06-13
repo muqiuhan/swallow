@@ -36,7 +36,6 @@
 
 namespace swallow::compiler
 {
-
   class CompileUnit
   {
   public:

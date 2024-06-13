@@ -31,8 +31,11 @@
 #define SWALLOW_COMPILER_RUNTIME_NODE_H
 
 #include <cstdint>
-#include <functional>
-#include <vector>
+
+namespace swallow::compiler::runtime::stack
+{
+  class Stack;
+} // namespace swallow::compiler::runtime::stack
 
 namespace swallow::compiler::runtime::node
 {
@@ -51,61 +54,58 @@ namespace swallow::compiler::runtime::node
     enum Tag Tag;
 
   public:
-    [[nodiscard]] static auto Allocate() noexcept -> class Base *;
+    [[nodiscard]] static auto Allocate() noexcept -> Base *;
   };
 
   class Application
   {
   public:
-    class Base        Base;
-    const class Base *Left;
-    const class Base *Right;
+    Base  Node;
+    Base *Left;
+    Base *Right;
 
   public:
-    [[nodiscard]] static auto Allocate(
-      const class Base *Left, const class Base *Right) noexcept -> class Application *;
+    [[nodiscard]] static auto Allocate(Base *Left, Base *Right) noexcept -> Application *;
   };
 
   class Int
   {
   public:
-    class Base Base;
-    int32_t    Value;
+    Base    Node;
+    int32_t Value;
 
   public:
-    [[nodiscard]] static auto Allocate(int32_t Value) noexcept -> class Int *;
+    [[nodiscard]] static auto Allocate(int32_t Value) noexcept -> Int *;
   };
 
   class Global
   {
   public:
-    class Base Base;
-    int32_t    Arity;
-
-    std::function<void(class Stack *)> Function;
+    Base    Node;
+    int32_t Arity;
+    void (*Function)(runtime::stack::Stack *);
 
   public:
     [[nodiscard]] static auto Allocate(
-      const std::function<void(class Stack *)> &Function,
-      int32_t                                   Arity) noexcept -> class Global *;
+      void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *;
   };
 
   class Ind
   {
   public:
-    class Base        Base;
-    const class Base *Next;
+    Base *Next;
+    Base  Node;
 
   public:
-    [[nodiscard]] static auto Allocate(const class Base *Next) noexcept -> class Ind *;
+    [[nodiscard]] static auto Allocate(Base *Next) noexcept -> Ind *;
   };
 
   class Data
   {
   public:
-    class Base   Base;
-    enum Tag     Tag;
-    class Base **Array;
+    enum Tag Tag;
+    Base   **Array;
+    Base     Node;
   };
 
 } // namespace swallow::compiler::runtime::node

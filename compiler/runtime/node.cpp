@@ -27,14 +27,15 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <cstdlib>
 #include "node.h"
 #include "utils/panic/panic.hpp"
 
 namespace swallow::compiler::runtime::node
 {
-  [[nodiscard]] auto Base::Allocate() noexcept -> class Base *
+  [[nodiscard]] auto Base::Allocate() noexcept -> Base *
   {
-    auto *node = reinterpret_cast<class Base *>(std::malloc(sizeof(class Application)));
+    auto *node = reinterpret_cast<Base *>(std::malloc(sizeof(class Application)));
 
     if (nullptr == node)
       utils::Panic("ICE: Cannot allocate Base node");
@@ -42,11 +43,11 @@ namespace swallow::compiler::runtime::node
       return node;
   }
 
-  [[nodiscard]] auto Application::Allocate(
-    const class Base *Left, const class Base *Right) noexcept -> class Application *
+  [[nodiscard]] auto
+    Application::Allocate(Base *Left, Base *Right) noexcept -> Application *
   {
-    auto *node = reinterpret_cast<class Application *>(Base::Allocate());
-    node->Base.Tag = Tag::APPLICATION;
+    auto *node = reinterpret_cast<Application *>(Base::Allocate());
+    node->Node.Tag = Tag::APPLICATION;
     node->Left = Left;
     node->Right = Right;
     return node;
@@ -54,27 +55,26 @@ namespace swallow::compiler::runtime::node
 
   [[nodiscard]] auto Int::Allocate(int32_t Value) noexcept -> class Int *
   {
-    auto *node = reinterpret_cast<class Int *>(Base::Allocate());
-    node->Base.Tag = Tag::INT;
+    auto *node = reinterpret_cast<Int *>(Base::Allocate());
+    node->Node.Tag = Tag::INT;
     node->Value = Value;
     return node;
   }
 
   [[nodiscard]] auto Global::Allocate(
-    const std::function<void(class Stack *)> &Function,
-    int32_t                                   Arity) noexcept -> class Global *
+    void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *
   {
-    auto *node = reinterpret_cast<class Global *>(Base::Allocate());
-    node->Base.Tag = Tag::GLOBAL;
+    auto *node = reinterpret_cast<Global *>(Base::Allocate());
+    node->Node.Tag = Tag::GLOBAL;
     node->Arity = Arity;
     node->Function = Function;
     return node;
   }
 
-  [[nodiscard]] auto Ind::Allocate(const class Base *Next) noexcept -> class Ind *
+  [[nodiscard]] auto Ind::Allocate(Base *Next) noexcept -> Ind *
   {
-    auto *node = reinterpret_cast<class Ind *>(Base::Allocate());
-    node->Base.Tag = Tag::IND;
+    auto *node = reinterpret_cast<Ind *>(Base::Allocate());
+    node->Node.Tag = Tag::IND;
     node->Next = Next;
     return node;
   }

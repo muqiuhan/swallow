@@ -37,7 +37,6 @@ using namespace swallow::compiler;
 
 namespace swallow::compiler
 {
-
   auto Compiler(const CompilerOptions &options) noexcept -> int
   {
     CompileUnit::FILE = new CompileUnit(options.file);

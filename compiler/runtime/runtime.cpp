@@ -27,39 +27,52 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_RUNTIME_STACK_H
-#define SWALLOW_COMPILER_RUNTIME_STACK_H
+#include "runtime.h"
+#include "panic/panic.hpp"
 
-#include "node.h"
-#include <cstdint>
-
-namespace swallow::compiler::runtime::stack
+namespace swallow::compiler::runtime
 {
-  class Stack
+  [[nodiscard]] auto Runtime::Eval(node::Base *node) noexcept -> node::Base *
   {
-  public:
-    uint64_t     Size;
-    uint64_t     Count;
-    node::Base **Data;
+    Stack::Initialize(&stack);
+    Stack::Push(&stack, node);
+    Unwind(&stack);
 
-  public:
-    static void Initialize(Stack *stack) noexcept;
-    static void Free(Stack *stack) noexcept;
-    static void Push(Stack *stack, node::Base *node) noexcept;
+    auto *result = Stack::Pop(&stack);
+    Stack::Free(&stack);
+    return result;
+  }
 
-    [[nodiscard]]
-    static auto Pop(Stack *stack) noexcept -> node::Base *;
+  void Unwind(Stack *stack) noexcept
+  {
+    while (true)
+      {
+        auto *peek = Stack::Peek(stack, 0);
 
-    [[nodiscard]]
-    static auto Peek(Stack *stack, uint64_t o) noexcept -> node::Base *;
+        if (peek->Tag == node::Tag::APPLICATION)
+          Stack::Push(stack, reinterpret_cast<node::Application *>(peek)->Left);
+        else if (peek->Tag == node::Tag::GLOBAL)
+          {
+            auto *node = reinterpret_cast<node::Global *>(peek);
 
-    static void PopN(Stack *stack, uint64_t n) noexcept;
-    static void Slide(Stack *stack, uint64_t n) noexcept;
-    static void Update(Stack *stack, uint64_t o) noexcept;
-    static void Allocate(Stack *stack, uint64_t o) noexcept;
-    static void Pack(Stack *stack, uint64_t n, node::Tag) noexcept;
-    static void Split(Stack *stack, uint64_t n) noexcept;
-  };
-} // namespace swallow::compiler::runtime::stack
+            if (stack->Count > node->Arity)
+              utils::Panic("ICE: stack->Count > node->Arity");
 
-#endif /* SWALLOW_COMPILER_RUNTIME_STACK_H */
+            for (size_t i = 1; i <= node->Arity; i++)
+              stack->Data[stack->Count - i] =
+                reinterpret_cast<node::Application *>(stack->Data[stack->Count - i - 1])
+                  ->Right;
+
+            node->Function(stack);
+          }
+        else if (peek->Tag == node::Tag::IND)
+          {
+            const auto *_ = Stack::Pop(stack);
+            Stack::Push(stack, reinterpret_cast<node::Ind *>(peek)->Next);
+          }
+        else
+          break;
+      }
+  }
+
+} // namespace swallow::compiler::runtime
