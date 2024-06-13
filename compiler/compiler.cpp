@@ -31,6 +31,8 @@
 #include "ast/ast.hpp"
 #include "parser.h"
 #include "diagnostics/reporter.hpp"
+#include "runtime/node.h"
+#include "runtime/runtime.h"
 #include <chrono>
 
 using namespace swallow::compiler;
@@ -39,6 +41,12 @@ namespace swallow::compiler
 {
   auto Compiler(const CompilerOptions &options) noexcept -> int
   {
+    std::cout << std::format(
+      "test runtime...{}\n",
+      reinterpret_cast<swallow::compiler::runtime::node::Int *>(
+        swallow::compiler::runtime::Runtime::Result)
+        ->Value);
+
     CompileUnit::FILE = new CompileUnit(options.file);
     diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 

@@ -29,46 +29,48 @@
 
 #include "runtime.h"
 #include "panic/panic.hpp"
+#include "runtime/node.h"
+#include "runtime/stack.h"
 
 namespace swallow::compiler::runtime
 {
   [[nodiscard]] auto Runtime::Eval(node::Base *node) noexcept -> node::Base *
   {
-    Stack::Initialize(&stack);
-    Stack::Push(&stack, node);
-    Unwind(&stack);
+    Stack::Initialize(&Stack);
+    Stack::Push(&Stack, node);
+    Unwind();
 
-    auto *result = Stack::Pop(&stack);
-    Stack::Free(&stack);
+    auto *result = Stack::Pop(&Stack);
+    Stack::Free(&Stack);
     return result;
   }
 
-  void Unwind(Stack *stack) noexcept
+  void Runtime::Unwind() noexcept
   {
     while (true)
       {
-        auto *peek = Stack::Peek(stack, 0);
+        auto *peek = Stack::Peek(&Stack, 0);
 
         if (peek->Tag == node::Tag::APPLICATION)
-          Stack::Push(stack, reinterpret_cast<node::Application *>(peek)->Left);
+          Stack::Push(&Stack, reinterpret_cast<node::Application *>(peek)->Left);
         else if (peek->Tag == node::Tag::GLOBAL)
           {
             auto *node = reinterpret_cast<node::Global *>(peek);
 
-            if (stack->Count > node->Arity)
-              utils::Panic("ICE: stack->Count > node->Arity");
+            if (Stack.Count < node->Arity)
+              utils::Panic("ICE: Stack->Count > node->Arity");
 
             for (size_t i = 1; i <= node->Arity; i++)
-              stack->Data[stack->Count - i] =
-                reinterpret_cast<node::Application *>(stack->Data[stack->Count - i - 1])
+              Stack.Data[Stack.Count - i] =
+                reinterpret_cast<node::Application *>(Stack.Data[Stack.Count - i - 1])
                   ->Right;
 
-            node->Function(stack);
+            node->Function(&Stack);
           }
         else if (peek->Tag == node::Tag::IND)
           {
-            const auto *_ = Stack::Pop(stack);
-            Stack::Push(stack, reinterpret_cast<node::Ind *>(peek)->Next);
+            const auto *_ = Stack::Pop(&Stack);
+            Stack::Push(&Stack, reinterpret_cast<node::Ind *>(peek)->Next);
           }
         else
           break;
@@ -76,3 +78,51 @@ namespace swallow::compiler::runtime
   }
 
 } // namespace swallow::compiler::runtime
+
+void AddFunction(swallow::compiler::runtime::stack::Stack *stack) noexcept
+{
+  swallow::compiler::runtime::stack::Stack::Push(
+    stack,
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
+      swallow::compiler::runtime::node::Int::Allocate(
+        reinterpret_cast<swallow::compiler::runtime::node::Int *>(
+          swallow::compiler::runtime::Runtime::Eval(
+            swallow::compiler::runtime::stack::Stack::Peek(stack, 0)))
+          ->Value
+        + reinterpret_cast<swallow::compiler::runtime::node::Int *>(
+            swallow::compiler::runtime::Runtime::Eval(
+              swallow::compiler::runtime::stack::Stack::Peek(stack, 1)))
+            ->Value)));
+}
+
+void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept
+{
+  swallow::compiler::runtime::stack::Stack::Push(
+    stack,
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
+      swallow::compiler::runtime::node::Int::Allocate(10)));
+
+  swallow::compiler::runtime::stack::Stack::Push(
+    stack,
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
+      swallow::compiler::runtime::node::Int::Allocate(20)));
+
+  swallow::compiler::runtime::stack::Stack::Push(
+    stack,
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
+      swallow::compiler::runtime::node::Global::Allocate(AddFunction, 2)));
+
+  swallow::compiler::runtime::stack::Stack::Push(
+    stack,
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
+      swallow::compiler::runtime::node::Application::Allocate(
+        swallow::compiler::runtime::stack::Stack::Pop(stack),
+        swallow::compiler::runtime::stack::Stack::Pop(stack))));
+
+  swallow::compiler::runtime::stack::Stack::Push(
+    stack,
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
+      swallow::compiler::runtime::node::Application::Allocate(
+        swallow::compiler::runtime::stack::Stack::Pop(stack),
+        swallow::compiler::runtime::stack::Stack::Pop(stack))));
+}

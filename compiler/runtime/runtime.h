@@ -33,22 +33,23 @@
 #include "node.h"
 #include "stack.h"
 
+extern void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept;
+
 namespace swallow::compiler::runtime
 {
   using stack::Stack;
 
-  extern void EntryPoint(Stack *stack);
-
   class Runtime
   {
   public:
-    class Stack       stack;
-    node::Global     *firstNode = node::Global::Allocate(EntryPoint, 0);
-    class node::Base *result = Eval(reinterpret_cast<runtime::node::Base *>(firstNode));
+    [[nodiscard]] static auto Eval(node::Base *node) noexcept -> node::Base *;
+    static void               Unwind() noexcept;
 
   public:
-    [[nodiscard]] auto Eval(node::Base *node) noexcept -> node::Base *;
-    void               Unwind(Stack *stack) noexcept;
+    inline static class Stack   Stack;
+    inline static node::Global *FirstNode = node::Global::Allocate(EntryPoint, 0);
+    inline static node::Base   *Result =
+      Eval(reinterpret_cast<runtime::node::Base *>(FirstNode));
   };
 } // namespace swallow::compiler::runtime
 

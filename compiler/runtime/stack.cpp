@@ -63,7 +63,7 @@ namespace swallow::compiler::runtime::stack
 
   [[nodiscard]] auto Stack::Pop(Stack *stack) noexcept -> node::Base *
   {
-    if (stack->Count > 0)
+    if (stack->Count < 0)
       utils::Panic("ICE: Cannot pop element from empty runtime stack");
 
     return stack->Data[--(stack->Count)];
@@ -71,7 +71,7 @@ namespace swallow::compiler::runtime::stack
 
   [[nodiscard]] auto Stack::Peek(Stack *stack, uint64_t o) noexcept -> node::Base *
   {
-    if (stack->Count > 0)
+    if (stack->Count < o)
       utils::Panic(
         "ICE: peek exceeds the number of existing elements in the runtime stack");
 
@@ -80,7 +80,7 @@ namespace swallow::compiler::runtime::stack
 
   void Stack::PopN(Stack *stack, uint64_t n) noexcept
   {
-    if (stack->Count >= n)
+    if (stack->Count <= n)
       utils::Panic(
         "ICE: pop exceeds the number of existing elements in the runtime stack");
 
@@ -89,7 +89,7 @@ namespace swallow::compiler::runtime::stack
 
   void Stack::Slide(Stack *stack, uint64_t n) noexcept
   {
-    if (stack->Count > n)
+    if (stack->Count < n)
       utils::Panic(
         "ICE: slide exceeds the number of existing elements in the runtime stack");
 
@@ -99,7 +99,7 @@ namespace swallow::compiler::runtime::stack
 
   void Stack::Update(Stack *stack, uint64_t o) noexcept
   {
-    if (stack->Count > o + 1)
+    if (stack->Count < o + 1)
       utils::Panic(
         "ICE: update exceeds the number of existing elements in the runtime stack");
 
@@ -116,7 +116,7 @@ namespace swallow::compiler::runtime::stack
 
   void Stack::Pack(Stack *stack, uint64_t n, node::Tag tag) noexcept
   {
-    if (stack->Count >= n)
+    if (stack->Count <= n)
       utils::Panic(
         "ICE: update exceeds the number of existing elements in the runtime stack");
 
