@@ -28,9 +28,9 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ast.hpp"
+#include "utils/dump.h"
 #include <cstdint>
 #include <format>
-#include "utils/dump.h"
 using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::ast

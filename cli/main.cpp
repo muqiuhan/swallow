@@ -1,6 +1,6 @@
-#include <string>
 #include "utils/structopt.hpp"
 #include "compiler.h"
+#include <string>
 
 STRUCTOPT(
   swallow::compiler::CompilerOptions,
@@ -10,7 +10,7 @@ STRUCTOPT(
   dump_types,
   dump_gmachine_ir);
 
-int main(int argc, char *argv[])
+auto main(int argc, char *argv[]) -> int
 {
   try
     {
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
               swallow::compiler::CompilerOptions::HELP)
               .parse<swallow::compiler::CompilerOptions>(argc - 1, &argv[1]));
         }
-      else if (command == "i" || command == "repl")
+      if (command == "i" || command == "repl")
         {
           return 0;
         }

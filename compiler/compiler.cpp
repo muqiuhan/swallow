@@ -29,8 +29,8 @@
 
 #include "compiler.h"
 #include "ast/ast.hpp"
-#include "parser.h"
 #include "diagnostics/reporter.hpp"
+#include "parser.h"
 #include "runtime/node.h"
 #include "runtime/runtime.h"
 #include <chrono>

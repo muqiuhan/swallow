@@ -29,8 +29,8 @@
 
 #include "instruction.hpp"
 #include "ast.hpp"
-#include <format>
 #include "utils/dump.h"
+#include <format>
 
 using namespace swallow::compiler::utils;
 

@@ -27,9 +27,9 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <cstdlib>
 #include "node.h"
 #include "utils/panic/panic.hpp"
+#include <cstdlib>
 
 namespace swallow::compiler::runtime::node
 {
