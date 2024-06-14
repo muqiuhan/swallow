@@ -53,17 +53,17 @@ namespace swallow::compiler
     CompileUnit::FILE = new CompileUnit(options.file);
     diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 
+    std::cout << std::format("compiling {}...", options.file);
+
     const auto start = std::chrono::system_clock::now();
     auto      &program = parser::Parse();
     type::TypeCheck(program, options);
     gmachine::Compile(program, options);
     const auto end = std::chrono::system_clock::now();
 
-    std::cout
-      << "compiling " << options.file << " ..."
-      << double(
-           std::chrono::duration_cast<std::chrono::microseconds>(end - start).count())
-      << "ms\n";
+    std::cout << std::format(
+      "ok ({} ms)\n",
+      double(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
 
     delete CompileUnit::FILE;
     delete diagnostics::Reporter::REPORTER;
