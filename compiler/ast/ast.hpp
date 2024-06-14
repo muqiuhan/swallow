@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_AST_AST_H
-#define SWALLOW_COMPILER_AST_AST_H
+#ifndef SWALLOW_COMPILER_AST_HPP
+#define SWALLOW_COMPILER_AST_HPP
 
 #include "binop/binop.hpp"
 #include "g-machine/environment.hpp"
@@ -350,7 +350,7 @@ namespace swallow::compiler::ast
 
     void TypeCheck(type::Manager &typeManager, const type::Environment &typeEnvironment)
       const noexcept override;
-    void Resolve(const type::Manager &typeManager) noexcept;
+    void Resolve(const type::Manager &typeManager) noexcept override;
     void Compile() noexcept override;
   };
 

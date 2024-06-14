@@ -27,46 +27,56 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "compiler.h"
-#include "ast/ast.hpp"
-#include "parser.h"
-#include "diagnostics/reporter.hpp"
-#include "runtime/node.h"
-#include "runtime/runtime.h"
-#include <chrono>
+#include <cstdlib>
+#include "node.h"
+#include "utils/panic/panic.hpp"
 
-using namespace swallow::compiler;
-
-namespace swallow::compiler
+namespace swallow::compiler::runtime::node
 {
-  auto Compiler(const CompilerOptions &options) noexcept -> int
+  [[nodiscard]] auto Base::Allocate() noexcept -> Base *
   {
-#ifdef TEST_RUNTIME
-    auto *result = runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(
-      runtime::node::Global::Allocate(EntryPoint, 0)));
+    auto *node = reinterpret_cast<Base *>(std::malloc(sizeof(class Application)));
 
-    std::cout << std::format(
-      "test runtime...{}\n",
-      reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
-#endif
-
-    CompileUnit::FILE = new CompileUnit(options.file);
-    diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
-
-    std::cout << std::format("compiling {}...", options.file);
-
-    const auto start = std::chrono::system_clock::now();
-    auto      &program = parser::Parse();
-    type::TypeCheck(program, options);
-    gmachine::Compile(program, options);
-    const auto end = std::chrono::system_clock::now();
-
-    std::cout << std::format(
-      "ok ({} ms)\n",
-      double(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
-
-    delete CompileUnit::FILE;
-    delete diagnostics::Reporter::REPORTER;
-    return 0;
+    if (nullptr == node)
+      utils::Panic("ICE: Cannot allocate Base node");
+    else
+      return node;
   }
-} // namespace swallow::compiler
+
+  [[nodiscard]] auto
+    Application::Allocate(Base *Left, Base *Right) noexcept -> Application *
+  {
+    auto *node = reinterpret_cast<Application *>(Base::Allocate());
+    node->Node.Tag = Tag::APPLICATION;
+    node->Left = Left;
+    node->Right = Right;
+    return node;
+  }
+
+  [[nodiscard]] auto Int::Allocate(int32_t Value) noexcept -> class Int *
+  {
+    auto *node = reinterpret_cast<Int *>(Base::Allocate());
+    node->Node.Tag = Tag::INT;
+    node->Value = Value;
+    return node;
+  }
+
+  [[nodiscard]] auto Global::Allocate(
+    void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *
+  {
+    auto *node = reinterpret_cast<Global *>(Base::Allocate());
+    node->Node.Tag = Tag::GLOBAL;
+    node->Arity = Arity;
+    node->Function = Function;
+    return node;
+  }
+
+  [[nodiscard]] auto Ind::Allocate(Base *Next) noexcept -> Ind *
+  {
+    auto *node = reinterpret_cast<Ind *>(Base::Allocate());
+    node->Node.Tag = Tag::IND;
+    node->Next = Next;
+    return node;
+  }
+
+} // namespace swallow::compiler::runtime::node

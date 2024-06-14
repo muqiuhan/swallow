@@ -27,46 +27,39 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "compiler.h"
-#include "ast/ast.hpp"
-#include "parser.h"
-#include "diagnostics/reporter.hpp"
-#include "runtime/node.h"
-#include "runtime/runtime.h"
-#include <chrono>
+#ifndef SWALLOW_COMPILER_RUNTIME_STACK_H
+#define SWALLOW_COMPILER_RUNTIME_STACK_H
 
-using namespace swallow::compiler;
+#include "node.h"
+#include <cstdint>
 
-namespace swallow::compiler
+namespace swallow::compiler::runtime::stack
 {
-  auto Compiler(const CompilerOptions &options) noexcept -> int
+  class Stack
   {
-#ifdef TEST_RUNTIME
-    auto *result = runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(
-      runtime::node::Global::Allocate(EntryPoint, 0)));
+  public:
+    uint64_t     Size;
+    uint64_t     Count;
+    node::Base **Data;
 
-    std::cout << std::format(
-      "test runtime...{}\n",
-      reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
-#endif
+  public:
+    static void Initialize(Stack *stack) noexcept;
+    static void Free(Stack *stack) noexcept;
+    static void Push(Stack *stack, node::Base *node) noexcept;
 
-    CompileUnit::FILE = new CompileUnit(options.file);
-    diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
+    [[nodiscard]]
+    static auto Pop(Stack *stack) noexcept -> node::Base *;
 
-    std::cout << std::format("compiling {}...", options.file);
+    [[nodiscard]]
+    static auto Peek(Stack *stack, uint64_t o) noexcept -> node::Base *;
 
-    const auto start = std::chrono::system_clock::now();
-    auto      &program = parser::Parse();
-    type::TypeCheck(program, options);
-    gmachine::Compile(program, options);
-    const auto end = std::chrono::system_clock::now();
+    static void PopN(Stack *stack, uint64_t n) noexcept;
+    static void Slide(Stack *stack, uint64_t n) noexcept;
+    static void Update(Stack *stack, uint64_t o) noexcept;
+    static void Allocate(Stack *stack, uint64_t o) noexcept;
+    static void Pack(Stack *stack, uint64_t n, node::Tag) noexcept;
+    static void Split(Stack *stack, uint64_t n) noexcept;
+  };
+} // namespace swallow::compiler::runtime::stack
 
-    std::cout << std::format(
-      "ok ({} ms)\n",
-      double(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
-
-    delete CompileUnit::FILE;
-    delete diagnostics::Reporter::REPORTER;
-    return 0;
-  }
-} // namespace swallow::compiler
+#endif /* SWALLOW_COMPILER_RUNTIME_STACK_H */

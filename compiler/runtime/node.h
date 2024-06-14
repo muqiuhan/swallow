@@ -27,46 +27,87 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "compiler.h"
-#include "ast/ast.hpp"
-#include "parser.h"
-#include "diagnostics/reporter.hpp"
-#include "runtime/node.h"
-#include "runtime/runtime.h"
-#include <chrono>
+#ifndef SWALLOW_COMPILER_RUNTIME_NODE_H
+#define SWALLOW_COMPILER_RUNTIME_NODE_H
 
-using namespace swallow::compiler;
+#include <cstdint>
 
-namespace swallow::compiler
+namespace swallow::compiler::runtime::stack
 {
-  auto Compiler(const CompilerOptions &options) noexcept -> int
+  class Stack;
+} // namespace swallow::compiler::runtime::stack
+
+namespace swallow::compiler::runtime::node
+{
+  enum class Tag
   {
-#ifdef TEST_RUNTIME
-    auto *result = runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(
-      runtime::node::Global::Allocate(EntryPoint, 0)));
+    APPLICATION,
+    INT,
+    GLOBAL,
+    IND,
+    DATA
+  };
 
-    std::cout << std::format(
-      "test runtime...{}\n",
-      reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
-#endif
+  class Base
+  {
+  public:
+    enum Tag Tag;
 
-    CompileUnit::FILE = new CompileUnit(options.file);
-    diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
+  public:
+    [[nodiscard]] static auto Allocate() noexcept -> Base *;
+  };
 
-    std::cout << std::format("compiling {}...", options.file);
+  class Application
+  {
+  public:
+    Base  Node;
+    Base *Left;
+    Base *Right;
 
-    const auto start = std::chrono::system_clock::now();
-    auto      &program = parser::Parse();
-    type::TypeCheck(program, options);
-    gmachine::Compile(program, options);
-    const auto end = std::chrono::system_clock::now();
+  public:
+    [[nodiscard]] static auto Allocate(Base *Left, Base *Right) noexcept -> Application *;
+  };
 
-    std::cout << std::format(
-      "ok ({} ms)\n",
-      double(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
+  class Int
+  {
+  public:
+    Base    Node;
+    int32_t Value;
 
-    delete CompileUnit::FILE;
-    delete diagnostics::Reporter::REPORTER;
-    return 0;
-  }
-} // namespace swallow::compiler
+  public:
+    [[nodiscard]] static auto Allocate(int32_t Value) noexcept -> Int *;
+  };
+
+  class Global
+  {
+  public:
+    Base    Node;
+    int32_t Arity;
+    void (*Function)(runtime::stack::Stack *);
+
+  public:
+    [[nodiscard]] static auto Allocate(
+      void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *;
+  };
+
+  class Ind
+  {
+  public:
+    Base *Next;
+    Base  Node;
+
+  public:
+    [[nodiscard]] static auto Allocate(Base *Next) noexcept -> Ind *;
+  };
+
+  class Data
+  {
+  public:
+    enum Tag Tag;
+    Base   **Array;
+    Base     Node;
+  };
+
+} // namespace swallow::compiler::runtime::node
+
+#endif /* SWALLOW_COMPILER_RUNTIME_HPP*/

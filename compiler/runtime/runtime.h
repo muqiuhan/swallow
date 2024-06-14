@@ -27,46 +27,25 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "compiler.h"
-#include "ast/ast.hpp"
-#include "parser.h"
-#include "diagnostics/reporter.hpp"
-#include "runtime/node.h"
-#include "runtime/runtime.h"
-#include <chrono>
+#ifndef SWALLOW_COMPILER_RUNTIME_H
+#define SWALLOW_COMPILER_RUNTIME_H
 
-using namespace swallow::compiler;
+#include "node.h"
+#include "stack.h"
 
-namespace swallow::compiler
+extern void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept;
+
+namespace swallow::compiler::runtime
 {
-  auto Compiler(const CompilerOptions &options) noexcept -> int
+  using stack::Stack;
+
+  class Runtime
   {
-#ifdef TEST_RUNTIME
-    auto *result = runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(
-      runtime::node::Global::Allocate(EntryPoint, 0)));
+  public:
+    [[nodiscard]] static auto Eval(node::Base *node) noexcept -> node::Base *;
 
-    std::cout << std::format(
-      "test runtime...{}\n",
-      reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
+    static void Unwind(Stack *stack) noexcept;
+  };
+} // namespace swallow::compiler::runtime
+
 #endif
-
-    CompileUnit::FILE = new CompileUnit(options.file);
-    diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
-
-    std::cout << std::format("compiling {}...", options.file);
-
-    const auto start = std::chrono::system_clock::now();
-    auto      &program = parser::Parse();
-    type::TypeCheck(program, options);
-    gmachine::Compile(program, options);
-    const auto end = std::chrono::system_clock::now();
-
-    std::cout << std::format(
-      "ok ({} ms)\n",
-      double(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
-
-    delete CompileUnit::FILE;
-    delete diagnostics::Reporter::REPORTER;
-    return 0;
-  }
-} // namespace swallow::compiler
