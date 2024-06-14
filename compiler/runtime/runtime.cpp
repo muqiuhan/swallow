@@ -36,14 +36,14 @@ namespace swallow::compiler::runtime
 {
   [[nodiscard]] auto Runtime::Eval(node::Base *node) noexcept -> node::Base *
   {
-    Stack *stack;
-    Stack::Initialize(stack);
-    Stack::Push(stack, node);
+    Stack stack;
+    Stack::Initialize(&stack);
+    Stack::Push(&stack, node);
 
-    Unwind(stack);
+    Unwind(&stack);
 
-    auto *result = Stack::Pop(stack);
-    Stack::Free(stack);
+    auto *result = Stack::Pop(&stack);
+    Stack::Free(&stack);
     return result;
   }
 

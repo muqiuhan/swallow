@@ -43,11 +43,8 @@ namespace swallow::compiler::runtime
   {
   public:
     [[nodiscard]] static auto Eval(node::Base *node) noexcept -> node::Base *;
-    static void               Unwind(Stack *stack) noexcept;
 
-  public:
-    inline static node::Base *Result = Eval(
-      reinterpret_cast<runtime::node::Base *>(node::Global::Allocate(EntryPoint, 0)));
+    static void Unwind(Stack *stack) noexcept;
   };
 } // namespace swallow::compiler::runtime
 

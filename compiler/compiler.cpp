@@ -41,11 +41,14 @@ namespace swallow::compiler
 {
   auto Compiler(const CompilerOptions &options) noexcept -> int
   {
+#ifdef TEST_RUNTIME
+    auto *result = runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(
+      runtime::node::Global::Allocate(EntryPoint, 0)));
+
     std::cout << std::format(
       "test runtime...{}\n",
-      reinterpret_cast<swallow::compiler::runtime::node::Int *>(
-        swallow::compiler::runtime::Runtime::Result)
-        ->Value);
+      reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
+#endif
 
     CompileUnit::FILE = new CompileUnit(options.file);
     diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
