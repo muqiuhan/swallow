@@ -75,15 +75,9 @@ namespace swallow::compiler::utils
       return *this;
     }
 
-    auto operator==(const Ok<T> &val) const -> bool
-    {
-      return is_ok() && unwrap() == val.value;
-    }
+    auto operator==(const Ok<T> &val) const -> bool { return is_ok() && unwrap() == val.value; }
 
-    auto operator==(const Err<E> &val) const -> bool
-    {
-      return is_err() && unwrap_err() == val.value;
-    }
+    auto operator==(const Err<E> &val) const -> bool { return is_err() && unwrap_err() == val.value; }
 
     auto operator==(const Result<T, E> &rhs) const -> bool
     {
@@ -95,16 +89,10 @@ namespace swallow::compiler::utils
     auto operator!=(const Result<T, E> &rhs) const -> bool { return !(*this == rhs); }
 
     // Returns true if the result is Ok.
-    [[nodiscard]] auto is_ok() const -> bool
-    {
-      return std::holds_alternative<Ok<T>>(value);
-    }
+    [[nodiscard]] auto is_ok() const -> bool { return std::holds_alternative<Ok<T>>(value); }
 
     // Returns true if the result is Err.
-    [[nodiscard]] auto is_err() const -> bool
-    {
-      return std::holds_alternative<Err<E>>(value);
-    }
+    [[nodiscard]] auto is_err() const -> bool { return std::holds_alternative<Err<E>>(value); }
 
     // Converts from Result<T, E> to std::optional<T>.
     [[nodiscard]] auto ok() const -> std::optional<T>
@@ -190,15 +178,9 @@ namespace swallow::compiler::utils
       return op(unwrap_err());
     }
 
-    auto contains(const T &this_value) -> bool
-    {
-      return is_ok() ? unwrap() == this_value : false;
-    }
+    auto contains(const T &this_value) -> bool { return is_ok() ? unwrap() == this_value : false; }
 
-    auto contains_err(const E &this_value) -> bool
-    {
-      return is_err() ? unwrap_err() == this_value : false;
-    }
+    auto contains_err(const E &this_value) -> bool { return is_err() ? unwrap_err() == this_value : false; }
 
     // Maps a Result<T, E> to Result<U, E> by
     // applying a function to a contained Ok value,
@@ -214,8 +196,7 @@ namespace swallow::compiler::utils
 
     // Applies a function to the contained value (if any),
     // or returns the provided default (if not).
-    template <typename Value, typename Function>
-    auto map_or(Value default_value, Function fn) -> decltype(fn(T()))
+    template <typename Value, typename Function> auto map_or(Value default_value, Function fn) -> decltype(fn(T()))
     {
       if (is_ok())
         return fn(unwrap());
@@ -320,10 +301,7 @@ namespace swallow::compiler::utils
 
     Ok(T value) : value(value) {}
 
-    template <typename Function> auto and_then(Function op) -> Result<T, T>
-    {
-      return Result<T, T>(*this).and_then(op);
-    }
+    template <typename Function> auto and_then(Function op) -> Result<T, T> { return Result<T, T>(*this).and_then(op); }
   };
 
   template <typename E> struct Err
@@ -332,10 +310,7 @@ namespace swallow::compiler::utils
 
     Err(E value) : value(value) {}
 
-    template <typename Function> auto and_then(Function op) -> Result<E, E>
-    {
-      return Result<E, E>(*this).and_then(op);
-    }
+    template <typename Function> auto and_then(Function op) -> Result<E, E> { return Result<E, E>(*this).and_then(op); }
   };
 } // namespace swallow::compiler::utils
 

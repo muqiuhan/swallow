@@ -39,7 +39,7 @@ namespace swallow::compiler::runtime::stack
 
 namespace swallow::compiler::runtime::node
 {
-  enum class Tag
+  enum class Tag : int8_t
   {
     APPLICATION,
     INT,
@@ -86,8 +86,7 @@ namespace swallow::compiler::runtime::node
     void (*Function)(runtime::stack::Stack *);
 
   public:
-    [[nodiscard]] static auto Allocate(
-      void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *;
+    [[nodiscard]] static auto Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *;
   };
 
   class Ind

@@ -90,11 +90,7 @@ namespace swallow::compiler::gmachine::instruction
     to << "Jump\n\n";
 
     for (const auto& branch : Branches)
-      {
-        std::for_each(branch.begin(), branch.end(), [&](const auto& instruction) {
-          instruction->Dump(2, to);
-        });
-      }
+      std::for_each(branch.begin(), branch.end(), [&](const auto& instruction) { instruction->Dump(2, to); });
     to << "\n";
   }
 

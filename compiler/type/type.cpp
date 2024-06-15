@@ -49,15 +49,9 @@ namespace swallow::compiler::type
     return name;
   }
 
-  auto Manager::NewType() noexcept -> Type::Ptr
-  {
-    return Type::Ptr(new Variable(NewTypeName()));
-  }
+  auto Manager::NewType() noexcept -> Type::Ptr { return Type::Ptr(new Variable(NewTypeName())); }
 
-  auto Manager::NewArrowType() noexcept -> Type::Ptr
-  {
-    return Type::Ptr(new Arrow(NewType(), NewType()));
-  }
+  auto Manager::NewArrowType() noexcept -> Type::Ptr { return Type::Ptr(new Arrow(NewType(), NewType())); }
 
   auto Manager::Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr
   {
@@ -98,8 +92,7 @@ namespace swallow::compiler::type
         return Ok(Void());
       }
 
-    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
-        *rightArrow = dynamic_cast<Arrow *>(right.get());
+    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()), *rightArrow = dynamic_cast<Arrow *>(right.get());
         leftArrow != nullptr && rightArrow != nullptr)
       {
         return Unify(leftArrow->Left, rightArrow->Left).and_then([&](const auto &ok) {
@@ -107,8 +100,7 @@ namespace swallow::compiler::type
         });
       }
 
-    if (auto *leftID = dynamic_cast<Base *>(left.get()),
-        *rightID = dynamic_cast<Base *>(right.get());
+    if (auto *leftID = dynamic_cast<Base *>(left.get()), *rightID = dynamic_cast<Base *>(right.get());
         leftID != nullptr && rightID != nullptr)
       {
         if (leftID->Name == rightID->Name)
@@ -120,8 +112,7 @@ namespace swallow::compiler::type
 
   void Manager::Bind(const std::string &name, const Type::Ptr &type) noexcept
   {
-    if (const auto *other = dynamic_cast<const Variable *>(type.get());
-        (other != nullptr) && other->Name == name)
+    if (const auto *other = dynamic_cast<const Variable *>(type.get()); (other != nullptr) && other->Name == name)
       return;
 
     Types[name] = type;

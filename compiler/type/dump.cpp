@@ -50,10 +50,7 @@ namespace swallow::compiler::type
     Left->Dump(typeManager, to);
   }
 
-  void Base::Dump(const Manager &typeManager, std::ostream &to) const noexcept
-  {
-    to << Name;
-  }
+  void Base::Dump(const Manager &typeManager, std::ostream &to) const noexcept { to << Name; }
 
   void Environment::Dump(std::ostream &to, const Manager &typeManager) noexcept
   {

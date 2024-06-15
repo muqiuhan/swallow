@@ -4,6 +4,8 @@ set_xmakever("2.8.1")
 
 includes("../base")
 
+add_requires("llvm", { system = true })
+
 target("swc")
     set_kind("static")
     set_languages("c++20")
@@ -13,3 +15,4 @@ target("swc")
     add_deps("base")
     add_ldflags("clang::-stdlib=libc++")
     add_cxxflags("clang::-stdlib=libc++")
+    add_packages("llvm")

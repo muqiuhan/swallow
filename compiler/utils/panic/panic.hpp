@@ -51,14 +51,10 @@ namespace swallow::compiler::utils
   };
 
   template <class... Args>
-  [[noreturn]] void
-    Panic(PanicFormat<std::type_identity_t<Args>...> fmt, Args &&...args) noexcept
+  [[noreturn]] void Panic(PanicFormat<std::type_identity_t<Args>...> fmt, Args &&...args) noexcept
   {
     auto msg = std::format(
-      "{}:{} Panic: {}\n",
-      fmt.loc.file_name(),
-      fmt.loc.line(),
-      std::format(fmt.fmt, std::forward<Args>(args)...));
+      "{}:{} Panic: {}\n", fmt.loc.file_name(), fmt.loc.line(), std::format(fmt.fmt, std::forward<Args>(args)...));
     std::cout << msg.c_str() << std::endl;
     std::terminate();
   }
