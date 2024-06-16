@@ -49,7 +49,7 @@ namespace swallow::compiler::utils::variadicTable
   {
   public:
     /// The type stored for each row
-    typedef std::tuple<Ts...> DataTuple;
+    using DataTuple = std::tuple<Ts...>;
 
     /**
      * Construct the table with headers

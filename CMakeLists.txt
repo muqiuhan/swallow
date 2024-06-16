@@ -115,8 +115,8 @@ target_link_options(swallow_compiler_ast PRIVATE
 target_sources(swallow_compiler_ast PRIVATE
     compiler/ast/dump.cpp
     compiler/ast/ast.cpp
-    compiler/ast/g-machine.cpp
     compiler/ast/type.cpp
+    compiler/ast/gmachine.cpp
 )
 
 # target
@@ -409,8 +409,8 @@ target_sources(swc PRIVATE
     compiler/compiler.cpp
     compiler/ast/dump.cpp
     compiler/ast/ast.cpp
-    compiler/ast/g-machine.cpp
     compiler/ast/type.cpp
+    compiler/ast/gmachine.cpp
     compiler/diagnostics/utils.cpp
     compiler/diagnostics/diagnostics.cpp
     compiler/diagnostics/reporter.cpp
