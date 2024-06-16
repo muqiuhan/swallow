@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "runtime.h"
-#include "panic/panic.hpp"
+#include "utils/panic.hpp"
 #include "runtime/node.h"
 #include "runtime/stack.h"
 

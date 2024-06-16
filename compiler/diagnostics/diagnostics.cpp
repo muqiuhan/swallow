@@ -1,6 +1,6 @@
 #include "diagnostics.h"
 
-#include "panic/panic.hpp"
+#include "utils/panic.hpp"
 #include "termcolor.hpp"
 #include "utils.h"
 #include <algorithm>

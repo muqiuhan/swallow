@@ -30,7 +30,7 @@
 #ifndef SWALLOW_COMPILER_TYPE_H
 #define SWALLOW_COMPILER_TYPE_H
 
-#include "result/result.hpp"
+#include "utils/result.hpp"
 #include <cstdint>
 #include <map>
 #include <memory>

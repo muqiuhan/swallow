@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "binop.hpp"
-#include "panic/panic.hpp"
+#include "utils/panic.hpp"
 
 namespace swallow::compiler::gmachine
 {

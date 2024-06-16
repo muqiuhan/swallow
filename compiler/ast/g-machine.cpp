@@ -35,7 +35,7 @@
 #include "diagnostics/reporter.hpp"
 #include "g-machine/binop.hpp"
 #include "g-machine/instruction.hpp"
-#include "panic/panic.hpp"
+#include "utils/panic.hpp"
 
 using swallow::compiler::gmachine::instruction::Instruction;
 using namespace swallow::compiler::gmachine;

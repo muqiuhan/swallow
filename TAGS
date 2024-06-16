@@ -136,7 +136,7 @@ namespace swallow::compiler::ast45,1950
     const std::string Name;103,3512
     const std::vector<std::string> Types;104,3540
     const yy::location Location;105,3582
-    Constructodump::dumpIndent
+    Constructodump::DumpIndent
   class Definition113,3815
     const yy::location Location;118,3894
     explicit Definition(120,3928
@@ -524,7 +524,7 @@ namespace swallow::compiler::type39,1763
       -> utils::Result<utils::Result101,3182
     auto resolve(Type::Ptr type, Variable *&var) noexcept -> Type::Ptr;104,3287
 
-compiler/utils/binop/binop.hpp,194
+compiler/utils/utils/binop.hpp,194
 #define SWALLOW_COMPILER_UTILS_BINOP_HPP31,1629
 namespace swallow::compiler::utils33,1671
   enum class Binop35,1708
@@ -533,7 +533,7 @@ namespace swallow::compiler::utils33,1671
     TIMES,39,1752
     DIVIDE40,1763
 
-compiler/utils/optional/optional.hpp,11200
+compiler/utils/utils/optional.hpp,11200
 #define TL_OPTIONAL_HPP18,624
 #define TL_OPTIONAL_VERSION_MAJOR 20,649
 #define TL_OPTIONAL_VERSION_MINOR 21,685
@@ -741,8 +741,8 @@ namespace std2380,78838
   template <class T> struct hash<hash2383,78871
     ::std::size_t operator()(operator()2385,78925
 
-compiler/utils/panic/panic.hpp,290
-#define SWALLOW_UTILS_PANIC_H31,1618
+compiler/utils/utils/panic.hpp,290
+#define SWALLOW_COMPILER_UTILS_PANIC_H31,1618
 namespace swallow::compiler::utils38,1736
   template <class... Args> struct panic_format40,1773
     consteval panic_format(43,1847
@@ -750,7 +750,7 @@ namespace swallow::compiler::utils38,1736
     std::source_location loc;51,2039
   [[noreturn]] void panic(55,2102
 
-compiler/utils/result/result.hpp,1291
+compiler/utils/utils/result.hpp,1291
 #define SWALLOW_COMPILER_UTILS_RESULT_RESULT_HPP31,1637
 namespace swallow::compiler::utils37,1747
   struct Void41,1855

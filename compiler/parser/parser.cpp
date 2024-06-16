@@ -33,7 +33,7 @@
 #include "compiler.h"
 #include "diagnostics/reporter.hpp"
 #include "location.hh"
-#include "panic/panic.hpp"
+#include "utils/panic.hpp"
 #include <cstdio>
 
 namespace yy

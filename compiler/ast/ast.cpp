@@ -29,7 +29,7 @@
 
 #include "ast.hpp"
 #include "diagnostics/reporter.hpp"
-#include "panic/panic.hpp"
+#include "utils/panic.hpp"
 #include "type/environment.hpp"
 #include "type/type.hpp"
 #include <vector>

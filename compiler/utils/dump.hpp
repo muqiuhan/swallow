@@ -27,48 +27,19 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.hpp"
-#include "utils/optional.hpp"
+#ifndef SWALLOW_COMPILER_UTILS_DUMP_H
+#define SWALLOW_COMPILER_UTILS_DUMP_H
 
-namespace swallow::compiler::gmachine
+#include <cstdint>
+#include <iostream>
+
+namespace swallow::compiler::utils::dump
 {
-
-  [[nodiscard]] auto Variable::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
+  static void DumpIndent(uint8_t n, std::ostream &to) noexcept
   {
-    if (name == Name)
-      return tl::make_optional(0);
-
-    if (Parent != nullptr)
-      return Parent->GetOffset(name).map([](const auto &offset) { return offset + 1; });
-
-    return tl::nullopt;
+    while ((n--) != 0U)
+      to << "  ";
   }
+} // namespace swallow::compiler::utils::dump
 
-  [[nodiscard]] auto Variable::HasVariable(const std::string &name) const noexcept -> bool
-  {
-    if (name == Name)
-      return true;
-
-    if (Parent != nullptr)
-      return Parent->HasVariable(name);
-
-    return false;
-  }
-
-  [[nodiscard]] auto Offset::HasVariable(const std::string &name) const noexcept -> bool
-  {
-    if (Parent != nullptr)
-      return Parent->HasVariable(name);
-
-    return false;
-  }
-
-  [[nodiscard]] auto Offset::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
-  {
-    if (Parent != nullptr)
-      return Parent->GetOffset(name).map([&](const auto &offset) { return offset + Value; });
-
-    return tl::nullopt;
-  }
-
-} // namespace swallow::compiler::gmachine
+#endif

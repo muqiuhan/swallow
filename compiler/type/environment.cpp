@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "environment.hpp"
-#include "result/result.hpp"
+#include "utils/result.hpp"
 #include <utility>
 
 using namespace swallow::compiler::utils;

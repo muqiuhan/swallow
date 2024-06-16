@@ -1,5 +1,5 @@
-#ifndef SWALLOW_UTILS_VARIADIC_TABLE_HPP
-#define SWALLOW_UTILS_VARIADIC_TABLE_HPP
+#ifndef SWALLOW_COMPILER_UTILS_VARIADIC_TABLE_HPP
+#define SWALLOW_COMPILER_UTILS_VARIADIC_TABLE_HPP
 
 #include <iostream>
 #include <iomanip>
@@ -10,7 +10,6 @@
 #include <cassert>
 #include <cmath>
 #include <algorithm>
-#include <limits>
 
 namespace swallow::compiler::utils::variadicTable
 {

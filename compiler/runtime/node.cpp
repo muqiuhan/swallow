@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "node.h"
-#include "utils/panic/panic.hpp"
+#include "utils/panic.hpp"
 #include <cstdlib>
 
 namespace swallow::compiler::runtime::node

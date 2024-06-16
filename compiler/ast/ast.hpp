@@ -30,11 +30,11 @@
 #ifndef SWALLOW_COMPILER_AST_HPP
 #define SWALLOW_COMPILER_AST_HPP
 
-#include "binop/binop.hpp"
+#include "utils/binop.hpp"
 #include "g-machine/environment.hpp"
 #include "g-machine/instruction.hpp"
 #include "parser/location.hh"
-#include "result/result.hpp"
+#include "utils/result.hpp"
 #include "type/environment.hpp"
 #include "type/type.hpp"
 #include "compiler.h"

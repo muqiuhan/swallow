@@ -30,7 +30,7 @@
 #ifndef SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
 #define SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
 
-#include "optional/optional.hpp"
+#include "utils/optional.hpp"
 #include <memory>
 #include <string>
 

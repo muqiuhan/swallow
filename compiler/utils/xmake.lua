@@ -1,0 +1,5 @@
+target("libswallow_utils")
+    set_kind("headeronly")
+    set_languages("c++20")
+    add_ldflags("clang::-stdlib=libc++")
+    add_cxxflags("clang::-stdlib=libc++")

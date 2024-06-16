@@ -30,7 +30,7 @@
 #ifndef SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
 #define SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
 
-#include "binop/binop.hpp"
+#include "utils/binop.hpp"
 #include <string>
 
 namespace swallow::compiler::gmachine

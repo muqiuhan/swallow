@@ -33,7 +33,7 @@
 #include "compiler.h"
 #include "diagnostics/diagnostics.h"
 #include "parser/bison_parser.hpp"
-#include "result/result.hpp"
+#include "utils/result.hpp"
 
 namespace swallow::compiler::diagnostics
 {

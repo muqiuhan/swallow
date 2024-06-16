@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ast.hpp"
-#include "utils/dump.h"
+#include "utils/dump.hpp"
 #include <cstdint>
 #include <format>
 using namespace swallow::compiler::utils;
@@ -37,25 +37,25 @@ namespace swallow::compiler::ast
 {
   void Int::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    dump::dumpIndent(indent, to);
+    dump::DumpIndent(indent, to);
     to << std::format("<Int: {}>", Value) << '\n';
   }
 
   void LID::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    dump::dumpIndent(indent, to);
+    dump::DumpIndent(indent, to);
     to << std::format("<LID: {}>", ID) << '\n';
   }
 
   void UID::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    dump::dumpIndent(indent, to);
+    dump::DumpIndent(indent, to);
     to << std::format("<UID: {}>", ID) << '\n';
   }
 
   void Binop::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    dump::dumpIndent(indent, to);
+    dump::DumpIndent(indent, to);
 
     to << std::format("<Binop: {}", OperatorToString(Operator)) << '\n';
 
@@ -67,7 +67,7 @@ namespace swallow::compiler::ast
 
   void Application::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    dump::dumpIndent(indent, to);
+    dump::DumpIndent(indent, to);
 
     to << "<Application: " << '\n';
 
@@ -78,13 +78,13 @@ namespace swallow::compiler::ast
 
   void Match::Dump(uint8_t indent, std::ostream &to) const noexcept
   {
-    dump::dumpIndent(indent, to);
+    dump::DumpIndent(indent, to);
 
     to << "<Match: " << '\n';
 
     for (const auto &branch : Branches)
       {
-        dump::dumpIndent(indent + 1, to);
+        dump::DumpIndent(indent + 1, to);
         branch->Patt->Dump(to);
         to << '\n';
         branch->Expr->Dump(indent + 2, to);

@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "stack.h"
-#include "utils/panic/panic.hpp"
+#include "utils/panic.hpp"
 #include <cstdlib>
 #include <cstring>
 

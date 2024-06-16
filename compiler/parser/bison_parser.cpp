@@ -41,7 +41,7 @@
 #include <iostream>
 #include "bison_parser.hpp"
 #include "diagnostics/reporter.hpp"
-#include "binop/binop.hpp"
+#include "utils/binop.hpp"
 
 std::vector<Definition::Ptr>   Program;
 extern yy::parser::symbol_type yylex();
