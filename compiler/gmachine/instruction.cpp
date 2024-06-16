@@ -28,7 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "instruction.hpp"
-#include "ast.hpp"
+#include "ast/ast.hpp"
 #include "utils/dump.hpp"
 #include <format>
 

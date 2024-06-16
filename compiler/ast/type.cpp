@@ -27,15 +27,14 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "type.hpp"
+#include "type/type.hpp"
 #include "ast.hpp"
-#include "code.hpp"
+#include "diagnostics/code.hpp"
 #include "diagnostics/reporter.hpp"
 #include "type/environment.hpp"
 #include <algorithm>
 #include <format>
 #include <sstream>
-#include <utils.h>
 #include <vector>
 
 using namespace swallow::compiler::utils;

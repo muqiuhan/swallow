@@ -31,10 +31,10 @@
 #include <sstream>
 
 #include "ast.hpp"
-#include "code.hpp"
+#include "diagnostics/code.hpp"
 #include "diagnostics/reporter.hpp"
-#include "g-machine/binop.hpp"
-#include "g-machine/instruction.hpp"
+#include "gmachine/binop.hpp"
+#include "gmachine/instruction.hpp"
 #include "utils/panic.hpp"
 
 using swallow::compiler::gmachine::instruction::Instruction;
@@ -185,7 +185,7 @@ namespace swallow::compiler::ast
         std::stringstream with;
         With->Dump(0, with);
         utils::Panic(
-          "ICE: Cannot compile expression to g-machine instruction for match "
+          "ICE: Cannot compile expression to gmachine instruction for match "
           "expr {} at ({}:{} - {}:{})",
           with.str(),
           Location.begin.line,

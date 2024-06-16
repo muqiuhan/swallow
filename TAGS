@@ -154,7 +154,7 @@ namespace swallow::compiler::ast34,1645
   void PatternVariable::dump(dump100,3112
   void PatternConstructor::dump(dump105,3203
 
-compiler/ast/g-machine.cpp,272
+compiler/ast/gmachine.cpp,272
 namespace swallow::compiler::ast37,1780
   void Int::compile(compile39,1815
   void LID::compile(compile45,2018
@@ -198,7 +198,7 @@ compiler/diagnostics/LICENSE,519
    distributed under the License is distributed on an "AS IS" BASIS,198,11107
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,199,11176
 
-compiler/diagnostics/code.hpp,720
+compiler/diagnostics/diagnostics/code.hpp,720
 #define SWALLOW_COMPILER_DIAGNOSTICS_CODE_HPP31,1634
 namespace swallow::compiler::diagnostics34,1700
   enum Code 37,1744
@@ -383,17 +383,17 @@ namespace swallow::compiler::diagnostics13,209
   Report::Report(706,20830
   void Report::print(print715,21114
 
-compiler/g-machine/binop.cpp,46
+compiler/gmachine/binop.cpp,46
 namespace swallow::compiler::gmachine33,1637
 
-compiler/g-machine/binop.hpp,279
+compiler/gmachine/binop.hpp,279
 #define SWALLOW_COMPILER_G_MACHINE_BINOP_HPP31,1633
 namespace swallow::compiler::gmachine36,1725
   class Binop38,1765
       operatorsToString(const utils::Binop op) noexcept -> std::string;42,1823
       operatorsAction(const utils::Binop op) noexcept -> std::string;44,1925
 
-compiler/g-machine/environment.hpp,589
+compiler/gmachine/environment.hpp,589
 #define SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP31,1639
 namespace swallow::compiler::gmachine37,1761
   class Environment40,1802
@@ -410,7 +410,7 @@ namespace swallow::compiler::gmachine37,1761
       -> tl::optional<int> override;82,2805
       hasVariable(const std::string &name) const noexcept -> bool override;85,2866
 
-compiler/g-machine/instruction.cpp,440
+compiler/gmachine/instruction.cpp,440
 namespace swallow::compiler::gmachine::instruction32,1616
   void Pop::dump(dump34,1669
   void MakeApplication::dump(dump35,1738
@@ -424,7 +424,7 @@ namespace swallow::compiler::gmachine::instruction32,1616
   void PushGlobal::dump(dump43,2322
   void Push::dump(dump44,2398
 
-compiler/g-machine/instruction.hpp,1205
+compiler/gmachine/instruction.hpp,1205
 #define SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP31,1639
 namespace swallow::compiler::gmachine::instruction40,1820
   class Instruction43,1874
@@ -857,14 +857,14 @@ build/linux/x86_64/debug/swc:build/linux/x86_64/debug/swc73,2627
 build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o78,5164
 build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o83,5467
 build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o88,5769
-build/.objs/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o93,6076
+build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o93,6076
 build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o98,6408
 build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o103,6715
 build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o108,7090
 build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o113,7450
-build/.objs/swc/linux/x86_64/debug/compiler/g-machine/binop.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/g-machine/binop.cpp.o118,7840
-build/.objs/swc/linux/x86_64/debug/compiler/g-machine/environment.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/g-machine/environment.cpp.o123,8188
-build/.objs/swc/linux/x86_64/debug/compiler/g-machine/instruction.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/g-machine/instruction.cpp.o128,8566
+build/.objs/swc/linux/x86_64/debug/compiler/gmachine/binop.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/gmachine/binop.cpp.o118,7840
+build/.objs/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o123,8188
+build/.objs/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o128,8566
 build/.objs/swc/linux/x86_64/debug/compiler/lexer/lexer.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/lexer/lexer.cpp.o133,8944
 build/.objs/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o138,9268
 build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o:build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o143,9617
@@ -923,14 +923,14 @@ resources/logo.png,108
 build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o,15
 �$$30,12705
 
-build/.objs/swc/linux/x86_64/debug/compiler/g-machine/environment.cpp.o,84
+build/.objs/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o,84
 I�F�m����]��?�cf�
 ��nٗl�ǡ�a��(E��mAX���!����!��Gm�7�{�g��c��57,13711
 
-build/.objs/swc/linux/x86_64/debug/compiler/g-machine/instruction.cpp.o,54
+build/.objs/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o,54
 ��f���͕i��Pj��3X#�#x�ͩtr.o��r:��J�J131,37980
 
-build/.objs/swc/linux/x86_64/debug/compiler/g-machine/binop.cpp.o,1081
+build/.objs/swc/linux/x86_64/debug/compiler/gmachine/binop.cpp.o,1081
 ��R�R19,17829
 ��R�R20,18323
 H�E�H�E�H�E�H�E�H�H�E�H�E�H�E�H�E�H30,32144
@@ -944,7 +944,7 @@ Y4@��j7x�q��uSO7�7�X���\�i�<��º���؇	��
 �0����Ȼc�����E��qi�0�F�]֤�9M���]�|�����֦"��"��dU��B#e�<������ę��زg;t��2l��t��Sw<�tf��f�s*`�	^*�d��m�J��|�,n_D�)��A���v%�W��W�232,118360
 c�_�S���^�T��3c�q�t�NX�2g�l����׏�"�)��JQ0ws�:+���g�g�238,119594
 
-build/.objs/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o,68
+build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o,68
 YY�YY5,9965
 YY�`���]2ҲF�v)�?�U���!��H�3�x�)z(z5,9965
 
@@ -1174,17 +1174,17 @@ build/.deps/base/linux/x86_64/debug/libbase.so.d,32
     files 2,2
     values 5,87
 
-build/.deps/swc/linux/x86_64/release/compiler/g-machine/environment.cpp.o.d,59
+build/.deps/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o.d,59
     values 2,2
     files 20,456
     depfiles_gcc 23,522
 
-build/.deps/swc/linux/x86_64/release/compiler/g-machine/instruction.cpp.o.d,59
+build/.deps/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o.d,59
     values 2,2
     files 20,456
     depfiles_gcc 23,522
 
-build/.deps/swc/linux/x86_64/release/compiler/g-machine/binop.cpp.o.d,59
+build/.deps/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o.d,59
     values 2,2
     files 20,456
     depfiles_gcc 23,516
@@ -1214,7 +1214,7 @@ build/.deps/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o.d,59
     files 20,456
     depfiles_gcc 23,517
 
-build/.deps/swc/linux/x86_64/release/compiler/ast/g-machine.cpp.o.d,59
+build/.deps/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o.d,59
     values 2,2
     files 20,456
     depfiles_gcc 23,514
@@ -1268,15 +1268,15 @@ build/.deps/swc/linux/x86_64/release/swc.d,35
     files 2,2
     values 22,1428
 
-build/.deps/swc/linux/x86_64/debug/compiler/g-machine/environment.cpp.o.d,41
+build/.deps/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o.d,41
     values 2,2
     depfiles_gcc 18,372
 
-build/.deps/swc/linux/x86_64/debug/compiler/g-machine/instruction.cpp.o.d,41
+build/.deps/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o.d,41
     values 2,2
     depfiles_gcc 18,372
 
-build/.deps/swc/linux/x86_64/debug/compiler/g-machine/binop.cpp.o.d,41
+build/.deps/swc/linux/x86_64/debug/compiler/gmachine/binop.cpp.o.d,41
     values 2,2
     depfiles_gcc 18,372
 
@@ -1300,7 +1300,7 @@ build/.deps/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o.d,41
     values 2,2
     depfiles_gcc 18,372
 
-build/.deps/swc/linux/x86_64/debug/compiler/ast/g-machine.cpp.o.d,41
+build/.deps/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o.d,41
     values 2,2
     depfiles_gcc 18,372
 
@@ -1422,7 +1422,7 @@ RIFF�RIFF1,0
 &&��Āp]p7,899
 &&��Āp]��Āp]p7,899
 
-.cache/clangd/index/code.hpp.3EACCC3895CB1160.idx,18
+.cache/clangd/index/diagnostics/code.hpp.3EACCC3895CB1160.idx,18
 ,,Z�Z10,1064
 
 .cache/clangd/index/optional.hpp.B229842C26E8024F.idx,9388
@@ -2342,7 +2342,7 @@ std::vector<Definition::Ptr> Program;14,263
 
 .vscode/compile_commands.json,0
 
-.cache/clangd/index/g-machine.cpp.3D8D6B2A65D5DEB1.idx,0
+.cache/clangd/index/gmachine.cpp.3D8D6B2A65D5DEB1.idx,0
 
 .cache/clangd/index/flex_lexer.cpp.89AF1892F2D8383F.idx,0
 
@@ -2602,7 +2602,7 @@ build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o,0
 
 build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o,0
 
-build/.objs/swc/linux/x86_64/release/compiler/ast/g-machine.cpp.o,0
+build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o,0
 
 build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp-e1385833.o.tmp,0
 
@@ -2630,13 +2630,13 @@ build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp-ac90d4f3.o.tmp,0
 
 build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp-9d77ceb5.o.tmp,0
 
-build/.objs/swc/linux/x86_64/release/compiler/ast/g-machine.cpp-bd75e49d.o.tmp,0
+build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp-bd75e49d.o.tmp,0
 
-build/.objs/swc/linux/x86_64/release/compiler/g-machine/binop.cpp.o,0
+build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o,0
 
-build/.objs/swc/linux/x86_64/release/compiler/g-machine/environment.cpp.o,0
+build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o,0
 
-build/.objs/swc/linux/x86_64/release/compiler/g-machine/instruction.cpp.o,0
+build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o,0
 
 build/.objs/base/linux/x86_64/debug/base/stdlib.cpp.o,0
 

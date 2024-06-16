@@ -31,8 +31,8 @@
 #define SWALLOW_COMPILER_AST_HPP
 
 #include "utils/binop.hpp"
-#include "g-machine/environment.hpp"
-#include "g-machine/instruction.hpp"
+#include "gmachine/environment.hpp"
+#include "gmachine/instruction.hpp"
 #include "parser/location.hh"
 #include "utils/result.hpp"
 #include "type/environment.hpp"

@@ -31,7 +31,7 @@
 #define SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP
 
 #include "binop.hpp"
-#include "g-machine/environment.hpp"
+#include "gmachine/environment.hpp"
 #include <cstdint>
 #include <map>
 #include <memory>

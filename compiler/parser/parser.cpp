@@ -29,7 +29,7 @@
 
 #include "parser.h"
 #include "bison_parser.hpp"
-#include "code.hpp"
+#include "diagnostics/code.hpp"
 #include "compiler.h"
 #include "diagnostics/reporter.hpp"
 #include "location.hh"

@@ -30,7 +30,7 @@
 #include "compiler.h"
 #include "ast/ast.hpp"
 #include "diagnostics/reporter.hpp"
-#include "parser.h"
+#include "parser/parser.h"
 #include <chrono>
 
 using namespace swallow::compiler;
