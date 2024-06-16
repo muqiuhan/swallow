@@ -92,7 +92,7 @@ namespace swallow::compiler::ir::context
 
     auto CreateSize(size_t num) noexcept -> llvm::ConstantInt *;
 
-    auto CreatePop(llvm::Function *function) noexcept -> llvm::Function *;
+    auto CreatePop(llvm::Function *function) noexcept -> llvm::Value *;
 
     auto CreatePeek(llvm::Function *function, llvm::Value *value) noexcept -> llvm::Function *;
 
@@ -124,6 +124,6 @@ namespace swallow::compiler::ir::context
 
     auto UnwrapNum(llvm::Value *value) noexcept -> llvm::Value *;
   };
-} // namespace swallow::compiler::ir
+} // namespace swallow::compiler::ir::context
 
 #endif
