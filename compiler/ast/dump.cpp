@@ -27,8 +27,8 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "ast.hpp"
 #include "utils/dump.hpp"
+#include "ast.hpp"
 #include <cstdint>
 #include <format>
 using namespace swallow::compiler::utils;

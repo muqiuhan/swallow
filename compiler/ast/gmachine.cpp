@@ -164,7 +164,7 @@ namespace swallow::compiler::ast
     const yy::location     &Location) noexcept
   {
 
-    auto *variablePattern = dynamic_cast<VariablePattern *>(branch->Patt.get());
+    auto *variablePattern    = dynamic_cast<VariablePattern *>(branch->Patt.get());
     auto *constructorPattern = dynamic_cast<ConstructorPattern *>(branch->Patt.get());
 
     if (nullptr != variablePattern)

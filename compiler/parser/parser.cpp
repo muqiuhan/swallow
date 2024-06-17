@@ -29,8 +29,8 @@
 
 #include "parser.h"
 #include "bison_parser.hpp"
-#include "diagnostics/code.hpp"
 #include "compiler.h"
+#include "diagnostics/code.hpp"
 #include "diagnostics/reporter.hpp"
 #include "location.hh"
 #include "utils/panic.hpp"

@@ -30,14 +30,14 @@
 #ifndef SWALLOW_COMPILER_AST_HPP
 #define SWALLOW_COMPILER_AST_HPP
 
-#include "utils/binop.hpp"
+#include "compiler.h"
 #include "gmachine/environment.hpp"
 #include "gmachine/instruction.hpp"
 #include "parser/location.hh"
-#include "utils/result.hpp"
 #include "type/environment.hpp"
 #include "type/type.hpp"
-#include "compiler.h"
+#include "utils/binop.hpp"
+#include "utils/result.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>

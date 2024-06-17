@@ -784,7 +784,7 @@ namespace termcolor
 
       // get terminal handle
       HANDLE hTerminal = INVALID_HANDLE_VALUE;
-      hTerminal = get_terminal_handle(stream);
+      hTerminal        = get_terminal_handle(stream);
 
       // save default terminal attributes if it unsaved
       if (!defaultAttributes)

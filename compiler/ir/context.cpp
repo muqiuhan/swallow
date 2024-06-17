@@ -33,9 +33,12 @@
 #include <llvm/IR/Constants.h>
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Function.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Module.h>
 #include <llvm/IR/Type.h>
-#include <memory>
 #include <format>
+#include <memory>
+#include <utility>
 
 namespace swallow::compiler::ir::context
 {
@@ -63,23 +66,35 @@ namespace swallow::compiler::ir::context
 
   void LLVMContext::CreateTypes() noexcept
   {
-    StackType = llvm::StructType::create(Context, "Struct");
+    StackType    = llvm::StructType::create(Context, "Struct");
     StackPtrType = llvm::PointerType::getUnqual(StackType);
-    TagType = llvm::IntegerType::getInt8Ty(Context);
+    TagType      = llvm::IntegerType::getInt8Ty(Context);
   }
 
-  auto LLVMContext::CreateCustomFunction(std::string name, int32_t arity) noexcept -> llvm::Function *
+  inline static auto CreateNewFunction(
+    const std::string &name,
+    llvm::LLVMContext &Context,
+    llvm::PointerType *StackPtrType,
+    llvm::Module      &Module) noexcept -> std::pair<std::string, llvm::Function *>
   {
-    auto *voidType = llvm::Type::getVoidTy(Context);
-    auto *functionType = llvm::FunctionType::get(voidType, {StackPtrType}, false);
-    auto *newFunction = llvm::Function::Create(
-      functionType, llvm::Function::LinkageTypes::ExternalLinkage, std::format("swallow_{}", name), &Module);
-    auto *startBlock = llvm::BasicBlock::Create(Context, "EntryPoint", newFunction);
-    auto  newCustomFunction = std::make_unique<CustomFunction>();
+    auto *voidType            = llvm::Type::getVoidTy(Context);
+    auto *functionType        = llvm::FunctionType::get(voidType, {StackPtrType}, false);
+    auto  functionName        = std::format("swallow_{}", name);
+    auto  functionLinkageType = llvm::Function::LinkageTypes::ExternalLinkage;
+    auto *function            = llvm::Function::Create(functionType, functionLinkageType, functionName, &Module);
 
-    newCustomFunction->Arity = arity;
+    return std::make_pair(functionName, function);
+  }
+
+  auto LLVMContext::CreateCustomFunction(const std::string &name, int32_t arity) noexcept -> llvm::Function *
+  {
+    auto &&[newFunctionName, newFunction] = CreateNewFunction(name, Context, StackPtrType, Module);
+    auto *startBlock                      = llvm::BasicBlock::Create(Context, "EntryPoint", newFunction);
+    auto  newCustomFunction               = std::make_unique<CustomFunction>();
+
+    newCustomFunction->Arity    = arity;
     newCustomFunction->Function = newFunction;
-    CustomFunctions.insert({std::format("swallow_{}", name), std::move(newCustomFunction)});
+    CustomFunctions.insert({newFunctionName, std::move(newCustomFunction)});
 
     return newFunction;
   }
@@ -95,7 +110,7 @@ namespace swallow::compiler::ir::context
 
   auto LLVMContext::CreatePop(llvm::Function *function) noexcept -> llvm::Value *
   {
-    return Builder.CreateCall(Functions.at("Stack::Pop"), {function->arg_begin()});
+    return Builder.CreateCall(Functions.at("swallow::compiler::runtime::stack::Stack::Pop"), {function->arg_begin()});
   }
 
   auto LLVMContext::CreatePeek(llvm::Function *function, llvm::Value *value) noexcept -> llvm::Function * {}
@@ -124,6 +139,12 @@ namespace swallow::compiler::ir::context
 
   auto LLVMContext::UnwrapDataTag(llvm::Value *value) noexcept -> llvm::Value * {}
 
-  auto LLVMContext::UnwrapNum(llvm::Value *value) noexcept -> llvm::Value * {}
+  auto LLVMContext::UnwrapNum(llvm::Value *value) noexcept -> llvm::Value *
+  {
+    auto *type = llvm::PointerType::getUnqual(StructTypes.at("swallow::compiler::runtime::node::Int"));
+    auto *num  = Builder.CreatePointerCast(value, type);
+
+    return Builder.CreateLoad(type, Builder.CreateGEP(type, num, {CreateInt32(0), CreateInt32(1)}));
+  }
 
 } // namespace swallow::compiler::ir::context

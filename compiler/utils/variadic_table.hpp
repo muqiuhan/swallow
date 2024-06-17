@@ -1,15 +1,15 @@
 #ifndef SWALLOW_COMPILER_UTILS_VARIADIC_TABLE_HPP
 #define SWALLOW_COMPILER_UTILS_VARIADIC_TABLE_HPP
 
-#include <iostream>
-#include <iomanip>
-#include <ios>
-#include <vector>
-#include <tuple>
-#include <type_traits>
+#include <algorithm>
 #include <cassert>
 #include <cmath>
-#include <algorithm>
+#include <iomanip>
+#include <ios>
+#include <iostream>
+#include <tuple>
+#include <type_traits>
+#include <vector>
 
 namespace swallow::compiler::utils::variadicTable
 {
@@ -32,12 +32,12 @@ namespace swallow::compiler::utils::variadicTable
    * It's templated on the types that will be in each column
    * (all values in a column must have the same type)
    *
-   * For instance, to use it with data that looks like:  "Fred", 193.4, 35, "Sam"
-   * with header names: "Name", "Weight", "Age", "Brother"
+   * For instance, to use it with data that looks like:  "Fred", 193.4, 35,
+   * "Sam" with header names: "Name", "Weight", "Age", "Brother"
    *
    * You would invoke the table like so:
-   * VariadicTable<std::string, double, int, std::string> vt("Name", "Weight", "Age",
-   * "Brother");
+   * VariadicTable<std::string, double, int, std::string> vt("Name", "Weight",
+   * "Age", "Brother");
    *
    * Then add the data to the table:
    * vt.addRow("Fred", 193.4, 35, "Sam");
@@ -55,7 +55,8 @@ namespace swallow::compiler::utils::variadicTable
      * Construct the table with headers
      *
      * @param headers The names of the columns
-     * @param static_column_size The size of columns that can't be found automatically
+     * @param static_column_size The size of columns that can't be found
+     * automatically
      */
     VariadicTable(std::vector<std::string> headers, unsigned int static_column_size = 0, unsigned int cell_padding = 1)
       : _headers(headers)
@@ -128,8 +129,8 @@ namespace swallow::compiler::utils::variadicTable
      *
      * Note: this is ignored for std::string columns
      *
-     * @column_format The format for each column: MUST be the same length as the number of
-     * columns.
+     * @column_format The format for each column: MUST be the same length as the
+     * number of columns.
      */
     void setColumnFormat(const std::vector<VariadicTableColumnFormat> &column_format)
     {
@@ -143,8 +144,8 @@ namespace swallow::compiler::utils::variadicTable
      *
      * Note: this is ignored for std::string columns
      *
-     * @column_format The precision for each column: MUST be the same length as the number
-     * of columns.
+     * @column_format The precision for each column: MUST be the same length as
+     * the number of columns.
      */
     void setColumnPrecision(const std::vector<int> &precision)
     {
@@ -232,7 +233,8 @@ namespace swallow::compiler::utils::variadicTable
       // Unset the format
       if (!_column_format.empty())
         {
-          // Because "stream << std::defaultfloat;" won't compile with old GCC or Clang
+          // Because "stream << std::defaultfloat;" won't compile with old GCC
+          // or Clang
           stream.unsetf(std::ios_base::floatfield);
         }
 
@@ -278,8 +280,8 @@ namespace swallow::compiler::utils::variadicTable
     size_t sizeOfData(...) { return _static_column_size; }
 
     /**
-     * These three functions iterate over the Tuple, find the printed size of each element
-     * and set it in a vector
+     * These three functions iterate over the Tuple, find the printed size of
+     * each element and set it in a vector
      */
 
     /**

@@ -28,9 +28,9 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "runtime.h"
-#include "utils/panic.hpp"
 #include "runtime/node.h"
 #include "runtime/stack.h"
+#include "utils/panic.hpp"
 
 namespace swallow::compiler::runtime
 {
@@ -112,7 +112,7 @@ void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept
   swallow::compiler::runtime::node::Base *left;
   swallow::compiler::runtime::node::Base *right;
 
-  left = swallow::compiler::runtime::stack::Stack::Pop(stack);
+  left  = swallow::compiler::runtime::stack::Stack::Pop(stack);
   right = swallow::compiler::runtime::stack::Stack::Pop(stack);
 
   // AddFunction(10) : Int => Int
@@ -121,7 +121,7 @@ void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept
     reinterpret_cast<swallow::compiler::runtime::node::Base *>(
       swallow::compiler::runtime::node::Application::Allocate(left, right)));
 
-  left = swallow::compiler::runtime::stack::Stack::Pop(stack);
+  left  = swallow::compiler::runtime::stack::Stack::Pop(stack);
   right = swallow::compiler::runtime::stack::Stack::Pop(stack);
   // (AddFunction(10), 20) : Int
   swallow::compiler::runtime::stack::Stack::Push(

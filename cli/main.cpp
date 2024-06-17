@@ -1,5 +1,5 @@
-#include "utils/structopt.hpp"
 #include "compiler.h"
+#include "utils/structopt.hpp"
 #include <string>
 
 STRUCTOPT(swallow::compiler::CompilerOptions, file, verbose, dump_ast, dump_types, dump_gmachine_ir);
@@ -22,7 +22,8 @@ auto main(int argc, char *argv[]) -> int
         }
       else
         {
-          std::cout << "USAGE: swa [command]\n\ncommand:\n\tc, compile\tcall the "
+          std::cout << "USAGE: swa [command]\n\ncommand:\n\tc, compile\tcall "
+                       "the "
                        "compiler\n\ti, repl\t\tcall the repl interpreter\n";
         }
     }

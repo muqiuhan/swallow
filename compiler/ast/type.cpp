@@ -79,7 +79,7 @@ namespace swallow::compiler::ast
   {
     const std::string operatorName = OperatorToString(Operator);
 
-    type::Type::Ptr leftType = Left->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr leftType  = Left->CommonTypeCheck(typeManager, typeEnvironment);
     type::Type::Ptr rightType = Right->CommonTypeCheck(typeManager, typeEnvironment);
 
     type::Type::Ptr functionType = typeEnvironment.Lookup(operatorName)
@@ -94,8 +94,8 @@ namespace swallow::compiler::ast
     }).unwrap();
 
     type::Type::Ptr returnType = typeManager.NewType();
-    type::Type::Ptr arrowOne = type::Type::Ptr(new type::Arrow(rightType, returnType));
-    type::Type::Ptr arrowTwo = type::Type::Ptr(new type::Arrow(leftType, arrowOne));
+    type::Type::Ptr arrowOne   = type::Type::Ptr(new type::Arrow(rightType, returnType));
+    type::Type::Ptr arrowTwo   = type::Type::Ptr(new type::Arrow(leftType, arrowOne));
 
     typeManager.Unify(arrowTwo, functionType)
       .or_else([&](const auto &err) {
@@ -124,11 +124,11 @@ namespace swallow::compiler::ast
   auto Application::TypeCheck(type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
-    type::Type::Ptr leftType = Left->CommonTypeCheck(typeManager, typeEnvironment);
+    type::Type::Ptr leftType  = Left->CommonTypeCheck(typeManager, typeEnvironment);
     type::Type::Ptr rightType = Right->CommonTypeCheck(typeManager, typeEnvironment);
 
     type::Type::Ptr returnType = typeManager.NewType();
-    type::Type::Ptr arrowType = type::Type::Ptr(new type::Arrow(rightType, returnType));
+    type::Type::Ptr arrowType  = type::Type::Ptr(new type::Arrow(rightType, returnType));
 
     typeManager.Unify(arrowType, leftType)
       .or_else([&](const auto &err) {
@@ -152,8 +152,8 @@ namespace swallow::compiler::ast
   auto Match::TypeCheck(type::Manager &typeManager, const type::Environment &typeEnvironment) const noexcept
     -> Result<type::Type::Ptr, Void>
   {
-    type::Variable *var = nullptr;
-    type::Type::Ptr matchType = typeManager.Resolve(With->CommonTypeCheck(typeManager, typeEnvironment), var);
+    type::Variable *var        = nullptr;
+    type::Type::Ptr matchType  = typeManager.Resolve(With->CommonTypeCheck(typeManager, typeEnvironment), var);
     type::Type::Ptr branchType = typeManager.NewType();
 
     for (const auto &branch : Branches)
@@ -250,12 +250,12 @@ namespace swallow::compiler::ast
 
   void Fn::PreScanTypes(type::Manager &typeManager, type::Environment &typeEnvironment) noexcept
   {
-    ReturnType = typeManager.NewType();
+    ReturnType               = typeManager.NewType();
     type::Type::Ptr fullType = ReturnType;
 
     std::for_each(Params.rbegin(), Params.rend(), [&](const std::string &param) {
       type::Type::Ptr paramType = typeManager.NewType();
-      fullType = type::Type::Ptr(new type::Arrow(paramType, fullType));
+      fullType                  = type::Type::Ptr(new type::Arrow(paramType, fullType));
       ParamTypes.push_back(paramType);
     });
 
@@ -267,7 +267,7 @@ namespace swallow::compiler::ast
     type::Environment newEnvironment = typeEnvironment.Scope();
 
     auto paramIterator = Params.begin();
-    auto typeIterator = ParamTypes.rbegin();
+    auto typeIterator  = ParamTypes.rbegin();
     while (paramIterator != Params.end() && typeIterator != ParamTypes.rend())
       {
         newEnvironment.Bind(*paramIterator, *typeIterator);
@@ -296,13 +296,13 @@ namespace swallow::compiler::ast
 
   void Data::PreScanTypes(type::Manager &typeManager, type::Environment &typeEnvironment) noexcept
   {
-    auto   *thisType = new type::Data(Name);
+    auto   *thisType   = new type::Data(Name);
     auto    returnType = type::Type::Ptr(thisType);
-    uint8_t nextTag = 0;
+    uint8_t nextTag    = 0;
 
     for (const auto &constructor : Constructors)
       {
-        constructor->Tag = nextTag;
+        constructor->Tag                          = nextTag;
         thisType->Constructors[constructor->Name] = {nextTag++};
 
         auto fullType = returnType;

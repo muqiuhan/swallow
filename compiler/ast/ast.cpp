@@ -29,9 +29,9 @@
 
 #include "ast.hpp"
 #include "diagnostics/reporter.hpp"
-#include "utils/panic.hpp"
 #include "type/environment.hpp"
 #include "type/type.hpp"
+#include "utils/panic.hpp"
 #include <vector>
 
 using namespace swallow::compiler::utils;
@@ -80,7 +80,7 @@ namespace swallow::compiler::type
     Manager     typeManager;
     Environment typeEnvironment;
 
-    auto intType = Type::Ptr(new Base("Int"));
+    auto intType   = Type::Ptr(new Base("Int"));
     auto binopType = Type::Ptr(new Arrow(intType, Type::Ptr(new type::Arrow(intType, intType))));
 
     typeEnvironment.Bind("+", binopType);

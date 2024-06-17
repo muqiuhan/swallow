@@ -1,8 +1,8 @@
 #include "diagnostics.h"
 
+#include "utils.h"
 #include "utils/panic.hpp"
 #include "utils/termcolor.hpp"
-#include "utils.h"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -240,7 +240,7 @@ namespace swallow::compiler::diagnostics
         if (current_span == nullptr)
           {
             auto new_span = std::make_shared<Span>(this, index, index);
-            current_span = new_span.get();
+            current_span  = new_span.get();
             this->line_spans_.push_back(new_span);
           }
 
@@ -261,7 +261,7 @@ namespace swallow::compiler::diagnostics
   auto Details::get_line_source(const Span &span) const -> std::string
   {
     auto result = this->source_.substr(span.get_start_index(), span.get_width());
-    result = std::regex_replace(result, std::regex("\t"), " ");
+    result      = std::regex_replace(result, std::regex("\t"), " ");
     return result;
   }
 
@@ -292,13 +292,13 @@ namespace swallow::compiler::diagnostics
     std::sort(ascending_labels.begin(), ascending_labels.end(), AscendingLabels());
 
     this->first_label_ = ascending_labels.front();
-    this->last_label_ = ascending_labels.back();
+    this->last_label_  = ascending_labels.back();
   }
 
   void LabelGroup::print(std::ostream &output, const std::string &spaces_prefix) const
   {
     auto first_line = this->first_label_->get_line();
-    auto last_line = this->last_label_->get_line();
+    auto last_line  = this->last_label_->get_line();
 
     auto beginning_line = 0U;
     if (first_line >= DISPLAYED_LINE_PADDING)
@@ -343,9 +343,9 @@ namespace swallow::compiler::diagnostics
         const auto &labels = level_labels.at(index);
         for (const auto &label : labels)
           {
-            const auto relative_span = label->get_span().relative_to(line_span);
+            const auto relative_span                              = label->get_span().relative_to(line_span);
             next_label_startings[relative_span.get_start_index()] = label;
-            next_label_endings[relative_span.get_end_index()] = label;
+            next_label_endings[relative_span.get_end_index()]     = label;
           }
       }
 
@@ -354,13 +354,13 @@ namespace swallow::compiler::diagnostics
     std::map<size_t, const Label *> current_label_startings;
     for (const auto &label : current_labels)
       {
-        const auto relative_span = label->get_span().relative_to(line_span);
+        const auto relative_span                                 = label->get_span().relative_to(line_span);
         current_label_startings[relative_span.get_start_index()] = label;
       }
 
     output << spaces_prefix << COLOR_RGB("o  ", COLOR_GREY);
 
-    const Label *last_label = nullptr;
+    const Label *last_label     = nullptr;
     size_t       last_end_index = 0U;
     for (auto index = 0U; index < line_span.get_width(); index++)
       {
@@ -389,7 +389,7 @@ namespace swallow::compiler::diagnostics
             continue;
           }
 
-        const auto *label = current_label_startings.at(index);
+        const auto *label         = current_label_startings.at(index);
         auto        relative_span = label->get_span().relative_to(line_span);
 
         if (last_end_index >= index && index != 0)
@@ -408,7 +408,7 @@ namespace swallow::compiler::diagnostics
           COLOR_BY_TYPE(label->get_color(), "^");
 
         last_end_index = relative_span.get_end_index();
-        last_label = label;
+        last_label     = label;
       }
 
     output << "\n";
@@ -460,8 +460,8 @@ namespace swallow::compiler::diagnostics
     std::map<size_t, const Label *> mapped_labels;
     for (const auto &label : labels)
       {
-        const auto &line_span = this->details_->get_line_spans()[label->get_line()];
-        auto        relative_span = label->get_span().relative_to(*line_span);
+        const auto &line_span                          = this->details_->get_line_spans()[label->get_line()];
+        auto        relative_span                      = label->get_span().relative_to(*line_span);
         mapped_labels[relative_span.get_start_index()] = label;
       }
 
@@ -582,7 +582,7 @@ namespace swallow::compiler::diagnostics
     auto last_line = labels.front()->get_line();
     for (const auto &label : ascending_labels)
       {
-        auto label_line = label->get_line();
+        auto label_line      = label->get_line();
         auto line_difference = (int32_t) label_line - (int32_t) last_line;
 
         if (line_difference > DISPLAYED_LINE_PADDING)
@@ -623,7 +623,7 @@ namespace swallow::compiler::diagnostics
     auto biggest_number = 0U;
     for (const auto &labels_group : this->label_groups_)
       {
-        const auto *last_label = labels_group.get_last_label();
+        const auto *last_label  = labels_group.get_last_label();
         auto        line_number = last_label->get_line();
 
         if (biggest_number < line_number)
@@ -667,7 +667,7 @@ namespace swallow::compiler::diagnostics
       }
 
     auto biggest_number_width = std::to_string(biggest_number).length();
-    auto spaces_prefix = std::string(biggest_number_width + 3, ' ');
+    auto spaces_prefix        = std::string(biggest_number_width + 3, ' ');
 
     output << spaces_prefix << COLOR_RGB("/", COLOR_GREY);
     for (auto index = 0U; index < file_groups.size(); index++)
@@ -705,7 +705,7 @@ namespace swallow::compiler::diagnostics
     for (const auto &label : this->labels_)
       {
         auto *details = label.get_span().get_details();
-        auto  result = group_mappings.find(details);
+        auto  result  = group_mappings.find(details);
 
         if (result == group_mappings.end())
           group_mappings[details] = {&label};

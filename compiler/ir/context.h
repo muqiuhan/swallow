@@ -30,14 +30,14 @@
 #ifndef SWALLOW_COMPILER_LLVM_H
 #define SWALLOW_COMPILER_LLVM_H
 
-#include <cstdint>
 #include <llvm/IR/Constants.h>
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Function.h>
+#include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
-#include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Value.h>
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <string>
@@ -118,7 +118,7 @@ namespace swallow::compiler::ir::context
 
     auto CreateApp(llvm::Value *left, llvm::Value *right) noexcept -> llvm::Value *;
 
-    auto CreateCustomFunction(std::string name, int32_t arity) noexcept -> llvm::Function *;
+    auto CreateCustomFunction(const std::string &name, int32_t arity) noexcept -> llvm::Function *;
 
     auto UnwrapDataTag(llvm::Value *value) noexcept -> llvm::Value *;
 

@@ -9,7 +9,7 @@ rule gen
  description = regenerating ninja files
 
 # rules for compiler
-rule mxx
+rule cxx
  command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
  deps = gcc
  depfile = $out.d
@@ -27,7 +27,13 @@ rule cc
  depfile = $out.d
  description = compiling.debug $in
 
-rule cxx
+rule mm
+ command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
+ deps = gcc
+ depfile = $out.d
+ description = compiling.debug $in
+
+rule mxx
  command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
  deps = gcc
  depfile = $out.d
@@ -39,21 +45,15 @@ rule cu
  depfile = $out.d
  description = compiling.debug $in
 
-rule mm
- command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
- deps = gcc
- depfile = $out.d
- description = compiling.debug $in
-
 
 # rules for linker
-rule ar
- command = /usr/bin/ar $ARGS $out $in
- description = archiving.debug $out
-
 rule sh
  command = /usr/bin/g++ -o $out $in $ARGS
  description = linking.debug $out
+
+rule ar
+ command = /usr/bin/ar $ARGS $out $in
+ description = archiving.debug $out
 
 rule ld
  command = /usr/bin/g++ -o $out $in $ARGS
@@ -91,9 +91,79 @@ build build/linux/x86_64/debug/libswi.a: ar build/.objs/swi/linux/x86_64/debug/r
 build build/.objs/swi/linux/x86_64/debug/repl/main.cpp.o: cxx repl/main.cpp
  ARGS = -m64 -g -O0 -std=c++20
 
+# build target: swallow_compiler_parser
+build swallow_compiler_parser: phony build/linux/x86_64/debug/libswallow_compiler_parser.a
+build build/linux/x86_64/debug/libswallow_compiler_parser.a: ar build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/parser.cpp.o build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/parser.cpp.o: cxx compiler/parser/parser.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o: cxx compiler/parser/bison_parser.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+# build target: swallow_base
+build swallow_base: phony build/linux/x86_64/debug/libswallow_base.a
+build build/linux/x86_64/debug/libswallow_base.a: ar build/.objs/swallow_base/linux/x86_64/debug/base/base.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_base/linux/x86_64/debug/base/base.cpp.o: cxx base/base.cpp
+ ARGS = -m64 -g -O0 -std=c++20
+
+# build target: swa
+build swa: phony build/linux/x86_64/debug/swa
+build build/linux/x86_64/debug/swa: ld build/.objs/swa/linux/x86_64/debug/cli/main.cpp.o || $
+   build/linux/x86_64/debug/libswc.a build/linux/x86_64/debug/libswi.a
+ ARGS = -m64 -Lbuild/linux/x86_64/debug -lswi -lswc
+
+build build/.objs/swa/linux/x86_64/debug/cli/main.cpp.o: cxx cli/main.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+# build target: swallow_compiler_diagnostics
+build swallow_compiler_diagnostics: phony build/linux/x86_64/debug/libswallow_compiler_diagnostics.a
+build build/linux/x86_64/debug/libswallow_compiler_diagnostics.a: ar build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o: cxx compiler/diagnostics/utils.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o: cxx compiler/diagnostics/diagnostics.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o: cxx compiler/diagnostics/reporter.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+# build target: swallow_compiler_gmachine
+build swallow_compiler_gmachine: phony build/linux/x86_64/debug/libswallow_compiler_gmachine.a
+build build/linux/x86_64/debug/libswallow_compiler_gmachine.a: ar build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/binop.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/environment.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/binop.cpp.o: cxx compiler/gmachine/binop.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/environment.cpp.o: cxx compiler/gmachine/environment.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o: cxx compiler/gmachine/instruction.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+# build target: swallow_compiler_type
+build swallow_compiler_type: phony build/linux/x86_64/debug/libswallow_compiler_type.a
+build build/linux/x86_64/debug/libswallow_compiler_type.a: ar build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/dump.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/environment.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/type.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/dump.cpp.o: cxx compiler/type/dump.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/environment.cpp.o: cxx compiler/type/environment.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/type.cpp.o: cxx compiler/type/type.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
 # build target: swc
 build swc: phony build/linux/x86_64/debug/libswc.a
-build build/linux/x86_64/debug/libswc.a: ar build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/type.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o
+build build/linux/x86_64/debug/libswc.a: ar build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/type/type.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o
  ARGS = -cr
 
 build build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o: cxx compiler/compiler.cpp
@@ -102,13 +172,13 @@ build build/.objs/swc/linux/x86_64/debug/compiler/compiler.cpp.o: cxx compiler/c
 build build/.objs/swc/linux/x86_64/debug/compiler/ast/dump.cpp.o: cxx compiler/ast/dump.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
-build build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
+build build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o: cxx compiler/ast/gmachine.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
 build build/.objs/swc/linux/x86_64/debug/compiler/ast/type.cpp.o: cxx compiler/ast/type.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
-build build/.objs/swc/linux/x86_64/debug/compiler/ast/gmachine.cpp.o: cxx compiler/ast/gmachine.cpp
+build build/.objs/swc/linux/x86_64/debug/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
 build build/.objs/swc/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o: cxx compiler/diagnostics/utils.cpp
@@ -162,93 +232,6 @@ build build/.objs/swc/linux/x86_64/debug/compiler/gmachine/environment.cpp.o: cx
 build build/.objs/swc/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o: cxx compiler/gmachine/instruction.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
-# build target: swa
-build swa: phony build/linux/x86_64/debug/swa
-build build/linux/x86_64/debug/swa: ld build/.objs/swa/linux/x86_64/debug/cli/main.cpp.o || $
-   build/linux/x86_64/debug/libswc.a build/linux/x86_64/debug/libswi.a
- ARGS = -m64 -Lbuild/linux/x86_64/debug -lswi -lswc
-
-build build/.objs/swa/linux/x86_64/debug/cli/main.cpp.o: cxx cli/main.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-# build target: swallow_compiler_gmachine
-build swallow_compiler_gmachine: phony build/linux/x86_64/debug/libswallow_compiler_gmachine.a
-build build/linux/x86_64/debug/libswallow_compiler_gmachine.a: ar build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/binop.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/environment.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/binop.cpp.o: cxx compiler/gmachine/binop.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/environment.cpp.o: cxx compiler/gmachine/environment.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_gmachine/linux/x86_64/debug/compiler/gmachine/instruction.cpp.o: cxx compiler/gmachine/instruction.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-# build target: swallow_compiler_type
-build swallow_compiler_type: phony build/linux/x86_64/debug/libswallow_compiler_type.a
-build build/linux/x86_64/debug/libswallow_compiler_type.a: ar build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/dump.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/environment.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/type.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/dump.cpp.o: cxx compiler/type/dump.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/environment.cpp.o: cxx compiler/type/environment.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_type/linux/x86_64/debug/compiler/type/type.cpp.o: cxx compiler/type/type.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-# build target: swallow_compiler_ast
-build swallow_compiler_ast: phony build/linux/x86_64/debug/libswallow_compiler_ast.a
-build build/linux/x86_64/debug/libswallow_compiler_ast.a: ar build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/dump.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/ast.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/type.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/gmachine.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/dump.cpp.o: cxx compiler/ast/dump.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/type.cpp.o: cxx compiler/ast/type.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/gmachine.cpp.o: cxx compiler/ast/gmachine.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-# build target: swallow_compiler_ir
-build swallow_compiler_ir: phony build/linux/x86_64/debug/libswallow_compiler_ir.a
-build build/linux/x86_64/debug/libswallow_compiler_ir.a: ar build/.objs/swallow_compiler_ir/linux/x86_64/debug/compiler/ir/context.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_compiler_ir/linux/x86_64/debug/compiler/ir/context.cpp.o: cxx compiler/ir/context.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-# build target: swallow_compiler_diagnostics
-build swallow_compiler_diagnostics: phony build/linux/x86_64/debug/libswallow_compiler_diagnostics.a
-build build/linux/x86_64/debug/libswallow_compiler_diagnostics.a: ar build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/utils.cpp.o: cxx compiler/diagnostics/utils.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/diagnostics.cpp.o: cxx compiler/diagnostics/diagnostics.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_diagnostics/linux/x86_64/debug/compiler/diagnostics/reporter.cpp.o: cxx compiler/diagnostics/reporter.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-# build target: swallow_compiler_parser
-build swallow_compiler_parser: phony build/linux/x86_64/debug/libswallow_compiler_parser.a
-build build/linux/x86_64/debug/libswallow_compiler_parser.a: ar build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/parser.cpp.o build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/parser.cpp.o: cxx compiler/parser/parser.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
-build build/.objs/swallow_compiler_parser/linux/x86_64/debug/compiler/parser/bison_parser.cpp.o: cxx compiler/parser/bison_parser.cpp
- ARGS = -m64 -g -O0 -std=c++20 -Icompiler
-
 # build target: swallow_compiler_lexer
 build swallow_compiler_lexer: phony build/linux/x86_64/debug/libswallow_compiler_lexer.a
 build build/linux/x86_64/debug/libswallow_compiler_lexer.a: ar build/.objs/swallow_compiler_lexer/linux/x86_64/debug/compiler/lexer/lexer.cpp.o build/.objs/swallow_compiler_lexer/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o
@@ -258,6 +241,14 @@ build build/.objs/swallow_compiler_lexer/linux/x86_64/debug/compiler/lexer/lexer
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
 build build/.objs/swallow_compiler_lexer/linux/x86_64/debug/compiler/lexer/flex_lexer.cpp.o: cxx compiler/lexer/flex_lexer.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+# build target: swallow_compiler_ir
+build swallow_compiler_ir: phony build/linux/x86_64/debug/libswallow_compiler_ir.a
+build build/linux/x86_64/debug/libswallow_compiler_ir.a: ar build/.objs/swallow_compiler_ir/linux/x86_64/debug/compiler/ir/context.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_compiler_ir/linux/x86_64/debug/compiler/ir/context.cpp.o: cxx compiler/ir/context.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
 # build target: swallow_compiler_runtime
@@ -274,16 +265,25 @@ build build/.objs/swallow_compiler_runtime/linux/x86_64/debug/compiler/runtime/r
 build build/.objs/swallow_compiler_runtime/linux/x86_64/debug/compiler/runtime/node.cpp.o: cxx compiler/runtime/node.cpp
  ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
-# build target: swallow_base
-build swallow_base: phony build/linux/x86_64/debug/libswallow_base.a
-build build/linux/x86_64/debug/libswallow_base.a: ar build/.objs/swallow_base/linux/x86_64/debug/base/base.cpp.o
+# build target: swallow_compiler_ast
+build swallow_compiler_ast: phony build/linux/x86_64/debug/libswallow_compiler_ast.a
+build build/linux/x86_64/debug/libswallow_compiler_ast.a: ar build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/dump.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/gmachine.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/type.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/ast.cpp.o
  ARGS = -cr
 
-build build/.objs/swallow_base/linux/x86_64/debug/base/base.cpp.o: cxx base/base.cpp
- ARGS = -m64 -g -O0 -std=c++20
+build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/dump.cpp.o: cxx compiler/ast/dump.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
 
-build default: phony swi swc swa swallow_compiler_gmachine swallow_compiler_type swallow_compiler_ast swallow_compiler_ir swallow_compiler_diagnostics swallow_compiler_parser swallow_compiler_lexer swallow_compiler_runtime swallow_base
-build all: phony swi swc swa swallow_compiler_gmachine swallow_compiler_type swallow_compiler_ast swallow_compiler_ir swallow_compiler_diagnostics swallow_compiler_parser swallow_compiler_lexer swallow_compiler_runtime swallow_base
+build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/gmachine.cpp.o: cxx compiler/ast/gmachine.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/type.cpp.o: cxx compiler/ast/type.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build build/.objs/swallow_compiler_ast/linux/x86_64/debug/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
+ ARGS = -m64 -g -O0 -std=c++20 -Icompiler
+
+build default: phony swi swallow_compiler_parser swallow_base swa swallow_compiler_diagnostics swallow_compiler_gmachine swallow_compiler_type swc swallow_compiler_lexer swallow_compiler_ir swallow_compiler_runtime swallow_compiler_ast
+build all: phony swi swallow_compiler_parser swallow_base swa swallow_compiler_diagnostics swallow_compiler_gmachine swallow_compiler_type swc swallow_compiler_lexer swallow_compiler_ir swallow_compiler_runtime swallow_compiler_ast
 
 default default
 

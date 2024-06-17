@@ -36,9 +36,9 @@ namespace swallow::compiler::runtime::stack
 {
   void Stack::Initialize(Stack *stack) noexcept
   {
-    stack->Size = 4;
+    stack->Size  = 4;
     stack->Count = 0;
-    stack->Data = reinterpret_cast<node::Base **>(std::malloc(sizeof(*(stack->Data)) * stack->Size));
+    stack->Data  = reinterpret_cast<node::Base **>(std::malloc(sizeof(*(stack->Data)) * stack->Size));
 
     if (nullptr == stack->Data)
       utils::Panic("ICE: Cannot initialize runtime stack");
@@ -71,7 +71,8 @@ namespace swallow::compiler::runtime::stack
   [[nodiscard]] auto Stack::Peek(Stack *stack, uint64_t o) noexcept -> node::Base *
   {
     if (stack->Count < o)
-      utils::Panic("ICE: peek exceeds the number of existing elements in the runtime stack");
+      utils::Panic("ICE: peek exceeds the number of existing elements in the "
+                   "runtime stack");
 
     return stack->Data[(stack->Count) - o - 1];
   }
@@ -79,7 +80,8 @@ namespace swallow::compiler::runtime::stack
   void Stack::PopN(Stack *stack, uint64_t n) noexcept
   {
     if (stack->Count <= n)
-      utils::Panic("ICE: pop exceeds the number of existing elements in the runtime stack");
+      utils::Panic("ICE: pop exceeds the number of existing elements in the "
+                   "runtime stack");
 
     stack->Count -= n;
   }
@@ -87,7 +89,8 @@ namespace swallow::compiler::runtime::stack
   void Stack::Slide(Stack *stack, uint64_t n) noexcept
   {
     if (stack->Count < n)
-      utils::Panic("ICE: slide exceeds the number of existing elements in the runtime stack");
+      utils::Panic("ICE: slide exceeds the number of existing elements in the "
+                   "runtime stack");
 
     stack->Data[stack->Count - n - 1] = stack->Data[stack->Count - 1];
     stack->Count -= n;
@@ -96,11 +99,12 @@ namespace swallow::compiler::runtime::stack
   void Stack::Update(Stack *stack, uint64_t o) noexcept
   {
     if (stack->Count < o + 1)
-      utils::Panic("ICE: update exceeds the number of existing elements in the runtime stack");
+      utils::Panic("ICE: update exceeds the number of existing elements in the "
+                   "runtime stack");
 
-    auto *ind = reinterpret_cast<node::Ind *>(stack->Data[stack->Count - o - 2]);
+    auto *ind     = reinterpret_cast<node::Ind *>(stack->Data[stack->Count - o - 2]);
     ind->Node.Tag = node::Tag::IND;
-    ind->Next = stack->Data[stack->Count -= 1];
+    ind->Next     = stack->Data[stack->Count -= 1];
   }
 
   void Stack::Allocate(Stack *stack, uint64_t o) noexcept
@@ -112,7 +116,8 @@ namespace swallow::compiler::runtime::stack
   void Stack::Pack(Stack *stack, uint64_t n, node::Tag tag) noexcept
   {
     if (stack->Count <= n)
-      utils::Panic("ICE: update exceeds the number of existing elements in the runtime stack");
+      utils::Panic("ICE: update exceeds the number of existing elements in the "
+                   "runtime stack");
 
     auto **data = reinterpret_cast<node::Base **>(std::malloc(sizeof(*stack->Data) * n));
 
@@ -121,10 +126,10 @@ namespace swallow::compiler::runtime::stack
 
     std::memcpy(data, &stack->Data[stack->Count - n - 1], n * sizeof(*data));
 
-    auto *node = reinterpret_cast<node::Data *>(node::Base::Allocate());
-    node->Array = data;
+    auto *node     = reinterpret_cast<node::Data *>(node::Base::Allocate());
+    node->Array    = data;
     node->Node.Tag = node::Tag::DATA;
-    node->Tag = tag;
+    node->Tag      = tag;
 
     stack->PopN(stack, n);
     stack->Push(stack, reinterpret_cast<node::Base *>(node));

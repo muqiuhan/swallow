@@ -6,19 +6,19 @@ add_rules("mode.debug", "mode.release")
 
 includes("**/xmake.lua")
 
-after_build(function () 
+after_build(function()
     -- imports
     import("core.project.config")
     import("core.project.depend")
     import("core.project.project")
     import("core.base.task")
-    
+
     -- we should not update it if we are installing xmake package
     if os.getenv("XMAKE_IN_XREPO") then
         return
     end
 
-    function update_compile_commands ()
+    function update_compile_commands()
         -- run only once for all xmake process
         local tmpfile = path.join(config.buildir(), ".gens", "rules", "plugin.compile_commands.autoupdate")
         local dependfile = tmpfile .. ".d"
@@ -37,20 +37,22 @@ after_build(function ()
                 end
             end
             table.sort(sourcefiles)
-            depend.on_changed(function ()
+            depend.on_changed(function()
                 -- we use task instead of os.exec("xmake") to avoid the project lock
                 local filename = "compile_commands.json"
                 local filepath = outputdir and path.join(outputdir, filename) or filename
-                task.run("project", {kind = "compile_commands", outputdir = outputdir, lsp = lsp})
-                print("[ RUN]: Update compile_commands.json")
-            end, {dependfile = dependfile,
-                  files = table.join(project.allfiles(), config.filepath()),
-                  values = sourcefiles})
+                task.run("project", { kind = "compile_commands", outputdir = outputdir, lsp = lsp })
+                print("[ RUN]: update compile_commands.json")
+            end, {
+                dependfile = dependfile,
+                files = table.join(project.allfiles(), config.filepath()),
+                values = sourcefiles
+            })
             lockfile:close()
         end
     end
 
-    function update_makefile ()
+    function update_makefile()
         -- run only once for all xmake process
         local tmpfile = path.join(config.buildir(), ".gens", "rules", "plugin.makefile.autoupdate")
         local dependfile = tmpfile .. ".d"
@@ -69,20 +71,22 @@ after_build(function ()
                 end
             end
             table.sort(sourcefiles)
-            depend.on_changed(function ()
+            depend.on_changed(function()
                 -- we use task instead of os.exec("xmake") to avoid the project lock
                 local filename = "makefile"
                 local filepath = outputdir and path.join(outputdir, filename) or filename
-                task.run("project", {kind = "makefile", outputdir = outputdir, lsp = lsp})
-                print("[ RUN]: Update makefile")
-            end, {dependfile = dependfile,
-                  files = table.join(project.allfiles(), config.filepath()),
-                  values = sourcefiles})
+                task.run("project", { kind = "makefile", outputdir = outputdir, lsp = lsp })
+                print("[ RUN]: update makefile")
+            end, {
+                dependfile = dependfile,
+                files = table.join(project.allfiles(), config.filepath()),
+                values = sourcefiles
+            })
             lockfile:close()
         end
     end
 
-    function update_cmake ()
+    function update_cmake()
         -- run only once for all xmake process
         local tmpfile = path.join(config.buildir(), ".gens", "rules", "plugin.cmake.autoupdate")
         local dependfile = tmpfile .. ".d"
@@ -101,20 +105,22 @@ after_build(function ()
                 end
             end
             table.sort(sourcefiles)
-            depend.on_changed(function ()
+            depend.on_changed(function()
                 -- we use task instead of os.exec("xmake") to avoid the project lock
                 local filename = "CMakeLists.txt"
                 local filepath = outputdir and path.join(outputdir, filename) or filename
-                task.run("project", {kind = "cmake", outputdir = outputdir, lsp = lsp})
-                print("[ RUN]: Update CMakeLists.txt")
-            end, {dependfile = dependfile,
-                  files = table.join(project.allfiles(), config.filepath()),
-                  values = sourcefiles})
+                task.run("project", { kind = "cmake", outputdir = outputdir, lsp = lsp })
+                print("[ RUN]: update CMakeLists.txt")
+            end, {
+                dependfile = dependfile,
+                files = table.join(project.allfiles(), config.filepath()),
+                values = sourcefiles
+            })
             lockfile:close()
         end
     end
 
-    function update_ninja ()
+    function update_ninja()
         -- run only once for all xmake process
         local tmpfile = path.join(config.buildir(), ".gens", "rules", "plugin.ninja.autoupdate")
         local dependfile = tmpfile .. ".d"
@@ -133,15 +139,17 @@ after_build(function ()
                 end
             end
             table.sort(sourcefiles)
-            depend.on_changed(function ()
+            depend.on_changed(function()
                 -- we use task instead of os.exec("xmake") to avoid the project lock
                 local filename = "build.ninja"
                 local filepath = outputdir and path.join(outputdir, filename) or filename
-                task.run("project", {kind = "ninja", outputdir = outputdir, lsp = lsp})
-                print("[ RUN]: Update build.ninja")
-            end, {dependfile = dependfile,
-                  files = table.join(project.allfiles(), config.filepath()),
-                  values = sourcefiles})
+                task.run("project", { kind = "ninja", outputdir = outputdir, lsp = lsp })
+                print("[ RUN]: update build.ninja")
+            end, {
+                dependfile = dependfile,
+                files = table.join(project.allfiles(), config.filepath()),
+                values = sourcefiles
+            })
             lockfile:close()
         end
     end

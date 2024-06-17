@@ -47,12 +47,12 @@ namespace swallow::compiler
       "test runtime...{}\n", reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
 #endif
 
-    CompileUnit::FILE = new CompileUnit(options.file);
+    CompileUnit::FILE               = new CompileUnit(options.file);
     diagnostics::Reporter::REPORTER = new diagnostics::Reporter();
 
     std::cout << std::format("compiling {}...", options.file);
 
-    const auto start = std::chrono::system_clock::now();
+    const auto start   = std::chrono::system_clock::now();
     auto      &program = parser::Parse();
     type::TypeCheck(program, options);
     gmachine::Compile(program, options);

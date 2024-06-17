@@ -56,7 +56,7 @@ namespace swallow::compiler::type
   auto Manager::Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr
   {
     Variable *cast = nullptr;
-    var = nullptr;
+    var            = nullptr;
 
     while ((cast = dynamic_cast<Variable *>(type.get())) != nullptr)
       {
@@ -74,10 +74,10 @@ namespace swallow::compiler::type
 
   auto Manager::Unify(Type::Ptr left, Type::Ptr right) noexcept -> Result<Void, Void>
   {
-    Variable *leftVar = nullptr;
+    Variable *leftVar  = nullptr;
     Variable *rightVar = nullptr;
 
-    left = Resolve(left, leftVar);
+    left  = Resolve(left, leftVar);
     right = Resolve(right, rightVar);
 
     if (leftVar != nullptr)
