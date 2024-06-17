@@ -1,7 +1,7 @@
 #include "diagnostics.h"
 
 #include "utils/panic.hpp"
-#include "termcolor.hpp"
+#include "utils/termcolor.hpp"
 #include "utils.h"
 #include <algorithm>
 #include <iomanip>
