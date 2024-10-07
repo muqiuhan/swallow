@@ -6,143 +6,48 @@ ifneq ($(VERBOSE),1)
 VV=@
 endif
 
-CXX=/usr/bin/gcc
 CU=/usr/bin/clang
-MM=/usr/bin/gcc
-MXX=/usr/bin/gcc
 CC=/usr/bin/gcc
+CXX=/usr/bin/gcc
 AS=/usr/bin/gcc
+MXX=/usr/bin/gcc
+MM=/usr/bin/gcc
 
 AR=/usr/bin/ar
-LD=/usr/bin/g++
 SH=/usr/bin/g++
+LD=/usr/bin/g++
 
-swallow_compiler_diagnostics_AR=/usr/bin/ar
-swallow_compiler_diagnostics_CXX=/usr/bin/gcc
-swallow_compiler_diagnostics_CXX=/usr/bin/gcc
-swallow_compiler_ast_AR=/usr/bin/ar
-swallow_compiler_ast_CXX=/usr/bin/gcc
-swallow_compiler_ast_CXX=/usr/bin/gcc
 swi_AR=/usr/bin/ar
 swi_CXX=/usr/bin/gcc
 swi_CXX=/usr/bin/gcc
-swallow_compiler_type_AR=/usr/bin/ar
-swallow_compiler_type_CXX=/usr/bin/gcc
-swallow_compiler_type_CXX=/usr/bin/gcc
-swallow_compiler_parser_AR=/usr/bin/ar
-swallow_compiler_parser_CXX=/usr/bin/gcc
-swallow_compiler_parser_CXX=/usr/bin/gcc
-swallow_compiler_lexer_AR=/usr/bin/ar
-swallow_compiler_lexer_CXX=/usr/bin/gcc
-swallow_compiler_lexer_CXX=/usr/bin/gcc
+swa_LD=/usr/bin/g++
+swa_CXX=/usr/bin/gcc
+swa_CXX=/usr/bin/gcc
 swallow_base_AR=/usr/bin/ar
 swallow_base_CXX=/usr/bin/gcc
 swallow_base_CXX=/usr/bin/gcc
 swc_AR=/usr/bin/ar
 swc_CXX=/usr/bin/gcc
 swc_CXX=/usr/bin/gcc
-swallow_compiler_runtime_AR=/usr/bin/ar
-swallow_compiler_runtime_CXX=/usr/bin/gcc
-swallow_compiler_runtime_CXX=/usr/bin/gcc
-swa_LD=/usr/bin/g++
-swa_CXX=/usr/bin/gcc
-swa_CXX=/usr/bin/gcc
-swallow_compiler_gmachine_AR=/usr/bin/ar
-swallow_compiler_gmachine_CXX=/usr/bin/gcc
-swallow_compiler_gmachine_CXX=/usr/bin/gcc
-swallow_compiler_ir_AR=/usr/bin/ar
-swallow_compiler_ir_CXX=/usr/bin/gcc
-swallow_compiler_ir_CXX=/usr/bin/gcc
 
-swallow_compiler_diagnostics_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_diagnostics_CXXFLAGS=
-swallow_compiler_diagnostics_ARFLAGS=-cr
-swallow_compiler_ast_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_ast_CXXFLAGS=
-swallow_compiler_ast_ARFLAGS=-cr
-swi_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
 swi_CXXFLAGS=
+swi_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
 swi_ARFLAGS=-cr
-swallow_compiler_type_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_type_CXXFLAGS=
-swallow_compiler_type_ARFLAGS=-cr
-swallow_compiler_parser_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_parser_CXXFLAGS=
-swallow_compiler_parser_ARFLAGS=-cr
-swallow_compiler_lexer_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_lexer_CXXFLAGS=
-swallow_compiler_lexer_ARFLAGS=-cr
-swallow_base_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
-swallow_base_CXXFLAGS=
-swallow_base_ARFLAGS=-cr
-swc_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swc_CXXFLAGS=
-swc_ARFLAGS=-cr
-swallow_compiler_runtime_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_runtime_CXXFLAGS=
-swallow_compiler_runtime_ARFLAGS=-cr
-swa_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
 swa_CXXFLAGS=
-swa_LDFLAGS=-m64 -Lbuild/linux/x86_64/release -s -lswi -lswc
-swallow_compiler_gmachine_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_gmachine_CXXFLAGS=
-swallow_compiler_gmachine_ARFLAGS=-cr
-swallow_compiler_ir_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
-swallow_compiler_ir_CXXFLAGS=
-swallow_compiler_ir_ARFLAGS=-cr
+swa_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
+swa_LDFLAGS=-m64 -Lbuild/linux/x86_64/release -s -lswi -lswc -lpthread
+swallow_base_CXXFLAGS=
+swallow_base_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
+swallow_base_ARFLAGS=-cr
+swc_CXXFLAGS=
+swc_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -DNDEBUG
+swc_ARFLAGS=-cr
 
-default:  swallow_compiler_diagnostics swallow_compiler_ast swi swallow_compiler_type swallow_compiler_parser swallow_compiler_lexer swallow_base swc swallow_compiler_runtime swa swallow_compiler_gmachine swallow_compiler_ir
+default:  swi swa swallow_base swc
 
-all:  swallow_compiler_diagnostics swallow_compiler_ast swi swallow_compiler_type swallow_compiler_parser swallow_compiler_lexer swallow_base swc swallow_compiler_runtime swa swallow_compiler_gmachine swallow_compiler_ir
+all:  swi swa swallow_base swc
 
-.PHONY: default all  swallow_compiler_diagnostics swallow_compiler_ast swi swallow_compiler_type swallow_compiler_parser swallow_compiler_lexer swallow_base swc swallow_compiler_runtime swa swallow_compiler_gmachine swallow_compiler_ir
-
-swallow_compiler_diagnostics: build/linux/x86_64/release/libswallow_compiler_diagnostics.a
-build/linux/x86_64/release/libswallow_compiler_diagnostics.a: build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/utils.cpp.o
-	@echo linking.release libswallow_compiler_diagnostics.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_diagnostics_AR) $(swallow_compiler_diagnostics_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_diagnostics.a build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/utils.cpp.o
-
-build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o: compiler/diagnostics/diagnostics.cpp
-	@echo compiling.release compiler/diagnostics/diagnostics.cpp
-	@mkdir -p build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics
-	$(VV)$(swallow_compiler_diagnostics_CXX) -c $(swallow_compiler_diagnostics_CXXFLAGS) -o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o compiler/diagnostics/diagnostics.cpp
-
-build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o: compiler/diagnostics/reporter.cpp
-	@echo compiling.release compiler/diagnostics/reporter.cpp
-	@mkdir -p build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics
-	$(VV)$(swallow_compiler_diagnostics_CXX) -c $(swallow_compiler_diagnostics_CXXFLAGS) -o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o compiler/diagnostics/reporter.cpp
-
-build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/utils.cpp.o: compiler/diagnostics/utils.cpp
-	@echo compiling.release compiler/diagnostics/utils.cpp
-	@mkdir -p build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics
-	$(VV)$(swallow_compiler_diagnostics_CXX) -c $(swallow_compiler_diagnostics_CXXFLAGS) -o build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/utils.cpp.o compiler/diagnostics/utils.cpp
-
-swallow_compiler_ast: build/linux/x86_64/release/libswallow_compiler_ast.a
-build/linux/x86_64/release/libswallow_compiler_ast.a: build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/type.cpp.o
-	@echo linking.release libswallow_compiler_ast.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_ast_AR) $(swallow_compiler_ast_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_ast.a build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/type.cpp.o
-
-build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/ast.cpp.o: compiler/ast/ast.cpp
-	@echo compiling.release compiler/ast/ast.cpp
-	@mkdir -p build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast
-	$(VV)$(swallow_compiler_ast_CXX) -c $(swallow_compiler_ast_CXXFLAGS) -o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/ast.cpp.o compiler/ast/ast.cpp
-
-build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/dump.cpp.o: compiler/ast/dump.cpp
-	@echo compiling.release compiler/ast/dump.cpp
-	@mkdir -p build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast
-	$(VV)$(swallow_compiler_ast_CXX) -c $(swallow_compiler_ast_CXXFLAGS) -o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/dump.cpp.o compiler/ast/dump.cpp
-
-build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/gmachine.cpp.o: compiler/ast/gmachine.cpp
-	@echo compiling.release compiler/ast/gmachine.cpp
-	@mkdir -p build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast
-	$(VV)$(swallow_compiler_ast_CXX) -c $(swallow_compiler_ast_CXXFLAGS) -o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/gmachine.cpp.o compiler/ast/gmachine.cpp
-
-build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/type.cpp.o: compiler/ast/type.cpp
-	@echo compiling.release compiler/ast/type.cpp
-	@mkdir -p build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast
-	$(VV)$(swallow_compiler_ast_CXX) -c $(swallow_compiler_ast_CXXFLAGS) -o build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/type.cpp.o compiler/ast/type.cpp
+.PHONY: default all  swi swa swallow_base swc
 
 swi: build/linux/x86_64/release/libswi.a
 build/linux/x86_64/release/libswi.a: build/linux/x86_64/release/libswc.a build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
@@ -155,58 +60,16 @@ build/.objs/swi/linux/x86_64/release/repl/main.cpp.o: repl/main.cpp
 	@mkdir -p build/.objs/swi/linux/x86_64/release/repl
 	$(VV)$(swi_CXX) -c $(swi_CXXFLAGS) -o build/.objs/swi/linux/x86_64/release/repl/main.cpp.o repl/main.cpp
 
-swallow_compiler_type: build/linux/x86_64/release/libswallow_compiler_type.a
-build/linux/x86_64/release/libswallow_compiler_type.a: build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/type.cpp.o
-	@echo linking.release libswallow_compiler_type.a
+swa: build/linux/x86_64/release/swa
+build/linux/x86_64/release/swa: build/linux/x86_64/release/libswc.a build/linux/x86_64/release/libswi.a build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
+	@echo linking.release swa
 	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_type_AR) $(swallow_compiler_type_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_type.a build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/type.cpp.o
+	$(VV)$(swa_LD) -o build/linux/x86_64/release/swa build/.objs/swa/linux/x86_64/release/cli/main.cpp.o $(swa_LDFLAGS)
 
-build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/dump.cpp.o: compiler/type/dump.cpp
-	@echo compiling.release compiler/type/dump.cpp
-	@mkdir -p build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type
-	$(VV)$(swallow_compiler_type_CXX) -c $(swallow_compiler_type_CXXFLAGS) -o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/dump.cpp.o compiler/type/dump.cpp
-
-build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/environment.cpp.o: compiler/type/environment.cpp
-	@echo compiling.release compiler/type/environment.cpp
-	@mkdir -p build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type
-	$(VV)$(swallow_compiler_type_CXX) -c $(swallow_compiler_type_CXXFLAGS) -o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/environment.cpp.o compiler/type/environment.cpp
-
-build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/type.cpp.o: compiler/type/type.cpp
-	@echo compiling.release compiler/type/type.cpp
-	@mkdir -p build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type
-	$(VV)$(swallow_compiler_type_CXX) -c $(swallow_compiler_type_CXXFLAGS) -o build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/type.cpp.o compiler/type/type.cpp
-
-swallow_compiler_parser: build/linux/x86_64/release/libswallow_compiler_parser.a
-build/linux/x86_64/release/libswallow_compiler_parser.a: build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/parser.cpp.o
-	@echo linking.release libswallow_compiler_parser.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_parser_AR) $(swallow_compiler_parser_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_parser.a build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/parser.cpp.o
-
-build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/bison_parser.cpp.o: compiler/parser/bison_parser.cpp
-	@echo compiling.release compiler/parser/bison_parser.cpp
-	@mkdir -p build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser
-	$(VV)$(swallow_compiler_parser_CXX) -c $(swallow_compiler_parser_CXXFLAGS) -o build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/bison_parser.cpp.o compiler/parser/bison_parser.cpp
-
-build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/parser.cpp.o: compiler/parser/parser.cpp
-	@echo compiling.release compiler/parser/parser.cpp
-	@mkdir -p build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser
-	$(VV)$(swallow_compiler_parser_CXX) -c $(swallow_compiler_parser_CXXFLAGS) -o build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/parser.cpp.o compiler/parser/parser.cpp
-
-swallow_compiler_lexer: build/linux/x86_64/release/libswallow_compiler_lexer.a
-build/linux/x86_64/release/libswallow_compiler_lexer.a: build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/lexer.cpp.o
-	@echo linking.release libswallow_compiler_lexer.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_lexer_AR) $(swallow_compiler_lexer_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_lexer.a build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/lexer.cpp.o
-
-build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o: compiler/lexer/flex_lexer.cpp
-	@echo compiling.release compiler/lexer/flex_lexer.cpp
-	@mkdir -p build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer
-	$(VV)$(swallow_compiler_lexer_CXX) -c $(swallow_compiler_lexer_CXXFLAGS) -o build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o compiler/lexer/flex_lexer.cpp
-
-build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/lexer.cpp.o: compiler/lexer/lexer.cpp
-	@echo compiling.release compiler/lexer/lexer.cpp
-	@mkdir -p build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer
-	$(VV)$(swallow_compiler_lexer_CXX) -c $(swallow_compiler_lexer_CXXFLAGS) -o build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/lexer.cpp.o compiler/lexer/lexer.cpp
+build/.objs/swa/linux/x86_64/release/cli/main.cpp.o: cli/main.cpp
+	@echo compiling.release cli/main.cpp
+	@mkdir -p build/.objs/swa/linux/x86_64/release/cli
+	$(VV)$(swa_CXX) -c $(swa_CXXFLAGS) -o build/.objs/swa/linux/x86_64/release/cli/main.cpp.o cli/main.cpp
 
 swallow_base: build/linux/x86_64/release/libswallow_base.a
 build/linux/x86_64/release/libswallow_base.a: build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
@@ -220,10 +83,10 @@ build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o: base/base.cpp
 	$(VV)$(swallow_base_CXX) -c $(swallow_base_CXXFLAGS) -o build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o base/base.cpp
 
 swc: build/linux/x86_64/release/libswc.a
-build/linux/x86_64/release/libswc.a: build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
+build/linux/x86_64/release/libswc.a: build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
 	@echo linking.release libswc.a
 	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swc_AR) $(swc_ARFLAGS) build/linux/x86_64/release/libswc.a build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
+	$(VV)$(swc_AR) $(swc_ARFLAGS) build/linux/x86_64/release/libswc.a build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
 
 build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o: compiler/compiler.cpp
 	@echo compiling.release compiler/compiler.cpp
@@ -250,6 +113,11 @@ build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o: compiler/ast/type.
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/ast
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o compiler/ast/type.cpp
 
+build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o: compiler/diagnostics/utils.cpp
+	@echo compiling.release compiler/diagnostics/utils.cpp
+	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
+	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o compiler/diagnostics/utils.cpp
+
 build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o: compiler/diagnostics/diagnostics.cpp
 	@echo compiling.release compiler/diagnostics/diagnostics.cpp
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
@@ -259,11 +127,6 @@ build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o: compil
 	@echo compiling.release compiler/diagnostics/reporter.cpp
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o compiler/diagnostics/reporter.cpp
-
-build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o: compiler/diagnostics/utils.cpp
-	@echo compiling.release compiler/diagnostics/utils.cpp
-	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
-	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o compiler/diagnostics/utils.cpp
 
 build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o: compiler/gmachine/binop.cpp
 	@echo compiling.release compiler/gmachine/binop.cpp
@@ -285,15 +148,15 @@ build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o: compiler/ir/cont
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/ir
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o compiler/ir/context.cpp
 
-build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o: compiler/lexer/flex_lexer.cpp
-	@echo compiling.release compiler/lexer/flex_lexer.cpp
-	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/lexer
-	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o compiler/lexer/flex_lexer.cpp
-
 build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o: compiler/lexer/lexer.cpp
 	@echo compiling.release compiler/lexer/lexer.cpp
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/lexer
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o compiler/lexer/lexer.cpp
+
+build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o: compiler/lexer/flex_lexer.cpp
+	@echo compiling.release compiler/lexer/flex_lexer.cpp
+	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/lexer
+	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o compiler/lexer/flex_lexer.cpp
 
 build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o: compiler/parser/bison_parser.cpp
 	@echo compiling.release compiler/parser/bison_parser.cpp
@@ -335,110 +198,17 @@ build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o: compiler/type/typ
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/type
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o compiler/type/type.cpp
 
-swallow_compiler_runtime: build/linux/x86_64/release/libswallow_compiler_runtime.a
-build/linux/x86_64/release/libswallow_compiler_runtime.a: build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/stack.cpp.o
-	@echo linking.release libswallow_compiler_runtime.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_runtime_AR) $(swallow_compiler_runtime_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_runtime.a build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/stack.cpp.o
-
-build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/node.cpp.o: compiler/runtime/node.cpp
-	@echo compiling.release compiler/runtime/node.cpp
-	@mkdir -p build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime
-	$(VV)$(swallow_compiler_runtime_CXX) -c $(swallow_compiler_runtime_CXXFLAGS) -o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/node.cpp.o compiler/runtime/node.cpp
-
-build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/runtime.cpp.o: compiler/runtime/runtime.cpp
-	@echo compiling.release compiler/runtime/runtime.cpp
-	@mkdir -p build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime
-	$(VV)$(swallow_compiler_runtime_CXX) -c $(swallow_compiler_runtime_CXXFLAGS) -o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/runtime.cpp.o compiler/runtime/runtime.cpp
-
-build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/stack.cpp.o: compiler/runtime/stack.cpp
-	@echo compiling.release compiler/runtime/stack.cpp
-	@mkdir -p build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime
-	$(VV)$(swallow_compiler_runtime_CXX) -c $(swallow_compiler_runtime_CXXFLAGS) -o build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/stack.cpp.o compiler/runtime/stack.cpp
-
-swa: build/linux/x86_64/release/swa
-build/linux/x86_64/release/swa: build/linux/x86_64/release/libswc.a build/linux/x86_64/release/libswi.a build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
-	@echo linking.release swa
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swa_LD) -o build/linux/x86_64/release/swa build/.objs/swa/linux/x86_64/release/cli/main.cpp.o $(swa_LDFLAGS)
-
-build/.objs/swa/linux/x86_64/release/cli/main.cpp.o: cli/main.cpp
-	@echo compiling.release cli/main.cpp
-	@mkdir -p build/.objs/swa/linux/x86_64/release/cli
-	$(VV)$(swa_CXX) -c $(swa_CXXFLAGS) -o build/.objs/swa/linux/x86_64/release/cli/main.cpp.o cli/main.cpp
-
-swallow_compiler_gmachine: build/linux/x86_64/release/libswallow_compiler_gmachine.a
-build/linux/x86_64/release/libswallow_compiler_gmachine.a: build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/instruction.cpp.o
-	@echo linking.release libswallow_compiler_gmachine.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_gmachine_AR) $(swallow_compiler_gmachine_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_gmachine.a build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/instruction.cpp.o
-
-build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/binop.cpp.o: compiler/gmachine/binop.cpp
-	@echo compiling.release compiler/gmachine/binop.cpp
-	@mkdir -p build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine
-	$(VV)$(swallow_compiler_gmachine_CXX) -c $(swallow_compiler_gmachine_CXXFLAGS) -o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/binop.cpp.o compiler/gmachine/binop.cpp
-
-build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/environment.cpp.o: compiler/gmachine/environment.cpp
-	@echo compiling.release compiler/gmachine/environment.cpp
-	@mkdir -p build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine
-	$(VV)$(swallow_compiler_gmachine_CXX) -c $(swallow_compiler_gmachine_CXXFLAGS) -o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/environment.cpp.o compiler/gmachine/environment.cpp
-
-build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/instruction.cpp.o: compiler/gmachine/instruction.cpp
-	@echo compiling.release compiler/gmachine/instruction.cpp
-	@mkdir -p build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine
-	$(VV)$(swallow_compiler_gmachine_CXX) -c $(swallow_compiler_gmachine_CXXFLAGS) -o build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/instruction.cpp.o compiler/gmachine/instruction.cpp
-
-swallow_compiler_ir: build/linux/x86_64/release/libswallow_compiler_ir.a
-build/linux/x86_64/release/libswallow_compiler_ir.a: build/.objs/swallow_compiler_ir/linux/x86_64/release/compiler/ir/context.cpp.o
-	@echo linking.release libswallow_compiler_ir.a
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_compiler_ir_AR) $(swallow_compiler_ir_ARFLAGS) build/linux/x86_64/release/libswallow_compiler_ir.a build/.objs/swallow_compiler_ir/linux/x86_64/release/compiler/ir/context.cpp.o
-
-build/.objs/swallow_compiler_ir/linux/x86_64/release/compiler/ir/context.cpp.o: compiler/ir/context.cpp
-	@echo compiling.release compiler/ir/context.cpp
-	@mkdir -p build/.objs/swallow_compiler_ir/linux/x86_64/release/compiler/ir
-	$(VV)$(swallow_compiler_ir_CXX) -c $(swallow_compiler_ir_CXXFLAGS) -o build/.objs/swallow_compiler_ir/linux/x86_64/release/compiler/ir/context.cpp.o compiler/ir/context.cpp
-
-clean:  clean_swallow_compiler_diagnostics clean_swallow_compiler_ast clean_swi clean_swallow_compiler_type clean_swallow_compiler_parser clean_swallow_compiler_lexer clean_swallow_base clean_swc clean_swallow_compiler_runtime clean_swa clean_swallow_compiler_gmachine clean_swallow_compiler_ir
-
-clean_swallow_compiler_diagnostics: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_diagnostics.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_diagnostics.sym
-	@rm -rf build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o
-	@rm -rf build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o
-	@rm -rf build/.objs/swallow_compiler_diagnostics/linux/x86_64/release/compiler/diagnostics/utils.cpp.o
-
-clean_swallow_compiler_ast: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_ast.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_ast.sym
-	@rm -rf build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/ast.cpp.o
-	@rm -rf build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/dump.cpp.o
-	@rm -rf build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/gmachine.cpp.o
-	@rm -rf build/.objs/swallow_compiler_ast/linux/x86_64/release/compiler/ast/type.cpp.o
+clean:  clean_swi clean_swa clean_swallow_base clean_swc
 
 clean_swi:  clean_swc
 	@rm -rf build/linux/x86_64/release/libswi.a
 	@rm -rf build/linux/x86_64/release/swi.sym
 	@rm -rf build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
 
-clean_swallow_compiler_type: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_type.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_type.sym
-	@rm -rf build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/dump.cpp.o
-	@rm -rf build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/environment.cpp.o
-	@rm -rf build/.objs/swallow_compiler_type/linux/x86_64/release/compiler/type/type.cpp.o
-
-clean_swallow_compiler_parser: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_parser.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_parser.sym
-	@rm -rf build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/bison_parser.cpp.o
-	@rm -rf build/.objs/swallow_compiler_parser/linux/x86_64/release/compiler/parser/parser.cpp.o
-
-clean_swallow_compiler_lexer: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_lexer.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_lexer.sym
-	@rm -rf build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o
-	@rm -rf build/.objs/swallow_compiler_lexer/linux/x86_64/release/compiler/lexer/lexer.cpp.o
+clean_swa:  clean_swc clean_swi
+	@rm -rf build/linux/x86_64/release/swa
+	@rm -rf build/linux/x86_64/release/swa.sym
+	@rm -rf build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
 
 clean_swallow_base: 
 	@rm -rf build/linux/x86_64/release/libswallow_base.a
@@ -453,15 +223,15 @@ clean_swc:
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o
+	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o
-	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o
-	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o
+	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o
@@ -470,28 +240,4 @@ clean_swc:
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
-
-clean_swallow_compiler_runtime: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_runtime.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_runtime.sym
-	@rm -rf build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/node.cpp.o
-	@rm -rf build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/runtime.cpp.o
-	@rm -rf build/.objs/swallow_compiler_runtime/linux/x86_64/release/compiler/runtime/stack.cpp.o
-
-clean_swa:  clean_swc clean_swi
-	@rm -rf build/linux/x86_64/release/swa
-	@rm -rf build/linux/x86_64/release/swa.sym
-	@rm -rf build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
-
-clean_swallow_compiler_gmachine: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_gmachine.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_gmachine.sym
-	@rm -rf build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/binop.cpp.o
-	@rm -rf build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/environment.cpp.o
-	@rm -rf build/.objs/swallow_compiler_gmachine/linux/x86_64/release/compiler/gmachine/instruction.cpp.o
-
-clean_swallow_compiler_ir: 
-	@rm -rf build/linux/x86_64/release/libswallow_compiler_ir.a
-	@rm -rf build/linux/x86_64/release/swallow_compiler_ir.sym
-	@rm -rf build/.objs/swallow_compiler_ir/linux/x86_64/release/compiler/ir/context.cpp.o
 

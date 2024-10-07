@@ -12,9 +12,6 @@ add_executable(swa "")
 set_target_properties(swa PROPERTIES OUTPUT_NAME "swa")
 set_target_properties(swa PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
 add_dependencies(swa swc swi)
-target_precompile_headers(swa PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x25ec980">
-)
 target_include_directories(swa PRIVATE
     compiler
 )
@@ -42,6 +39,7 @@ endif()
 target_link_libraries(swa PRIVATE
     swi
     swc
+    pthread
 )
 target_link_directories(swa PRIVATE
     build/linux/x86_64/release
@@ -62,9 +60,6 @@ target_sources(swa PRIVATE
 add_library(swallow_base STATIC "")
 set_target_properties(swallow_base PROPERTIES OUTPUT_NAME "swallow_base")
 set_target_properties(swallow_base PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_base PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x1f06ba0">
-)
 target_compile_options(swallow_base PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
@@ -94,411 +89,16 @@ target_sources(swallow_base PRIVATE
 )
 
 # target
-add_library(swallow_compiler_ast STATIC "")
-set_target_properties(swallow_compiler_ast PROPERTIES OUTPUT_NAME "swallow_compiler_ast")
-set_target_properties(swallow_compiler_ast PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_ast PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x25963a0">
-)
-target_include_directories(swallow_compiler_ast PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_ast PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_ast PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_ast PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_ast PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_ast PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_ast PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_ast PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_ast PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_ast PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_ast PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_ast PRIVATE
-    compiler/ast/ast.cpp
-    compiler/ast/dump.cpp
-    compiler/ast/gmachine.cpp
-    compiler/ast/type.cpp
-)
-
-# target
-add_library(swallow_compiler_diagnostics STATIC "")
-set_target_properties(swallow_compiler_diagnostics PROPERTIES OUTPUT_NAME "swallow_compiler_diagnostics")
-set_target_properties(swallow_compiler_diagnostics PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_diagnostics PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x2270c50">
-)
-target_include_directories(swallow_compiler_diagnostics PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_diagnostics PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_diagnostics PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_diagnostics PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_diagnostics PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_diagnostics PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_diagnostics PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_diagnostics PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_diagnostics PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_diagnostics PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_diagnostics PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_diagnostics PRIVATE
-    compiler/diagnostics/diagnostics.cpp
-    compiler/diagnostics/reporter.cpp
-    compiler/diagnostics/utils.cpp
-)
-
-# target
-add_library(swallow_compiler_gmachine STATIC "")
-set_target_properties(swallow_compiler_gmachine PROPERTIES OUTPUT_NAME "swallow_compiler_gmachine")
-set_target_properties(swallow_compiler_gmachine PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_gmachine PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x260ac20">
-)
-target_include_directories(swallow_compiler_gmachine PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_gmachine PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_gmachine PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_gmachine PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_gmachine PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_gmachine PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_gmachine PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_gmachine PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_gmachine PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_gmachine PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_gmachine PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_gmachine PRIVATE
-    compiler/gmachine/binop.cpp
-    compiler/gmachine/environment.cpp
-    compiler/gmachine/instruction.cpp
-)
-
-# target
-add_library(swallow_compiler_ir STATIC "")
-set_target_properties(swallow_compiler_ir PROPERTIES OUTPUT_NAME "swallow_compiler_ir")
-set_target_properties(swallow_compiler_ir PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_ir PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x21e2c80">
-)
-target_include_directories(swallow_compiler_ir PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_ir PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_ir PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_ir PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_ir PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_ir PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_ir PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_ir PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_ir PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_ir PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_ir PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_ir PRIVATE
-    compiler/ir/context.cpp
-)
-
-# target
-add_library(swallow_compiler_lexer STATIC "")
-set_target_properties(swallow_compiler_lexer PROPERTIES OUTPUT_NAME "swallow_compiler_lexer")
-set_target_properties(swallow_compiler_lexer PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_lexer PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x24c93b0">
-)
-target_include_directories(swallow_compiler_lexer PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_lexer PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_lexer PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_lexer PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_lexer PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_lexer PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_lexer PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_lexer PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_lexer PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_lexer PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_lexer PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_lexer PRIVATE
-    compiler/lexer/flex_lexer.cpp
-    compiler/lexer/lexer.cpp
-)
-
-# target
-add_library(swallow_compiler_parser STATIC "")
-set_target_properties(swallow_compiler_parser PROPERTIES OUTPUT_NAME "swallow_compiler_parser")
-set_target_properties(swallow_compiler_parser PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_parser PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x23d44d0">
-)
-target_include_directories(swallow_compiler_parser PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_parser PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_parser PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_parser PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_parser PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_parser PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_parser PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_parser PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_parser PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_parser PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_parser PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_parser PRIVATE
-    compiler/parser/bison_parser.cpp
-    compiler/parser/parser.cpp
-)
-
-# target
-add_library(swallow_compiler_runtime STATIC "")
-set_target_properties(swallow_compiler_runtime PROPERTIES OUTPUT_NAME "swallow_compiler_runtime")
-set_target_properties(swallow_compiler_runtime PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_runtime PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x25ca5d0">
-)
-target_include_directories(swallow_compiler_runtime PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_runtime PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_runtime PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_runtime PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_runtime PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_runtime PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_runtime PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_runtime PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_runtime PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_runtime PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_runtime PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_runtime PRIVATE
-    compiler/runtime/node.cpp
-    compiler/runtime/runtime.cpp
-    compiler/runtime/stack.cpp
-)
-
-# target
-add_library(swallow_compiler_type STATIC "")
-set_target_properties(swallow_compiler_type PROPERTIES OUTPUT_NAME "swallow_compiler_type")
-set_target_properties(swallow_compiler_type PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swallow_compiler_type PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x2414860">
-)
-target_include_directories(swallow_compiler_type PRIVATE
-    compiler
-)
-target_compile_options(swallow_compiler_type PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-)
-if(Clang)
-target_compile_options(swallow_compiler_type PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>
-)
-endif()
-set_target_properties(swallow_compiler_type PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(swallow_compiler_type PRIVATE cxx_std_20)
-if(MSVC)
-    target_compile_options(swallow_compiler_type PRIVATE $<$<CONFIG:Release>:-O2>)
-else()
-    target_compile_options(swallow_compiler_type PRIVATE -O3)
-endif()
-if(MSVC)
-else()
-    target_compile_options(swallow_compiler_type PRIVATE -fvisibility=hidden)
-endif()
-if(MSVC)
-    set_property(TARGET swallow_compiler_type PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
-target_link_options(swallow_compiler_type PRIVATE
-    -m64
-)
-if(Clang)
-target_link_options(swallow_compiler_type PRIVATE
-    -stdlib=libc++
-)
-endif()
-target_sources(swallow_compiler_type PRIVATE
-    compiler/type/dump.cpp
-    compiler/type/environment.cpp
-    compiler/type/type.cpp
-)
-
-# target
 add_library(swc STATIC "")
 set_target_properties(swc PROPERTIES OUTPUT_NAME "swc")
 set_target_properties(swc PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
-target_precompile_headers(swc PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x1f22dc0">
-)
 target_include_directories(swc PRIVATE
     compiler
+)
+target_include_directories(swc SYSTEM PRIVATE
+    /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include
+    /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include
+    /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include
 )
 target_compile_options(swc PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
@@ -526,6 +126,9 @@ if(MSVC)
     set_property(TARGET swc PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
+target_link_libraries(swc PRIVATE
+    pthread
+)
 target_link_options(swc PRIVATE
     -m64
 )
@@ -540,15 +143,15 @@ target_sources(swc PRIVATE
     compiler/ast/dump.cpp
     compiler/ast/gmachine.cpp
     compiler/ast/type.cpp
+    compiler/diagnostics/utils.cpp
     compiler/diagnostics/diagnostics.cpp
     compiler/diagnostics/reporter.cpp
-    compiler/diagnostics/utils.cpp
     compiler/gmachine/binop.cpp
     compiler/gmachine/environment.cpp
     compiler/gmachine/instruction.cpp
     compiler/ir/context.cpp
-    compiler/lexer/flex_lexer.cpp
     compiler/lexer/lexer.cpp
+    compiler/lexer/flex_lexer.cpp
     compiler/parser/bison_parser.cpp
     compiler/parser/parser.cpp
     compiler/runtime/node.cpp
@@ -564,9 +167,6 @@ add_library(swi STATIC "")
 set_target_properties(swi PROPERTIES OUTPUT_NAME "swi")
 set_target_properties(swi PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
 add_dependencies(swi swc)
-target_precompile_headers(swi PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/"table: 0x23f9ef0">
-)
 target_compile_options(swi PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
@@ -590,6 +190,7 @@ if(MSVC)
 endif()
 target_link_libraries(swi PRIVATE
     swc
+    pthread
 )
 target_link_directories(swi PRIVATE
     build/linux/x86_64/release
