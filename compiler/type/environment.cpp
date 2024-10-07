@@ -28,30 +28,24 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "environment.hpp"
-#include "result/result.hpp"
+#include <tl/expected.hpp>
 #include <utility>
-
-using namespace swallow::compiler::utils;
 
 namespace swallow::compiler::type
 {
 
-  auto
-    Environment::Lookup(const std::string &name) const noexcept -> Result<Type::Ptr, Void>
+  auto Environment::Lookup(const std::string &name) const noexcept -> tl::expected<Type::Ptr, std::nullptr_t>
   {
     if (const auto it = Names.find(name); it != Names.end())
-      return Ok(it->second);
+      return it->second;
 
     if (Parent != nullptr)
       return Parent->Lookup(name);
 
-    return Err(Void());
+    return nullptr;
   }
 
-  void Environment::Bind(const std::string &name, Type::Ptr type) noexcept
-  {
-    Names[name] = std::move(type);
-  }
+  void Environment::Bind(const std::string &name, Type::Ptr type) noexcept { Names[name] = std::move(type); }
 
   auto Environment::Scope() const noexcept -> Environment { return Environment(this); }
 

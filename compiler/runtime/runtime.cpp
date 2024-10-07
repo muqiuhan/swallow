@@ -28,9 +28,9 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "runtime.h"
-#include "panic/panic.hpp"
 #include "runtime/node.h"
 #include "runtime/stack.h"
+#include "error/errors.hpp"
 
 namespace swallow::compiler::runtime
 {
@@ -60,12 +60,11 @@ namespace swallow::compiler::runtime
             auto *node = reinterpret_cast<node::Global *>(peek);
 
             if (stack->Count < node->Arity)
-              utils::Panic("ICE: stack->Count > node->Arity");
+              Panic("ICE: stack->Count > node->Arity");
 
             for (size_t i = 1; i <= node->Arity; i++)
               stack->Data[stack->Count - i] =
-                reinterpret_cast<node::Application *>(stack->Data[stack->Count - i - 1])
-                  ->Right;
+                reinterpret_cast<node::Application *>(stack->Data[stack->Count - i - 1])->Right;
 
             node->Function(stack);
           }
@@ -84,12 +83,10 @@ namespace swallow::compiler::runtime
 void AddFunction(swallow::compiler::runtime::stack::Stack *stack) noexcept
 {
   auto *left = reinterpret_cast<swallow::compiler::runtime::node::Int *>(
-    swallow::compiler::runtime::Runtime::Eval(
-      swallow::compiler::runtime::stack::Stack::Peek(stack, 0)));
+    swallow::compiler::runtime::Runtime::Eval(swallow::compiler::runtime::stack::Stack::Peek(stack, 0)));
 
   auto *right = reinterpret_cast<swallow::compiler::runtime::node::Int *>(
-    swallow::compiler::runtime::Runtime::Eval(
-      swallow::compiler::runtime::stack::Stack::Peek(stack, 1)));
+    swallow::compiler::runtime::Runtime::Eval(swallow::compiler::runtime::stack::Stack::Peek(stack, 1)));
 
   swallow::compiler::runtime::stack::Stack::Push(
     stack,
@@ -101,13 +98,11 @@ void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept
 {
   swallow::compiler::runtime::stack::Stack::Push(
     stack,
-    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
-      swallow::compiler::runtime::node::Int::Allocate(10)));
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(swallow::compiler::runtime::node::Int::Allocate(10)));
 
   swallow::compiler::runtime::stack::Stack::Push(
     stack,
-    reinterpret_cast<swallow::compiler::runtime::node::Base *>(
-      swallow::compiler::runtime::node::Int::Allocate(20)));
+    reinterpret_cast<swallow::compiler::runtime::node::Base *>(swallow::compiler::runtime::node::Int::Allocate(20)));
 
   swallow::compiler::runtime::stack::Stack::Push(
     stack,

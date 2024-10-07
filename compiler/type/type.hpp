@@ -30,11 +30,11 @@
 #ifndef SWALLOW_COMPILER_TYPE_H
 #define SWALLOW_COMPILER_TYPE_H
 
-#include "result/result.hpp"
 #include <cstdint>
 #include <map>
 #include <memory>
 #include <string>
+#include <tl/expected.hpp>
 
 namespace swallow::compiler::type
 {
@@ -105,8 +105,7 @@ namespace swallow::compiler::type
     auto NewArrowType() noexcept -> Type::Ptr;
 
     /** Find values for placeholder variables such that they can equal. */
-    auto Unify(Type::Ptr left, Type::Ptr right) noexcept
-      -> utils::Result<utils::Void, utils::Void>;
+    auto Unify(Type::Ptr left, Type::Ptr right) noexcept -> tl::expected<std::nullptr_t, std::nullptr_t>;
 
     /** Get to the bottom of a chain of equations. */
     auto Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr;

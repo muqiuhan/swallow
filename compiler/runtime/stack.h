@@ -32,6 +32,7 @@
 
 #include "node.h"
 #include <cstdint>
+#include "error/errors.hpp"
 
 namespace swallow::compiler::runtime::stack
 {

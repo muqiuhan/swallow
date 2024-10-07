@@ -27,20 +27,41 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
-#define SWALLOW_COMPILER_G_MACHINE_BINOP_HPP
-
-#include "binop/binop.hpp"
-#include <string>
+#include "binop.hpp"
 
 namespace swallow::compiler::gmachine
 {
-  class Binop
+  [[nodiscard]] auto Binop::ToString(utils::Binop op) noexcept -> std::string
   {
-  public:
-    [[nodiscard]] static auto ToString(utils::Binop op) noexcept -> std::string;
-    [[nodiscard]] static auto Action(utils::Binop op) noexcept -> std::string;
-  };
-} // namespace swallow::compiler::gmachine
+    switch (op)
+      {
+      case utils::Binop::PLUS:
+        return {"+"};
+      case utils::Binop::MINUS:
+        return {"-"};
+      case utils::Binop::TIMES:
+        return {"*"};
+      case utils::Binop::DIVIDE:
+        return {"/"};
+      }
 
-#endif /* SWALLOW_COMPILER_G_MACHINE_BINOP_HPP */
+    Panic("ICE: OperatorToString");
+  }
+
+  [[nodiscard]] auto Binop::Action(utils::Binop op) noexcept -> std::string
+  {
+    switch (op)
+      {
+      case utils::Binop::PLUS:
+        return {"plus"};
+      case utils::Binop::MINUS:
+        return {"minus"};
+      case utils::Binop::TIMES:
+        return {"times"};
+      case utils::Binop::DIVIDE:
+        return {"divide"};
+      }
+
+    Panic("ICE: OperatorToString");
+  }
+} // namespace swallow::compiler::gmachine

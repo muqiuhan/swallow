@@ -27,51 +27,43 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "environment.hpp"
-#include "optional/optional.hpp"
+#ifndef SWALLOW_COMPILER_ERRORS_HPP
+#define SWALLOW_COMPILER_ERRORS_HPP
 
-namespace swallow::compiler::gmachine
+#include <exception>
+#include <source_location>
+#include <spdlog/spdlog.h>
+#include <string>
+
+namespace swallow::compiler::error
 {
-
-  [[nodiscard]] auto
-    Variable::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
+  class Error
   {
-    if (name == Name)
-      return tl::make_optional(0);
+  public:
+    const std::string          message;
+    const std::source_location location;
 
-    if (Parent != nullptr)
-      return Parent->GetOffset(name).map([](const auto &offset) { return offset + 1; });
+    auto append(std::string append_message) const noexcept -> void
+    {
+      spdlog::error("{} at ({}:{})", append_message, location.file_name(), location.line());
+    }
 
-    return tl::nullopt;
-  }
+    [[noreturn]] auto panic() const noexcept -> void
+    {
+      spdlog::error("{} at ({}:{})", message, location.file_name(), location.line());
+      std::terminate();
+    }
+  };
 
-  [[nodiscard]] auto Variable::HasVariable(const std::string &name) const noexcept -> bool
-  {
-    if (name == Name)
-      return true;
+#define _Error(message)                                                                                                \
+  swallow::compiler::error::Error { message, std::source_location::current() }
 
-    if (Parent != nullptr)
-      return Parent->HasVariable(name);
+#define Unimplemented()                                                                                                \
+  _Error(fmt::format("unimplemented function: {}", std::source_location::current().function_name())).panic()
 
-    return false;
-  }
+#define Panic(message) _Error(fmt::format("{}", message)).panic()
 
-  [[nodiscard]] auto Offset::HasVariable(const std::string &name) const noexcept -> bool
-  {
-    if (Parent != nullptr)
-      return Parent->HasVariable(name);
+#define Err(message)   tl::make_unexpected(_Error(message))
+}; // namespace swallow::compiler::error
 
-    return false;
-  }
-
-  [[nodiscard]] auto
-    Offset::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
-  {
-    if (Parent != nullptr)
-      return Parent->GetOffset(name).map(
-        [&](const auto &offset) { return offset + Value; });
-
-    return tl::nullopt;
-  }
-
-} // namespace swallow::compiler::gmachine
+#endif /* SWALLOW_COMPILER_ERRORS_HPP */

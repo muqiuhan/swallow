@@ -27,42 +27,47 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "binop.hpp"
-#include "panic/panic.hpp"
+#include "environment.hpp"
 
 namespace swallow::compiler::gmachine
 {
-  [[nodiscard]] auto Binop::ToString(utils::Binop op) noexcept -> std::string
-  {
-    switch (op)
-      {
-      case utils::Binop::PLUS:
-        return {"+"};
-      case utils::Binop::MINUS:
-        return {"-"};
-      case utils::Binop::TIMES:
-        return {"*"};
-      case utils::Binop::DIVIDE:
-        return {"/"};
-      }
 
-    utils::Panic("ICE: OperatorToString");
+  [[nodiscard]] auto Variable::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
+  {
+    if (name == Name)
+      return tl::make_optional(0);
+
+    if (Parent != nullptr)
+      return Parent->GetOffset(name).map([](const auto &offset) { return offset + 1; });
+
+    return tl::nullopt;
   }
 
-  [[nodiscard]] auto Binop::Action(utils::Binop op) noexcept -> std::string
+  [[nodiscard]] auto Variable::HasVariable(const std::string &name) const noexcept -> bool
   {
-    switch (op)
-      {
-      case utils::Binop::PLUS:
-        return {"plus"};
-      case utils::Binop::MINUS:
-        return {"minus"};
-      case utils::Binop::TIMES:
-        return {"times"};
-      case utils::Binop::DIVIDE:
-        return {"divide"};
-      }
+    if (name == Name)
+      return true;
 
-    utils::Panic("ICE: OperatorToString");
+    if (Parent != nullptr)
+      return Parent->HasVariable(name);
+
+    return false;
   }
+
+  [[nodiscard]] auto Offset::HasVariable(const std::string &name) const noexcept -> bool
+  {
+    if (Parent != nullptr)
+      return Parent->HasVariable(name);
+
+    return false;
+  }
+
+  [[nodiscard]] auto Offset::GetOffset(const std::string &name) const noexcept -> tl::optional<int>
+  {
+    if (Parent != nullptr)
+      return Parent->GetOffset(name).map([&](const auto &offset) { return offset + Value; });
+
+    return tl::nullopt;
+  }
+
 } // namespace swallow::compiler::gmachine

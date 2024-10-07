@@ -7,15 +7,17 @@
 #include <string>
 #include <vector>
 
-#define COLOR_BY_TYPE(type, text)                                                        \
-  color_by_type(std::cout, type) << text << termcolor::reset
-#define COLOR_RGB(text, rgb) termcolor::color<rgb> << text << termcolor::reset
+#define COLOR_BY_TYPE(type, text) color_by_type(std::cout, type) << text << termcolor::reset
+#define COLOR_RGB(text, rgb)      termcolor::color<rgb> << text << termcolor::reset
 
-#define assertm(exp, msg)    assert(((void) msg, exp))
+#define assertm(exp, msg)         assert(((void) msg, exp))
 
 namespace swallow::compiler::diagnostics
 {
 
+#ifdef _WIN32
+#undef ERROR
+#endif
   enum class ReportType
   {
     ERROR,
@@ -133,8 +135,7 @@ namespace swallow::compiler::diagnostics
 
     [[nodiscard]] auto get_label_line(const Label &label) const -> size_t;
 
-    [[nodiscard]] auto
-      get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
+    [[nodiscard]] auto get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &;
 
     [[nodiscard]] auto get_source() const -> const std::string &;
 
@@ -162,11 +163,9 @@ namespace swallow::compiler::diagnostics
       std::ostream              &output,
       const std::string         &spaces_prefix) -> void;
 
-    auto print_colored_source_line(
-      std::ostream &output, const Span &label_span, const Labels &labels) const -> void;
+    auto print_colored_source_line(std::ostream &output, const Span &label_span, const Labels &labels) const -> void;
 
-    [[nodiscard]] static auto
-      find_label_levels(const Labels &labels) -> std::vector<Labels>;
+    [[nodiscard]] static auto find_label_levels(const Labels &labels) -> std::vector<Labels>;
 
     [[nodiscard]] static auto find_remove_overlapping_labels(Labels &labels) -> Labels;
 
@@ -209,11 +208,7 @@ namespace swallow::compiler::diagnostics
   {
   public:
     Report(
-      ReportType                 type,
-      std::string                message,
-      size_t                     code,
-      std::vector<Label>         labels,
-      std::optional<std::string> note);
+      ReportType type, std::string message, size_t code, std::vector<Label> labels, std::optional<std::string> note);
 
     auto print(std::ostream &output) const -> void;
 

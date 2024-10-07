@@ -1,14 +1,14 @@
 #include "diagnostics.h"
 
-#include "panic/panic.hpp"
-#include "termcolor.hpp"
 #include "utils.h"
+#include "utils/termcolor.hpp"
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <map>
 #include <regex>
 #include <utility>
+#include "error/errors.hpp"
 
 namespace swallow::compiler::diagnostics
 {
@@ -38,7 +38,7 @@ namespace swallow::compiler::diagnostics
       case ReportType::WARNING:
         return "W";
       default:
-        utils::Panic("This report type is not implemented yet.");
+        Panic("This report type is not implemented yet.");
       }
   }
 
@@ -53,7 +53,7 @@ namespace swallow::compiler::diagnostics
       case ReportType::WARNING:
         return "Warning";
       default:
-        utils::Panic("This report type is not implemented yet.");
+        Panic("This report type is not implemented yet.");
       }
 #define ERROR 0
   }
@@ -145,8 +145,7 @@ namespace swallow::compiler::diagnostics
 
   auto AscendingLabels::operator()(const Label *first, const Label *second) const -> bool
   {
-    auto difference = (int) first->get_span().get_start_index()
-                      - (int) second->get_span().get_start_index();
+    auto difference = (int) first->get_span().get_start_index() - (int) second->get_span().get_start_index();
     if (difference == 0)
       return first->get_span().get_end_index() < second->get_span().get_end_index();
 
@@ -155,8 +154,7 @@ namespace swallow::compiler::diagnostics
 
   auto DescendingLabels::operator()(const Label *first, const Label *second) const -> bool
   {
-    auto difference = (int) first->get_span().get_start_index()
-                      - (int) second->get_span().get_start_index();
+    auto difference = (int) first->get_span().get_start_index() - (int) second->get_span().get_start_index();
     if (difference == 0)
       return first->get_span().get_end_index() < second->get_span().get_end_index();
 
@@ -171,16 +169,12 @@ namespace swallow::compiler::diagnostics
 
   auto Span::relative_to(const Span &span) const -> Span
   {
-    return {
-      span.get_details(),
-      this->start_index_ - span.start_index_,
-      this->end_index_ - span.start_index_};
+    return {span.get_details(), this->start_index_ - span.start_index_, this->end_index_ - span.start_index_};
   }
 
   auto Span::is_inside_span(const Span &span) const -> bool
   {
-    return (this->start_index_ <= span.start_index_)
-           && (this->end_index_ >= span.end_index_);
+    return (this->start_index_ <= span.start_index_) && (this->end_index_ >= span.end_index_);
   }
 
   auto Span::get_start_index() const -> size_t { return this->start_index_; }
@@ -199,10 +193,7 @@ namespace swallow::compiler::diagnostics
     this->line_ = this->span_.get_details()->get_label_line(*this);
   }
 
-  auto Label::get_message() const -> const std::optional<std::string> &
-  {
-    return this->message_;
-  }
+  auto Label::get_message() const -> const std::optional<std::string> & { return this->message_; }
 
   auto Label::get_span() const -> const Span & { return this->span_; }
 
@@ -241,8 +232,7 @@ namespace swallow::compiler::diagnostics
     return {this->message_, this->span_.value(), color};
   }
 
-  Details::Details(std::string source, std::string path)
-    : source_(std::move(source)), path_(std::move(path))
+  Details::Details(std::string source, std::string path) : source_(std::move(source)), path_(std::move(path))
   {
     Span *current_span = nullptr;
     for (auto index = 0U; index < this->source_.size(); index++)
@@ -284,26 +274,19 @@ namespace swallow::compiler::diagnostics
           return index;
       }
 
-    utils::Panic("Couldn't find the associated line for this span.");
+    Panic("Couldn't find the associated line for this span.");
   }
 
-  auto Details::get_line_spans() const -> const std::vector<std::shared_ptr<Span>> &
-  {
-    return this->line_spans_;
-  }
+  auto Details::get_line_spans() const -> const std::vector<std::shared_ptr<Span>> & { return this->line_spans_; }
 
   auto Details::get_source() const -> const std::string & { return this->source_; }
 
   auto Details::get_path() const -> const std::string & { return this->path_; }
 
   LabelGroup::LabelGroup(Details *general_details_, std::vector<const Label *> labels)
-    : first_label_()
-    , last_label_()
-    , details_(general_details_)
-    , labels_(std::move(labels))
+    : first_label_(), last_label_(), details_(general_details_), labels_(std::move(labels))
   {
-    assertm(
-      !this->labels_.empty(), "Couldn't find the last labels as there are no labels.");
+    assertm(!this->labels_.empty(), "Couldn't find the last labels as there are no labels.");
 
     auto ascending_labels(this->labels_);
     std::sort(ascending_labels.begin(), ascending_labels.end(), AscendingLabels());
@@ -332,9 +315,7 @@ namespace swallow::compiler::diagnostics
         auto line_number = line_index + 1;
         output << "  "
                << COLOR_RGB(
-                    std::setw(spaces_prefix.length() - 3)
-                      << std::setfill(' ') << line_number << " |  ",
-                    COLOR_GREY);
+                    std::setw(spaces_prefix.length() - 3) << std::setfill(' ') << line_number << " |  ", COLOR_GREY);
 
         auto labels = this->find_labels_in_line(line_index);
         this->print_colored_source_line(output, *line_span, labels);
@@ -472,8 +453,7 @@ namespace swallow::compiler::diagnostics
       }
   }
 
-  void LabelGroup::print_colored_source_line(
-    std::ostream &output, const Span &label_span, const Labels &labels) const
+  void LabelGroup::print_colored_source_line(std::ostream &output, const Span &label_span, const Labels &labels) const
   {
     const auto source = this->details_->get_line_source(label_span);
 
@@ -501,9 +481,7 @@ namespace swallow::compiler::diagnostics
         output << current_char;
 
         auto starting_index = char_index;
-        for (char_index++;
-             char_index < starting_index + label->get_span().get_width() + 1;
-             char_index++)
+        for (char_index++; char_index < starting_index + label->get_span().get_width() + 1; char_index++)
           {
             if (mapped_labels.contains(char_index))
               break;
@@ -556,9 +534,7 @@ namespace swallow::compiler::diagnostics
       {
         const auto *next_label = *iterator;
 
-        if (
-          next_label->get_span().get_end_index()
-          < current_label->get_span().get_start_index())
+        if (next_label->get_span().get_end_index() < current_label->get_span().get_start_index())
           current_label = next_label;
         else
           {
@@ -622,8 +598,7 @@ namespace swallow::compiler::diagnostics
 
   void FileGroup::print(std::ostream &output, const std::string &spaces_prefix) const
   {
-    output << COLOR_RGB("-[", COLOR_GREY)
-           << COLOR_RGB(this->details_->get_path(), COLOR_WHITE)
+    output << COLOR_RGB("-[", COLOR_GREY) << COLOR_RGB(this->details_->get_path(), COLOR_WHITE)
            << COLOR_RGB("]", COLOR_GREY);
     output << "\n";
 
@@ -662,31 +637,20 @@ namespace swallow::compiler::diagnostics
     return biggest_number;
   }
 
-  auto FileGroup::get_label_groups() const -> const std::vector<LabelGroup> &
-  {
-    return this->label_groups_;
-  }
+  auto FileGroup::get_label_groups() const -> const std::vector<LabelGroup> & { return this->label_groups_; }
 
   auto FileGroup::get_details() const -> Details * { return this->details_; }
 
   Report::Report(
-    ReportType                 type,
-    std::string                message,
-    size_t                     code,
-    std::vector<Label>         labels,
-    std::optional<std::string> note)
-    : note_(std::move(note))
-    , labels_(std::move(labels))
-    , message_(std::move(message))
-    , type_(type)
-    , code_(code)
+    ReportType type, std::string message, size_t code, std::vector<Label> labels, std::optional<std::string> note)
+    : note_(std::move(note)), labels_(std::move(labels)), message_(std::move(message)), type_(type), code_(code)
   {}
 
   void Report::print(std::ostream &output) const
   {
     output << COLOR_RGB(
-      "[" << report_type_to_prefix(this->type_) << std::setw(3) << std::setfill('0')
-          << this->code_ << "] " << report_type_to_string(this->type_) << ":",
+      "[" << report_type_to_prefix(this->type_) << std::setw(3) << std::setfill('0') << this->code_ << "] "
+          << report_type_to_string(this->type_) << ":",
       COLOR_RED)
            << " " << COLOR_RGB(this->message_, COLOR_WHITE);
     output << "\n";
@@ -725,15 +689,13 @@ namespace swallow::compiler::diagnostics
 
     if (this->note_)
       {
-        output << spaces_prefix << COLOR_RGB("o-- ", COLOR_GREY)
-               << COLOR_RGB("Note: ", COLOR_BEACH);
+        output << spaces_prefix << COLOR_RGB("o-- ", COLOR_GREY) << COLOR_RGB("Note: ", COLOR_BEACH);
         print_formatted_text(output, this->note_.value());
         output << "\n";
       }
 
     auto dashes_prefix = biggest_number_width + 3;
-    output << COLOR_RGB(repeat_string("-", dashes_prefix), COLOR_GREY)
-           << COLOR_RGB("/", COLOR_GREY);
+    output << COLOR_RGB(repeat_string("-", dashes_prefix), COLOR_GREY) << COLOR_RGB("/", COLOR_GREY);
     output << "\n";
   }
 
@@ -760,10 +722,7 @@ namespace swallow::compiler::diagnostics
     return file_groups;
   }
 
-  auto Report::get_note() const -> const std::optional<std::string> &
-  {
-    return this->note_;
-  }
+  auto Report::get_note() const -> const std::optional<std::string> & { return this->note_; }
 
   auto Report::get_labels() const -> const std::vector<Label> & { return this->labels_; }
 
@@ -810,11 +769,6 @@ namespace swallow::compiler::diagnostics
     assertm(this->type_, "A type is required to build a report.");
     assertm(this->message_, "A message is required to build a report.");
     assertm(this->code_, "A message is required to build a report.");
-    return {
-      this->type_.value(),
-      this->message_.value(),
-      this->code_.value(),
-      this->labels_,
-      this->note_};
+    return {this->type_.value(), this->message_.value(), this->code_.value(), this->labels_, this->note_};
   }
 } // namespace swallow::compiler::diagnostics

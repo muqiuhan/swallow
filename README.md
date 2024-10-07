@@ -26,20 +26,30 @@
 - Build & Install
   - > This project provides makefile, CMakeLists.txt, which can be built in an environment without xmake.
   - > Setup: Install the [xmake](xmake.io)
-  - To build:   xmake build
+  - To build:   `xmake f --toolchain=gcc -m release -y && xmake build -j$(expr $(nproc) / 2)`
+  > or clang `xmake f --toolchain=clang -m release -y && xmake build -j$(expr $(nproc) / 2)`
   - To run:     xmake run
   - To install: xmake install
 
-
+  - Cross-compile to windows or other platforms on Linux
+    - Setup: Install the [llvm](https://apt.llvm.org/)
+    - Build: `xmake f --toolchain=mingw -m release -y && xmake build -j$(expr $(nproc) / 2)`
+    > If the LLVM header files cannot be found, you can manually run `ln -s` to the corresponding directory of mingw, for example:
+    ```
+    ln -s /usr/include/llvm /usr/lib64/gcc/x86_64-w64-mingw32/13.2.0/include
+    
+    ln -s /usr/include/llvm-c /usr/lib64/gcc/x86_64-w64-mingw32/13.2.0/include
+    ```
 - Tools
   - [XMake: A cross-platform build utility based on Lua](https://xmake.io/#/)
   - [GNU Bison: A general-purpose parser generator](https://github.com/akimd/bison)
   - [Flex:  The Fast Lexical Analyzer - scanner generator for lexing in C and C++](https://github.com/westes/flex)
 
 - Library/Frameworks
-  - [optional: C++11/14/17 std::optional with functional-style extensions and reference support](https://github.com/TartanLlama/optional)
-  - [result: Result<T, E> for Modern C++](https://github.com/p-ranav/result)
-  
+  - [llvm: LLVM project](https://github.com/llvm/llvm-project)
+  - [tl_optional:  C++11/14/17 std::optional with functional-style extensions and reference support](https://github.com/TartanLlama/optional)
+  - [tl_expected: C++11/14/17 std::expected with functional-style extensions ](https://github.com/TartanLlama/expected/)
+  - [spdlog: Fast C++ logging library](https://github.com/gabime/spdlog)
 
 - REFERENCE
   - [Theory of computation](https://en.wikipedia.org/wiki/Theory_of_computation)

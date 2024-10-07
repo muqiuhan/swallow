@@ -27,41 +27,56 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_UTILS_PANIC_H
-#define SWALLOW_UTILS_PANIC_H
+#ifndef SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
+#define SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
 
-#include <exception>
-#include <format>
-#include <iostream>
-#include <source_location>
+#include <memory>
+#include "error/errors.hpp"
+#include <tl/expected.hpp>
+#include <tl/optional.hpp>
+#include <string>
 
-namespace swallow::compiler::utils
+namespace swallow::compiler::gmachine
 {
-  template <class... Args> struct PanicFormat
+
+  class Environment
   {
-    template <class T>
-    consteval PanicFormat(
+  public:
+    using Ptr = std::shared_ptr<Environment>;
 
-      const T &s, std::source_location loc = std::source_location::current()) noexcept
-      : fmt{s}, loc{loc}
-    {}
+    virtual ~Environment() = default;
 
-    std::format_string<Args...> fmt;
-    std::source_location        loc;
+    [[nodiscard]] virtual auto GetOffset(const std::string &name) const noexcept -> tl::optional<int> = 0;
+
+    [[nodiscard]] virtual auto HasVariable(const std::string &name) const noexcept -> bool = 0;
   };
 
-  template <class... Args>
-  [[noreturn]] void
-    Panic(PanicFormat<std::type_identity_t<Args>...> fmt, Args &&...args) noexcept
+  class Variable : public Environment
   {
-    auto msg = std::format(
-      "{}:{} Panic: {}\n",
-      fmt.loc.file_name(),
-      fmt.loc.line(),
-      std::format(fmt.fmt, std::forward<Args>(args)...));
-    std::cout << msg.c_str() << std::endl;
-    std::terminate();
-  }
-} // namespace swallow::compiler::utils
+  public:
+    std::string Name;
+    Ptr         Parent;
 
-#endif
+    Variable(std::string Name, Ptr Parent) : Name(std::move(Name)), Parent(std::move(Parent)) {}
+
+    [[nodiscard]] auto GetOffset(const std::string &name) const noexcept -> tl::optional<int> override;
+
+    [[nodiscard]] auto HasVariable(const std::string &name) const noexcept -> bool override;
+  };
+
+  class Offset : public Environment
+  {
+  public:
+    uint32_t Value;
+    Ptr      Parent;
+
+    Offset(uint32_t Value, Ptr Parent) : Value(Value), Parent(std::move(Parent)) {}
+
+    [[nodiscard]] auto GetOffset(const std::string &name) const noexcept -> tl::optional<int> override;
+
+    [[nodiscard]] auto HasVariable(const std::string &name) const noexcept -> bool override;
+  };
+
+} // namespace swallow::compiler::gmachine
+
+#endif /* SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP */

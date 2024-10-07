@@ -1,16 +1,10 @@
-#include <string>
-#include "utils/structopt.hpp"
 #include "compiler.h"
+#include "utils/structopt.hpp"
+#include <string>
 
-STRUCTOPT(
-  swallow::compiler::CompilerOptions,
-  file,
-  verbose,
-  dump_ast,
-  dump_types,
-  dump_gmachine_ir);
+STRUCTOPT(swallow::compiler::CompilerOptions, file, verbose, dump_ast, dump_types, dump_gmachine_ir);
 
-int main(int argc, char *argv[])
+auto main(int argc, char *argv[]) -> int
 {
   try
     {
@@ -19,18 +13,17 @@ int main(int argc, char *argv[])
         {
           return swallow::compiler::Compiler(
             structopt::app(
-              "swa compile",
-              swallow::compiler::CompilerOptions::VERSION,
-              swallow::compiler::CompilerOptions::HELP)
+              "swa compile", swallow::compiler::CompilerOptions::VERSION, swallow::compiler::CompilerOptions::HELP)
               .parse<swallow::compiler::CompilerOptions>(argc - 1, &argv[1]));
         }
-      else if (command == "i" || command == "repl")
+      if (command == "i" || command == "repl")
         {
           return 0;
         }
       else
         {
-          std::cout << "USAGE: swa [command]\n\ncommand:\n\tc, compile\tcall the "
+          std::cout << "USAGE: swa [command]\n\ncommand:\n\tc, compile\tcall "
+                       "the "
                        "compiler\n\ti, repl\t\tcall the repl interpreter\n";
         }
     }

@@ -27,62 +27,19 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
-#define SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP
+#ifndef SWALLOW_COMPILER_UTILS_DUMP_H
+#define SWALLOW_COMPILER_UTILS_DUMP_H
 
-#include "optional/optional.hpp"
-#include <memory>
-#include <string>
+#include <cstdint>
+#include <iostream>
 
-namespace swallow::compiler::gmachine
+namespace swallow::compiler::utils::dump
 {
-
-  class Environment
+  static void DumpIndent(uint8_t n, std::ostream &to) noexcept
   {
-  public:
-    using Ptr = std::shared_ptr<Environment>;
+    while ((n--) != 0U)
+      to << "  ";
+  }
+} // namespace swallow::compiler::utils::dump
 
-    virtual ~Environment() = default;
-
-    [[nodiscard]] virtual auto
-      GetOffset(const std::string &name) const noexcept -> tl::optional<int> = 0;
-
-    [[nodiscard]] virtual auto
-      HasVariable(const std::string &name) const noexcept -> bool = 0;
-  };
-
-  class Variable : public Environment
-  {
-  public:
-    std::string Name;
-    Ptr         Parent;
-
-    Variable(std::string Name, Ptr Parent)
-      : Name(std::move(Name)), Parent(std::move(Parent))
-    {}
-
-    [[nodiscard]] auto
-      GetOffset(const std::string &name) const noexcept -> tl::optional<int> override;
-
-    [[nodiscard]] auto
-      HasVariable(const std::string &name) const noexcept -> bool override;
-  };
-
-  class Offset : public Environment
-  {
-  public:
-    uint32_t Value;
-    Ptr      Parent;
-
-    Offset(uint32_t Value, Ptr Parent) : Value(Value), Parent(std::move(Parent)) {}
-
-    [[nodiscard]] auto
-      GetOffset(const std::string &name) const noexcept -> tl::optional<int> override;
-
-    [[nodiscard]] auto
-      HasVariable(const std::string &name) const noexcept -> bool override;
-  };
-
-} // namespace swallow::compiler::gmachine
-
-#endif /* SWALLOW_COMPILER_G_MACHINE_ENVIRONMENT_HPP */
+#endif

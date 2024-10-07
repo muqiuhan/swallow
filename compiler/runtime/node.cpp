@@ -27,9 +27,9 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include <cstdlib>
 #include "node.h"
-#include "utils/panic/panic.hpp"
+#include <cstdlib>
+#include "error/errors.hpp"
 
 namespace swallow::compiler::runtime::node
 {
@@ -38,13 +38,12 @@ namespace swallow::compiler::runtime::node
     auto *node = reinterpret_cast<Base *>(std::malloc(sizeof(class Application)));
 
     if (nullptr == node)
-      utils::Panic("ICE: Cannot allocate Base node");
+      Panic("ICE: Cannot allocate Base node");
     else
       return node;
   }
 
-  [[nodiscard]] auto
-    Application::Allocate(Base *Left, Base *Right) noexcept -> Application *
+  [[nodiscard]] auto Application::Allocate(Base *Left, Base *Right) noexcept -> Application *
   {
     auto *node = reinterpret_cast<Application *>(Base::Allocate());
     node->Node.Tag = Tag::APPLICATION;
@@ -61,8 +60,7 @@ namespace swallow::compiler::runtime::node
     return node;
   }
 
-  [[nodiscard]] auto Global::Allocate(
-    void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *
+  [[nodiscard]] auto Global::Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *
   {
     auto *node = reinterpret_cast<Global *>(Base::Allocate());
     node->Node.Tag = Tag::GLOBAL;
