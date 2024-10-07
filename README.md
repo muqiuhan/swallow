@@ -26,11 +26,20 @@
 - Build & Install
   - > This project provides makefile, CMakeLists.txt, which can be built in an environment without xmake.
   - > Setup: Install the [xmake](xmake.io)
-  - To build:   xmake build
+  - To build:   `xmake f --toolchain=gcc -m release -y && xmake build -j$(expr $(nproc) / 2)`
+  > or clang `xmake f --toolchain=clang -m release -y && xmake build -j$(expr $(nproc) / 2)`
   - To run:     xmake run
   - To install: xmake install
 
-
+  - Cross-compile to windows or other platforms on Linux
+    - Setup: Install the [llvm](https://apt.llvm.org/)
+    - Build: `xmake f --toolchain=mingw -m release -y && xmake build -j$(expr $(nproc) / 2)`
+    > If the LLVM header files cannot be found, you can manually run `ln -s` to the corresponding directory of mingw, for example:
+    ```
+    ln -s /usr/include/llvm /usr/lib64/gcc/x86_64-w64-mingw32/13.2.0/include
+    
+    ln -s /usr/include/llvm-c /usr/lib64/gcc/x86_64-w64-mingw32/13.2.0/include
+    ```
 - Tools
   - [XMake: A cross-platform build utility based on Lua](https://xmake.io/#/)
   - [GNU Bison: A general-purpose parser generator](https://github.com/akimd/bison)

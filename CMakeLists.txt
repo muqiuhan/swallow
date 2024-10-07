@@ -5,6 +5,8 @@
 # project
 cmake_minimum_required(VERSION 3.15.0)
 cmake_policy(SET CMP0091 NEW)
+set(CMAKE_C_COMPILER "/usr/bin/x86_64-w64-mingw32-gcc")
+set(CMAKE_CXX_COMPILER "/usr/bin/x86_64-w64-mingw32-g++")
 project(swallow VERSION 0.0.1 LANGUAGES CXX)
 
 # target
@@ -98,7 +100,7 @@ target_include_directories(swc PRIVATE
 target_include_directories(swc SYSTEM PRIVATE
     /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include
     /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include
-    /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include
+    /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include
 )
 target_compile_options(swc PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
@@ -144,8 +146,8 @@ target_sources(swc PRIVATE
     compiler/ast/gmachine.cpp
     compiler/ast/type.cpp
     compiler/diagnostics/diagnostics.cpp
-    compiler/diagnostics/reporter.cpp
     compiler/diagnostics/utils.cpp
+    compiler/diagnostics/reporter.cpp
     compiler/gmachine/binop.cpp
     compiler/gmachine/environment.cpp
     compiler/gmachine/instruction.cpp

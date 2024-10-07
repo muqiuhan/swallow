@@ -42,7 +42,9 @@ namespace swallow::compiler::diagnostics
     const std::string              &&note,
     const std::uint32_t             &code) -> std::nullptr_t
   {
-
+#ifdef _WIN32
+#undef ERROR
+#endif
     std::cout << std::endl;
     ReportBuilder()
       .with_type(ReportType::ERROR)

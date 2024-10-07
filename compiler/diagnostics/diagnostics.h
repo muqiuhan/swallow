@@ -15,6 +15,9 @@
 namespace swallow::compiler::diagnostics
 {
 
+#ifdef _WIN32
+#undef ERROR
+#endif
   enum class ReportType
   {
     ERROR,

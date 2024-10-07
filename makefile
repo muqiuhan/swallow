@@ -6,65 +6,74 @@ ifneq ($(VERBOSE),1)
 VV=@
 endif
 
-AS=/usr/bin/gcc
-CC=/usr/bin/gcc
-CU=/usr/bin/clang
-CXX=/usr/bin/gcc
-MM=/usr/bin/gcc
-MXX=/usr/bin/gcc
+CC=/usr/bin/x86_64-w64-mingw32-gcc
+CXX=/usr/bin/x86_64-w64-mingw32-g++
+AS=/usr/bin/x86_64-w64-mingw32-gcc
+MRC=/usr/bin/x86_64-w64-mingw32-windres
 
-AR=/usr/bin/ar
-LD=/usr/bin/g++
-SH=/usr/bin/g++
+AR=/usr/bin/x86_64-w64-mingw32-ar
+LD=/usr/bin/x86_64-w64-mingw32-g++
+SH=/usr/bin/x86_64-w64-mingw32-g++
 
-swallow_base_AR=/usr/bin/ar
-swallow_base_CXX=/usr/bin/gcc
-swallow_base_CXX=/usr/bin/gcc
-swc_AR=/usr/bin/ar
-swc_CXX=/usr/bin/gcc
-swc_CXX=/usr/bin/gcc
-swi_AR=/usr/bin/ar
-swi_CXX=/usr/bin/gcc
-swi_CXX=/usr/bin/gcc
-swa_LD=/usr/bin/g++
-swa_CXX=/usr/bin/gcc
-swa_CXX=/usr/bin/gcc
+swi_AR=/usr/bin/x86_64-w64-mingw32-ar
+swi_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swi_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swa_LD=/usr/bin/x86_64-w64-mingw32-g++
+swa_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swa_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swc_AR=/usr/bin/x86_64-w64-mingw32-ar
+swc_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swc_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swallow_base_AR=/usr/bin/x86_64-w64-mingw32-ar
+swallow_base_CXX=/usr/bin/x86_64-w64-mingw32-g++
+swallow_base_CXX=/usr/bin/x86_64-w64-mingw32-g++
 
-swallow_base_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
-swallow_base_CXXFLAGS=
-swallow_base_ARFLAGS=-cr
-swc_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -DNDEBUG
-swc_CXXFLAGS=
-swc_ARFLAGS=-cr
 swi_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
 swi_CXXFLAGS=
 swi_ARFLAGS=-cr
 swa_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
 swa_CXXFLAGS=
 swa_LDFLAGS=-m64 -Lbuild/linux/x86_64/release -s -lswi -lswc -lpthread
+swc_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -DNDEBUG
+swc_CXXFLAGS=
+swc_ARFLAGS=-cr
+swallow_base_CXXFLAGS=-m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
+swallow_base_CXXFLAGS=
+swallow_base_ARFLAGS=-cr
 
-default:  swallow_base swc swi swa
+default:  swi swa swc swallow_base
 
-all:  swallow_base swc swi swa
+all:  swi swa swc swallow_base
 
-.PHONY: default all  swallow_base swc swi swa
+.PHONY: default all  swi swa swc swallow_base
 
-swallow_base: build/linux/x86_64/release/libswallow_base.a
-build/linux/x86_64/release/libswallow_base.a: build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
-	@echo linking.release libswallow_base.a
+swi: build/linux/x86_64/release/libswi.a
+build/linux/x86_64/release/libswi.a: build/linux/x86_64/release/libswc.a build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
+	@echo linking.release libswi.a
 	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swallow_base_AR) $(swallow_base_ARFLAGS) build/linux/x86_64/release/libswallow_base.a build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
+	$(VV)$(swi_AR) $(swi_ARFLAGS) build/linux/x86_64/release/libswi.a build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
 
-build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o: base/base.cpp
-	@echo compiling.release base/base.cpp
-	@mkdir -p build/.objs/swallow_base/linux/x86_64/release/base
-	$(VV)$(swallow_base_CXX) -c $(swallow_base_CXXFLAGS) -o build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o base/base.cpp
+build/.objs/swi/linux/x86_64/release/repl/main.cpp.o: repl/main.cpp
+	@echo compiling.release repl/main.cpp
+	@mkdir -p build/.objs/swi/linux/x86_64/release/repl
+	$(VV)$(swi_CXX) -c $(swi_CXXFLAGS) -o build/.objs/swi/linux/x86_64/release/repl/main.cpp.o repl/main.cpp
+
+swa: build/linux/x86_64/release/swa
+build/linux/x86_64/release/swa: build/linux/x86_64/release/libswc.a build/linux/x86_64/release/libswi.a build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
+	@echo linking.release swa
+	@mkdir -p build/linux/x86_64/release
+	$(VV)$(swa_LD) -o build/linux/x86_64/release/swa build/.objs/swa/linux/x86_64/release/cli/main.cpp.o $(swa_LDFLAGS)
+
+build/.objs/swa/linux/x86_64/release/cli/main.cpp.o: cli/main.cpp
+	@echo compiling.release cli/main.cpp
+	@mkdir -p build/.objs/swa/linux/x86_64/release/cli
+	$(VV)$(swa_CXX) -c $(swa_CXXFLAGS) -o build/.objs/swa/linux/x86_64/release/cli/main.cpp.o cli/main.cpp
 
 swc: build/linux/x86_64/release/libswc.a
-build/linux/x86_64/release/libswc.a: build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
+build/linux/x86_64/release/libswc.a: build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
 	@echo linking.release libswc.a
 	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swc_AR) $(swc_ARFLAGS) build/linux/x86_64/release/libswc.a build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
+	$(VV)$(swc_AR) $(swc_ARFLAGS) build/linux/x86_64/release/libswc.a build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
 
 build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o: compiler/compiler.cpp
 	@echo compiling.release compiler/compiler.cpp
@@ -96,15 +105,15 @@ build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o: com
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o compiler/diagnostics/diagnostics.cpp
 
-build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o: compiler/diagnostics/reporter.cpp
-	@echo compiling.release compiler/diagnostics/reporter.cpp
-	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
-	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o compiler/diagnostics/reporter.cpp
-
 build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o: compiler/diagnostics/utils.cpp
 	@echo compiling.release compiler/diagnostics/utils.cpp
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o compiler/diagnostics/utils.cpp
+
+build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o: compiler/diagnostics/reporter.cpp
+	@echo compiling.release compiler/diagnostics/reporter.cpp
+	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/diagnostics
+	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o compiler/diagnostics/reporter.cpp
 
 build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o: compiler/gmachine/binop.cpp
 	@echo compiling.release compiler/gmachine/binop.cpp
@@ -176,34 +185,28 @@ build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o: compiler/type/typ
 	@mkdir -p build/.objs/swc/linux/x86_64/release/compiler/type
 	$(VV)$(swc_CXX) -c $(swc_CXXFLAGS) -o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o compiler/type/type.cpp
 
-swi: build/linux/x86_64/release/libswi.a
-build/linux/x86_64/release/libswi.a: build/linux/x86_64/release/libswc.a build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
-	@echo linking.release libswi.a
+swallow_base: build/linux/x86_64/release/libswallow_base.a
+build/linux/x86_64/release/libswallow_base.a: build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
+	@echo linking.release libswallow_base.a
 	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swi_AR) $(swi_ARFLAGS) build/linux/x86_64/release/libswi.a build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
+	$(VV)$(swallow_base_AR) $(swallow_base_ARFLAGS) build/linux/x86_64/release/libswallow_base.a build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
 
-build/.objs/swi/linux/x86_64/release/repl/main.cpp.o: repl/main.cpp
-	@echo compiling.release repl/main.cpp
-	@mkdir -p build/.objs/swi/linux/x86_64/release/repl
-	$(VV)$(swi_CXX) -c $(swi_CXXFLAGS) -o build/.objs/swi/linux/x86_64/release/repl/main.cpp.o repl/main.cpp
+build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o: base/base.cpp
+	@echo compiling.release base/base.cpp
+	@mkdir -p build/.objs/swallow_base/linux/x86_64/release/base
+	$(VV)$(swallow_base_CXX) -c $(swallow_base_CXXFLAGS) -o build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o base/base.cpp
 
-swa: build/linux/x86_64/release/swa
-build/linux/x86_64/release/swa: build/linux/x86_64/release/libswc.a build/linux/x86_64/release/libswi.a build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
-	@echo linking.release swa
-	@mkdir -p build/linux/x86_64/release
-	$(VV)$(swa_LD) -o build/linux/x86_64/release/swa build/.objs/swa/linux/x86_64/release/cli/main.cpp.o $(swa_LDFLAGS)
+clean:  clean_swi clean_swa clean_swc clean_swallow_base
 
-build/.objs/swa/linux/x86_64/release/cli/main.cpp.o: cli/main.cpp
-	@echo compiling.release cli/main.cpp
-	@mkdir -p build/.objs/swa/linux/x86_64/release/cli
-	$(VV)$(swa_CXX) -c $(swa_CXXFLAGS) -o build/.objs/swa/linux/x86_64/release/cli/main.cpp.o cli/main.cpp
+clean_swi:  clean_swc
+	@rm -rf build/linux/x86_64/release/libswi.a
+	@rm -rf build/linux/x86_64/release/swi.sym
+	@rm -rf build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
 
-clean:  clean_swallow_base clean_swc clean_swi clean_swa
-
-clean_swallow_base: 
-	@rm -rf build/linux/x86_64/release/libswallow_base.a
-	@rm -rf build/linux/x86_64/release/swallow_base.sym
-	@rm -rf build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
+clean_swa:  clean_swc clean_swi
+	@rm -rf build/linux/x86_64/release/swa
+	@rm -rf build/linux/x86_64/release/swa.sym
+	@rm -rf build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
 
 clean_swc: 
 	@rm -rf build/linux/x86_64/release/libswc.a
@@ -214,8 +217,8 @@ clean_swc:
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o
-	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o
+	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o
@@ -231,13 +234,8 @@ clean_swc:
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o
 	@rm -rf build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
 
-clean_swi:  clean_swc
-	@rm -rf build/linux/x86_64/release/libswi.a
-	@rm -rf build/linux/x86_64/release/swi.sym
-	@rm -rf build/.objs/swi/linux/x86_64/release/repl/main.cpp.o
-
-clean_swa:  clean_swc clean_swi
-	@rm -rf build/linux/x86_64/release/swa
-	@rm -rf build/linux/x86_64/release/swa.sym
-	@rm -rf build/.objs/swa/linux/x86_64/release/cli/main.cpp.o
+clean_swallow_base: 
+	@rm -rf build/linux/x86_64/release/libswallow_base.a
+	@rm -rf build/linux/x86_64/release/swallow_base.sym
+	@rm -rf build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
 

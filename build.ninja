@@ -9,54 +9,40 @@ rule gen
  description = regenerating ninja files
 
 # rules for compiler
-rule as
- command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
- deps = gcc
- depfile = $out.d
- description = compiling.release $in
-
 rule cc
- command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
- deps = gcc
- depfile = $out.d
- description = compiling.release $in
-
-rule cu
- command = /usr/bin/clang $ARGS -MMD -MF $out.d -o $out -c $in
+ command = /usr/bin/x86_64-w64-mingw32-gcc $ARGS -MMD -MF $out.d -o $out -c $in
  deps = gcc
  depfile = $out.d
  description = compiling.release $in
 
 rule cxx
- command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
+ command = /usr/bin/x86_64-w64-mingw32-g++ $ARGS -MMD -MF $out.d -o $out -c $in
  deps = gcc
  depfile = $out.d
  description = compiling.release $in
 
-rule mm
- command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
+rule as
+ command = /usr/bin/x86_64-w64-mingw32-gcc $ARGS -MMD -MF $out.d -o $out -c $in
  deps = gcc
  depfile = $out.d
  description = compiling.release $in
 
-rule mxx
- command = /usr/bin/gcc $ARGS -MMD -MF $out.d -o $out -c $in
- deps = gcc
- depfile = $out.d
+rule mrc
+ command = /usr/bin/x86_64-w64-mingw32-windres $ARGS $in $out
  description = compiling.release $in
 
 
 # rules for linker
 rule ar
- command = /usr/bin/ar $ARGS $out $in
+ command = /usr/bin/x86_64-w64-mingw32-ar $ARGS $out $in
  description = archiving.release $out
 
 rule ld
- command = /usr/bin/g++ -o $out $in $ARGS
+ command = /usr/bin/x86_64-w64-mingw32-g++ -o $out $in $ARGS
  description = linking.release $out
 
 rule sh
- command = /usr/bin/g++ -o $out $in $ARGS
+ command = /usr/bin/x86_64-w64-mingw32-g++ -o $out $in $ARGS
  description = linking.release $out
 
 
@@ -73,85 +59,6 @@ build build.ninja: gen $
   compiler/xmake.lua $
   repl/xmake.lua $
   compiler/xmake.lua 
-
-# build target: swallow_base
-build swallow_base: phony build/linux/x86_64/release/libswallow_base.a
-build build/linux/x86_64/release/libswallow_base.a: ar build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
- ARGS = -cr
-
-build build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o: cxx base/base.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
-
-# build target: swc
-build swc: phony build/linux/x86_64/release/libswc.a
-build build/linux/x86_64/release/libswc.a: ar build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
- ARGS = -cr
-
-build build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o: cxx compiler/compiler.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o: cxx compiler/ast/dump.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o: cxx compiler/ast/gmachine.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o: cxx compiler/ast/type.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o: cxx compiler/diagnostics/diagnostics.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o: cxx compiler/diagnostics/reporter.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o: cxx compiler/diagnostics/utils.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o: cxx compiler/gmachine/binop.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o: cxx compiler/gmachine/environment.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o: cxx compiler/gmachine/instruction.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o: cxx compiler/ir/context.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o: cxx compiler/lexer/flex_lexer.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o: cxx compiler/lexer/lexer.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o: cxx compiler/parser/bison_parser.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o: cxx compiler/parser/parser.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o: cxx compiler/runtime/node.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o: cxx compiler/runtime/runtime.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o: cxx compiler/runtime/stack.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o: cxx compiler/type/dump.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o: cxx compiler/type/environment.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
-
-build build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o: cxx compiler/type/type.cpp
- ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include -isystem -DNDEBUG
 
 # build target: swi
 build swi: phony build/linux/x86_64/release/libswi.a
@@ -171,8 +78,87 @@ build build/linux/x86_64/release/swa: ld build/.objs/swa/linux/x86_64/release/cl
 build build/.objs/swa/linux/x86_64/release/cli/main.cpp.o: cxx cli/main.cpp
  ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -DNDEBUG
 
-build default: phony swallow_base swc swi swa
-build all: phony swallow_base swc swi swa
+# build target: swc
+build swc: phony build/linux/x86_64/release/libswc.a
+build build/linux/x86_64/release/libswc.a: ar build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o
+ ARGS = -cr
+
+build build/.objs/swc/linux/x86_64/release/compiler/compiler.cpp.o: cxx compiler/compiler.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/ast/ast.cpp.o: cxx compiler/ast/ast.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/ast/dump.cpp.o: cxx compiler/ast/dump.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/ast/gmachine.cpp.o: cxx compiler/ast/gmachine.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/ast/type.cpp.o: cxx compiler/ast/type.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/diagnostics/diagnostics.cpp.o: cxx compiler/diagnostics/diagnostics.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/diagnostics/utils.cpp.o: cxx compiler/diagnostics/utils.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/diagnostics/reporter.cpp.o: cxx compiler/diagnostics/reporter.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/gmachine/binop.cpp.o: cxx compiler/gmachine/binop.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/gmachine/environment.cpp.o: cxx compiler/gmachine/environment.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/gmachine/instruction.cpp.o: cxx compiler/gmachine/instruction.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/ir/context.cpp.o: cxx compiler/ir/context.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/lexer/flex_lexer.cpp.o: cxx compiler/lexer/flex_lexer.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/lexer/lexer.cpp.o: cxx compiler/lexer/lexer.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/parser/bison_parser.cpp.o: cxx compiler/parser/bison_parser.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/parser/parser.cpp.o: cxx compiler/parser/parser.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/runtime/node.cpp.o: cxx compiler/runtime/node.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/runtime/runtime.cpp.o: cxx compiler/runtime/runtime.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/runtime/stack.cpp.o: cxx compiler/runtime/stack.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/type/dump.cpp.o: cxx compiler/type/dump.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/type/environment.cpp.o: cxx compiler/type/environment.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+build build/.objs/swc/linux/x86_64/release/compiler/type/type.cpp.o: cxx compiler/type/type.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -Icompiler -isystem /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include -isystem /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include -isystem /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/6a0109080d85439d985a75b8a212f96a/include -isystem -DNDEBUG
+
+# build target: swallow_base
+build swallow_base: phony build/linux/x86_64/release/libswallow_base.a
+build build/linux/x86_64/release/libswallow_base.a: ar build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o
+ ARGS = -cr
+
+build build/.objs/swallow_base/linux/x86_64/release/base/base.cpp.o: cxx base/base.cpp
+ ARGS = -m64 -fvisibility=hidden -fvisibility-inlines-hidden -O3 -std=c++20 -DNDEBUG
+
+build default: phony swi swa swc swallow_base
+build all: phony swi swa swc swallow_base
 
 default default
 
