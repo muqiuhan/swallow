@@ -1,9 +1,3 @@
-%code requires {
-    #include "ast/ast.hpp"
-    using namespace swallow::compiler::ast;
-    using namespace swallow::compiler;
-}
-
 %{
 #include <string>
 #include <iostream>
@@ -13,8 +7,13 @@
 
 std::vector<Definition::Ptr> Program;
 extern yy::parser::symbol_type yylex();
-
 %}
+
+%code requires {
+    #include "ast/ast.hpp"
+    using namespace swallow::compiler::ast;
+    using namespace swallow::compiler;
+}
 
 %token PLUS
 %token TIMES

@@ -45,7 +45,7 @@
 #ifndef YY_YY_HOME_MUQIU_WORKSPACE_SWALLOW_COMPILER_PARSER_BISON_PARSER_HPP_INCLUDED
 # define YY_YY_HOME_MUQIU_WORKSPACE_SWALLOW_COMPILER_PARSER_BISON_PARSER_HPP_INCLUDED
 // "%code requires" blocks.
-#line 1 "/home/muqiu/Workspace/Swallow/compiler/parser/parser.y"
+#line 12 "/home/muqiu/Workspace/Swallow/compiler/parser/parser.y"
 
     #include "ast/ast.hpp"
     using namespace swallow::compiler::ast;
