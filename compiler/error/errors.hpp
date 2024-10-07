@@ -27,42 +27,48 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef SWALLOW_COMPILER_UTILS_PANIC_H
-#define SWALLOW_COMPILER_UTILS_PANIC_H
+#ifndef SWALLOW_COMPILER_ERRORS_HPP
+#define SWALLOW_COMPILER_ERRORS_HPP
 
 #include <exception>
-#include <format>
-#include <iostream>
 #include <source_location>
+#include <spdlog/spdlog.h>
+#include <string>
 
-namespace swallow::compiler::utils
+namespace swallow::compiler::error
 {
-  template <class... Args> struct PanicFormat
+  class Error
   {
-    template <class T>
-    consteval PanicFormat(
+  public:
+    const std::string          message;
+    const std::source_location location;
 
-      const T             &s,
-      std::source_location loc = std::source_location::current()) noexcept
-      : fmt{s}, loc{loc}
-    {}
+    auto append(std::string append_message) const noexcept -> void
+    {
+      spdlog::error(
+        "{} at ({}:{})", append_message, location.file_name(), location.line());
+    }
 
-    std::format_string<Args...> fmt;
-    std::source_location        loc;
+    [[noreturn]] auto panic() const noexcept -> void
+    {
+      spdlog::error(
+        "{} at ({}:{})", message, location.file_name(), location.line());
+      std::terminate();
+    }
   };
 
-  template <class... Args>
-  [[noreturn]] void Panic(
-    PanicFormat<std::type_identity_t<Args>...> fmt, Args &&...args) noexcept
-  {
-    auto msg = std::format(
-      "{}:{} Panic: {}\n",
-      fmt.loc.file_name(),
-      fmt.loc.line(),
-      std::format(fmt.fmt, std::forward<Args>(args)...));
-    std::cout << msg.c_str() << std::endl;
-    std::terminate();
-  }
-} // namespace swallow::compiler::utils
+#define _Error(message)                                                        \
+  swallow::compiler::error::Error { message, std::source_location::current() }
 
-#endif
+#define Unimplemented()                                                        \
+  _Error(fmt::format(                                                          \
+           "unimplemented function: {}",                                       \
+           std::source_location::current().function_name()))                   \
+    .panic()
+
+#define Panic(message) _Error(fmt::format("{}", message)).panic()
+
+#define Err(message)   tl::make_unexpected(_Error(message))
+}; // namespace swallow::compiler::error
+
+#endif /* SWALLOW_COMPILER_ERRORS_HPP */
