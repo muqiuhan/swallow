@@ -28,7 +28,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "binop.hpp"
-#include "utils/panic.hpp"
 
 namespace swallow::compiler::gmachine
 {
@@ -46,7 +45,7 @@ namespace swallow::compiler::gmachine
         return {"/"};
       }
 
-    utils::Panic("ICE: OperatorToString");
+    Panic("ICE: OperatorToString");
   }
 
   [[nodiscard]] auto Binop::Action(utils::Binop op) noexcept -> std::string
@@ -63,6 +62,6 @@ namespace swallow::compiler::gmachine
         return {"divide"};
       }
 
-    utils::Panic("ICE: OperatorToString");
+    Panic("ICE: OperatorToString");
   }
 } // namespace swallow::compiler::gmachine

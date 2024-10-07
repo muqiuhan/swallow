@@ -33,7 +33,7 @@
 #include "compiler.h"
 #include "diagnostics/diagnostics.h"
 #include "parser/bison_parser.hpp"
-#include "utils/result.hpp"
+#include <tl/expected.hpp>
 
 namespace swallow::compiler::diagnostics
 {
@@ -44,16 +44,14 @@ namespace swallow::compiler::diagnostics
   public:
     inline static Reporter *REPORTER = nullptr;
 
-    explicit Reporter()
-      : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
-    {}
+    explicit Reporter() : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath}) {}
 
     [[noreturn]] auto normal(
       const yy::parser::location_type &loc,
       const std::string              &&msg,
       const std::string              &&labelMsg,
       const std::string              &&note,
-      const std::uint32_t             &code) -> utils::Err<utils::Void>;
+      const std::uint32_t             &code) -> std::nullptr_t;
   };
 
 } // namespace swallow::compiler::diagnostics

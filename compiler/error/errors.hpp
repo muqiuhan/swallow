@@ -45,26 +45,21 @@ namespace swallow::compiler::error
 
     auto append(std::string append_message) const noexcept -> void
     {
-      spdlog::error(
-        "{} at ({}:{})", append_message, location.file_name(), location.line());
+      spdlog::error("{} at ({}:{})", append_message, location.file_name(), location.line());
     }
 
     [[noreturn]] auto panic() const noexcept -> void
     {
-      spdlog::error(
-        "{} at ({}:{})", message, location.file_name(), location.line());
+      spdlog::error("{} at ({}:{})", message, location.file_name(), location.line());
       std::terminate();
     }
   };
 
-#define _Error(message)                                                        \
+#define _Error(message)                                                                                                \
   swallow::compiler::error::Error { message, std::source_location::current() }
 
-#define Unimplemented()                                                        \
-  _Error(fmt::format(                                                          \
-           "unimplemented function: {}",                                       \
-           std::source_location::current().function_name()))                   \
-    .panic()
+#define Unimplemented()                                                                                                \
+  _Error(fmt::format("unimplemented function: {}", std::source_location::current().function_name())).panic()
 
 #define Panic(message) _Error(fmt::format("{}", message)).panic()
 

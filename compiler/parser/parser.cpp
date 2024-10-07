@@ -33,8 +33,8 @@
 #include "diagnostics/code.hpp"
 #include "diagnostics/reporter.hpp"
 #include "location.hh"
-#include "utils/panic.hpp"
 #include <cstdio>
+#include "error/errors.hpp"
 
 namespace yy
 {
@@ -63,8 +63,7 @@ namespace swallow::compiler::parser
     FILE *file = std::fopen(compiler::CompileUnit::FILE->FilePath.c_str(), "r");
 
     if (file == nullptr)
-      utils::Panic(
-        "Cannot open file {}", compiler::CompileUnit::FILE->FilePath);
+      Panic(fmt::format("Cannot open file {}", compiler::CompileUnit::FILE->FilePath));
 
     yyin = file;
     yy::parser().parse();

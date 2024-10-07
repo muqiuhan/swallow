@@ -30,8 +30,6 @@
 #include "type.hpp"
 #include <algorithm>
 
-using namespace swallow::compiler::utils;
-
 namespace swallow::compiler::type
 {
   auto Manager::NewTypeName() noexcept -> std::string
@@ -49,18 +47,11 @@ namespace swallow::compiler::type
     return name;
   }
 
-  auto Manager::NewType() noexcept -> Type::Ptr
-  {
-    return Type::Ptr(new Variable(NewTypeName()));
-  }
+  auto Manager::NewType() noexcept -> Type::Ptr { return Type::Ptr(new Variable(NewTypeName())); }
 
-  auto Manager::NewArrowType() noexcept -> Type::Ptr
-  {
-    return Type::Ptr(new Arrow(NewType(), NewType()));
-  }
+  auto Manager::NewArrowType() noexcept -> Type::Ptr { return Type::Ptr(new Arrow(NewType(), NewType())); }
 
-  auto
-    Manager::Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr
+  auto Manager::Resolve(Type::Ptr type, Variable *&var) const noexcept -> Type::Ptr
   {
     Variable *cast = nullptr;
     var = nullptr;
@@ -79,8 +70,7 @@ namespace swallow::compiler::type
     return type;
   }
 
-  auto Manager::Unify(Type::Ptr left, Type::Ptr right) noexcept
-    -> Result<Void, Void>
+  auto Manager::Unify(Type::Ptr left, Type::Ptr right) noexcept -> tl::expected<std::nullptr_t, std::nullptr_t>
   {
     Variable *leftVar = nullptr;
     Variable *rightVar = nullptr;
@@ -91,40 +81,36 @@ namespace swallow::compiler::type
     if (leftVar != nullptr)
       {
         Bind(leftVar->Name, right);
-        return Ok(Void());
+        return nullptr;
       }
 
     if (rightVar != nullptr)
       {
         Bind(rightVar->Name, left);
-        return Ok(Void());
+        return nullptr;
       }
 
-    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()),
-        *rightArrow = dynamic_cast<Arrow *>(right.get());
+    if (auto *leftArrow = dynamic_cast<Arrow *>(left.get()), *rightArrow = dynamic_cast<Arrow *>(right.get());
         leftArrow != nullptr && rightArrow != nullptr)
       {
-        return Unify(leftArrow->Left, rightArrow->Left)
-          .and_then([&](const auto &ok) {
-            return Unify(leftArrow->Right, rightArrow->Right);
-          });
+        return Unify(leftArrow->Left, rightArrow->Left).and_then([&](const auto &ok) {
+          return Unify(leftArrow->Right, rightArrow->Right);
+        });
       }
 
-    if (auto *leftID = dynamic_cast<Base *>(left.get()),
-        *rightID = dynamic_cast<Base *>(right.get());
+    if (auto *leftID = dynamic_cast<Base *>(left.get()), *rightID = dynamic_cast<Base *>(right.get());
         leftID != nullptr && rightID != nullptr)
       {
         if (leftID->Name == rightID->Name)
-          return Ok(Void());
+          return nullptr;
       }
 
-    return Err(Void());
+    return nullptr;
   }
 
   void Manager::Bind(const std::string &name, const Type::Ptr &type) noexcept
   {
-    if (const auto *other = dynamic_cast<const Variable *>(type.get());
-        (other != nullptr) && other->Name == name)
+    if (const auto *other = dynamic_cast<const Variable *>(type.get()); (other != nullptr) && other->Name == name)
       return;
 
     Types[name] = type;

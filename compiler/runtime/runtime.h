@@ -32,6 +32,7 @@
 
 #include "node.h"
 #include "stack.h"
+#include "error/errors.hpp"
 
 extern void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept;
 

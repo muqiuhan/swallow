@@ -5,12 +5,14 @@
 # project
 cmake_minimum_required(VERSION 3.15.0)
 cmake_policy(SET CMP0091 NEW)
+set(CMAKE_C_COMPILER "/usr/bin/clang")
+set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 project(swallow VERSION 0.0.1 LANGUAGES CXX)
 
 # target
 add_executable(swa "")
 set_target_properties(swa PROPERTIES OUTPUT_NAME "swa")
-set_target_properties(swa PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(swa PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
 add_dependencies(swa swc swi)
 target_include_directories(swa PRIVATE
     compiler
@@ -18,19 +20,18 @@ target_include_directories(swa PRIVATE
 target_compile_options(swa PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
 set_target_properties(swa PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(swa PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(swa PRIVATE $<$<CONFIG:Release>:-O2>)
+    target_compile_options(swa PRIVATE $<$<CONFIG:Debug>:-Od>)
 else()
-    target_compile_options(swa PRIVATE -O3)
+    target_compile_options(swa PRIVATE -O0)
 endif()
 if(MSVC)
+    target_compile_options(swa PRIVATE -Zi)
 else()
-    target_compile_options(swa PRIVATE -fvisibility=hidden)
+    target_compile_options(swa PRIVATE -g)
 endif()
 if(MSVC)
     set_property(TARGET swa PROPERTY
@@ -42,14 +43,14 @@ target_link_libraries(swa PRIVATE
     pthread
 )
 target_link_directories(swa PRIVATE
-    build/linux/x86_64/release
+    build/linux/x86_64/debug
 )
 target_link_options(swa PRIVATE
     -m64
 )
 if(Clang)
 target_link_options(swa PRIVATE
-    -stdlib=libc++
+    "SHELL:-lc++abi -lm -lc -lgcc_s -lgcc"
 )
 endif()
 target_sources(swa PRIVATE
@@ -59,23 +60,22 @@ target_sources(swa PRIVATE
 # target
 add_library(swallow_base STATIC "")
 set_target_properties(swallow_base PROPERTIES OUTPUT_NAME "swallow_base")
-set_target_properties(swallow_base PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(swallow_base PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
 target_compile_options(swallow_base PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
 set_target_properties(swallow_base PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(swallow_base PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(swallow_base PRIVATE $<$<CONFIG:Release>:-O2>)
+    target_compile_options(swallow_base PRIVATE $<$<CONFIG:Debug>:-Od>)
 else()
-    target_compile_options(swallow_base PRIVATE -O3)
+    target_compile_options(swallow_base PRIVATE -O0)
 endif()
 if(MSVC)
+    target_compile_options(swallow_base PRIVATE -Zi)
 else()
-    target_compile_options(swallow_base PRIVATE -fvisibility=hidden)
+    target_compile_options(swallow_base PRIVATE -g)
 endif()
 if(MSVC)
     set_property(TARGET swallow_base PROPERTY
@@ -91,20 +91,18 @@ target_sources(swallow_base PRIVATE
 # target
 add_library(swc STATIC "")
 set_target_properties(swc PROPERTIES OUTPUT_NAME "swc")
-set_target_properties(swc PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(swc PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
 target_include_directories(swc PRIVATE
     compiler
 )
 target_include_directories(swc SYSTEM PRIVATE
     /home/muqiu/.xmake/packages/t/tl_optional/v1.1.0/c98c96f6367f4230ab618e8e653468c7/include
     /home/muqiu/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include
-    /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/469f312ffeff47d9aa249e3ed8e400dc/include
+    /home/muqiu/.xmake/packages/s/spdlog/v1.14.1/e4490651087647e189bd99bf53ec35cc/include
 )
 target_compile_options(swc PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
 if(Clang)
 target_compile_options(swc PRIVATE
@@ -114,13 +112,14 @@ endif()
 set_target_properties(swc PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(swc PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(swc PRIVATE $<$<CONFIG:Release>:-O2>)
+    target_compile_options(swc PRIVATE $<$<CONFIG:Debug>:-Od>)
 else()
-    target_compile_options(swc PRIVATE -O3)
+    target_compile_options(swc PRIVATE -O0)
 endif()
 if(MSVC)
+    target_compile_options(swc PRIVATE -Zi)
 else()
-    target_compile_options(swc PRIVATE -fvisibility=hidden)
+    target_compile_options(swc PRIVATE -g)
 endif()
 if(MSVC)
     set_property(TARGET swc PROPERTY
@@ -134,15 +133,15 @@ target_link_options(swc PRIVATE
 )
 if(Clang)
 target_link_options(swc PRIVATE
-    -stdlib=libc++
+    "SHELL:-lc++abi -lm -lc -lgcc_s -lgcc"
 )
 endif()
 target_sources(swc PRIVATE
     compiler/compiler.cpp
+    compiler/ast/type.cpp
     compiler/ast/ast.cpp
     compiler/ast/dump.cpp
     compiler/ast/gmachine.cpp
-    compiler/ast/type.cpp
     compiler/diagnostics/utils.cpp
     compiler/diagnostics/diagnostics.cpp
     compiler/diagnostics/reporter.cpp
@@ -165,24 +164,23 @@ target_sources(swc PRIVATE
 # target
 add_library(swi STATIC "")
 set_target_properties(swi PROPERTIES OUTPUT_NAME "swi")
-set_target_properties(swi PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(swi PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/debug")
 add_dependencies(swi swc)
 target_compile_options(swi PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
     $<$<COMPILE_LANGUAGE:CXX>:-m64>
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
 set_target_properties(swi PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(swi PRIVATE cxx_std_20)
 if(MSVC)
-    target_compile_options(swi PRIVATE $<$<CONFIG:Release>:-O2>)
+    target_compile_options(swi PRIVATE $<$<CONFIG:Debug>:-Od>)
 else()
-    target_compile_options(swi PRIVATE -O3)
+    target_compile_options(swi PRIVATE -O0)
 endif()
 if(MSVC)
+    target_compile_options(swi PRIVATE -Zi)
 else()
-    target_compile_options(swi PRIVATE -fvisibility=hidden)
+    target_compile_options(swi PRIVATE -g)
 endif()
 if(MSVC)
     set_property(TARGET swi PROPERTY
@@ -193,14 +191,14 @@ target_link_libraries(swi PRIVATE
     pthread
 )
 target_link_directories(swi PRIVATE
-    build/linux/x86_64/release
+    build/linux/x86_64/debug
 )
 target_link_options(swi PRIVATE
     -m64
 )
 if(Clang)
 target_link_options(swi PRIVATE
-    -stdlib=libc++
+    "SHELL:-lc++abi -lm -lc -lgcc_s -lgcc"
 )
 endif()
 target_sources(swi PRIVATE

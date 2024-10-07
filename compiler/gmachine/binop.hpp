@@ -32,6 +32,7 @@
 
 #include "utils/binop.hpp"
 #include <string>
+#include "error/errors.hpp"
 
 namespace swallow::compiler::gmachine
 {

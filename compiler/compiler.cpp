@@ -41,12 +41,10 @@ namespace swallow::compiler
   {
 #ifdef TEST_RUNTIME
     auto *result =
-      runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(
-        runtime::node::Global::Allocate(EntryPoint, 0)));
+      runtime::Runtime::Eval(reinterpret_cast<runtime::node::Base *>(runtime::node::Global::Allocate(EntryPoint, 0)));
 
     std::cout << std::format(
-      "test runtime...{}\n",
-      reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
+      "test runtime...{}\n", reinterpret_cast<swallow::compiler::runtime::node::Int *>(result)->Value);
 #endif
 
     CompileUnit::FILE = new CompileUnit(options.file);
@@ -61,9 +59,7 @@ namespace swallow::compiler
     const auto end = std::chrono::system_clock::now();
 
     std::cout << std::format(
-      "ok ({} ms)\n",
-      double(std::chrono::duration_cast<std::chrono::microseconds>(end - start)
-               .count()));
+      "ok ({} ms)\n", double(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()));
 
     delete CompileUnit::FILE;
     delete diagnostics::Reporter::REPORTER;

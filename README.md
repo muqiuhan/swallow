@@ -37,9 +37,10 @@
   - [Flex:  The Fast Lexical Analyzer - scanner generator for lexing in C and C++](https://github.com/westes/flex)
 
 - Library/Frameworks
-  - [optional: C++11/14/17 std::optional with functional-style extensions and reference support](https://github.com/TartanLlama/optional)
-  - [result: Result<T, E> for Modern C++](https://github.com/p-ranav/result)
-  
+  - [llvm: LLVM project](https://github.com/llvm/llvm-project)
+  - [tl_optional:  C++11/14/17 std::optional with functional-style extensions and reference support](https://github.com/TartanLlama/optional)
+  - [tl_expected: C++11/14/17 std::expected with functional-style extensions ](https://github.com/TartanLlama/expected/)
+  - [spdlog: Fast C++ logging library](https://github.com/gabime/spdlog)
 
 - REFERENCE
   - [Theory of computation](https://en.wikipedia.org/wiki/Theory_of_computation)

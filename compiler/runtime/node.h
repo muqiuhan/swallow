@@ -31,6 +31,7 @@
 #define SWALLOW_COMPILER_RUNTIME_NODE_H
 
 #include <cstdint>
+#include "error/errors.hpp"
 
 namespace swallow::compiler::runtime::stack
 {
@@ -65,8 +66,7 @@ namespace swallow::compiler::runtime::node
     Base *Right;
 
   public:
-    [[nodiscard]] static auto
-      Allocate(Base *Left, Base *Right) noexcept -> Application *;
+    [[nodiscard]] static auto Allocate(Base *Left, Base *Right) noexcept -> Application *;
   };
 
   class Int
@@ -87,9 +87,7 @@ namespace swallow::compiler::runtime::node
     void (*Function)(runtime::stack::Stack *);
 
   public:
-    [[nodiscard]] static auto Allocate(
-      void (*Function)(runtime::stack::Stack *),
-      int32_t Arity) noexcept -> Global *;
+    [[nodiscard]] static auto Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *;
   };
 
   class Ind
