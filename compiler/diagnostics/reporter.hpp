@@ -44,7 +44,9 @@ namespace swallow::compiler::diagnostics
   public:
     inline static Reporter *REPORTER = nullptr;
 
-    explicit Reporter() : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath}) {}
+    explicit Reporter()
+      : Detail({CompileUnit::FILE->FileValue, CompileUnit::FILE->FilePath})
+    {}
 
     [[noreturn]] auto normal(
       const yy::parser::location_type &loc,

@@ -66,33 +66,38 @@ namespace swallow::compiler::ir::context
 
   void LLVMContext::CreateTypes() noexcept
   {
-    StackType    = llvm::StructType::create(Context, "Struct");
+    StackType = llvm::StructType::create(Context, "Struct");
     StackPtrType = llvm::PointerType::getUnqual(StackType);
-    TagType      = llvm::IntegerType::getInt8Ty(Context);
+    TagType = llvm::IntegerType::getInt8Ty(Context);
   }
 
   inline static auto CreateNewFunction(
     const std::string &name,
     llvm::LLVMContext &Context,
     llvm::PointerType *StackPtrType,
-    llvm::Module      &Module) noexcept -> std::pair<std::string, llvm::Function *>
+    llvm::Module &Module) noexcept -> std::pair<std::string, llvm::Function *>
   {
-    auto *voidType            = llvm::Type::getVoidTy(Context);
-    auto *functionType        = llvm::FunctionType::get(voidType, {StackPtrType}, false);
-    auto  functionName        = std::format("swallow_{}", name);
+    auto *voidType = llvm::Type::getVoidTy(Context);
+    auto *functionType =
+      llvm::FunctionType::get(voidType, {StackPtrType}, false);
+    auto  functionName = std::format("swallow_{}", name);
     auto  functionLinkageType = llvm::Function::LinkageTypes::ExternalLinkage;
-    auto *function            = llvm::Function::Create(functionType, functionLinkageType, functionName, &Module);
+    auto *function = llvm::Function::Create(
+      functionType, functionLinkageType, functionName, &Module);
 
     return std::make_pair(functionName, function);
   }
 
-  auto LLVMContext::CreateCustomFunction(const std::string &name, int32_t arity) noexcept -> llvm::Function *
+  auto LLVMContext::CreateCustomFunction(
+    const std::string &name, int32_t arity) noexcept -> llvm::Function *
   {
-    auto &&[newFunctionName, newFunction] = CreateNewFunction(name, Context, StackPtrType, Module);
-    auto *startBlock                      = llvm::BasicBlock::Create(Context, "EntryPoint", newFunction);
-    auto  newCustomFunction               = std::make_unique<CustomFunction>();
+    auto &&[newFunctionName, newFunction] =
+      CreateNewFunction(name, Context, StackPtrType, Module);
+    auto *startBlock =
+      llvm::BasicBlock::Create(Context, "EntryPoint", newFunction);
+    auto newCustomFunction = std::make_unique<CustomFunction>();
 
-    newCustomFunction->Arity    = arity;
+    newCustomFunction->Arity = arity;
     newCustomFunction->Function = newFunction;
     CustomFunctions.insert({newFunctionName, std::move(newCustomFunction)});
 
@@ -110,41 +115,65 @@ namespace swallow::compiler::ir::context
 
   auto LLVMContext::CreatePop(llvm::Function *function) noexcept -> llvm::Value *
   {
-    return Builder.CreateCall(Functions.at("swallow::compiler::runtime::stack::Stack::Pop"), {function->arg_begin()});
+    return Builder.CreateCall(
+      Functions.at("swallow::compiler::runtime::stack::Stack::Pop"),
+      {function->arg_begin()});
   }
 
-  auto LLVMContext::CreatePeek(llvm::Function *function, llvm::Value *value) noexcept -> llvm::Function * {}
+  auto LLVMContext::CreatePeek(
+    llvm::Function *function, llvm::Value *value) noexcept -> llvm::Function *
+  {}
 
-  void LLVMContext::CreatePush(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreatePush(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
-  void LLVMContext::CreatePopN(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreatePopN(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
-  void LLVMContext::CreateUpdate(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreateUpdate(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
-  void LLVMContext::CreatePack(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreatePack(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
-  void LLVMContext::CreateSplit(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreateSplit(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
-  void LLVMContext::CreateSlide(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreateSlide(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
-  void LLVMContext::CreateAlloc(llvm::Function *function, llvm::Value *value) noexcept {}
+  void LLVMContext::CreateAlloc(
+    llvm::Function *function, llvm::Value *value) noexcept
+  {}
 
   auto LLVMContext::CreateEval(llvm::Value *value) noexcept -> llvm::Value * {}
 
   auto LLVMContext::CreateNum(llvm::Value *value) noexcept -> llvm::Value * {}
 
-  auto LLVMContext::CreateGlobal(llvm::Value *value) noexcept -> llvm::Value * {}
+  auto LLVMContext::CreateGlobal(llvm::Value *value) noexcept -> llvm::Value *
+  {}
 
-  auto LLVMContext::CreateApp(llvm::Value *left, llvm::Value *right) noexcept -> llvm::Value * {}
+  auto LLVMContext::CreateApp(llvm::Value *left, llvm::Value *right) noexcept
+    -> llvm::Value *
+  {}
 
-  auto LLVMContext::UnwrapDataTag(llvm::Value *value) noexcept -> llvm::Value * {}
+  auto LLVMContext::UnwrapDataTag(llvm::Value *value) noexcept -> llvm::Value *
+  {}
 
   auto LLVMContext::UnwrapNum(llvm::Value *value) noexcept -> llvm::Value *
   {
-    auto *type = llvm::PointerType::getUnqual(StructTypes.at("swallow::compiler::runtime::node::Int"));
-    auto *num  = Builder.CreatePointerCast(value, type);
+    auto *type = llvm::PointerType::getUnqual(
+      StructTypes.at("swallow::compiler::runtime::node::Int"));
+    auto *num = Builder.CreatePointerCast(value, type);
 
-    return Builder.CreateLoad(type, Builder.CreateGEP(type, num, {CreateInt32(0), CreateInt32(1)}));
+    return Builder.CreateLoad(
+      type, Builder.CreateGEP(type, num, {CreateInt32(0), CreateInt32(1)}));
   }
 
 } // namespace swallow::compiler::ir::context

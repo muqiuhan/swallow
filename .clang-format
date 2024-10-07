@@ -22,8 +22,8 @@ BreakBeforeTernaryOperators:	true
 BreakConstructorInitializersBeforeComma:	true
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
-ColumnLimit: 120
-LambdaBodyIndentation: OuterScope
+ColumnLimit: 80
+LambdaBodyIndentation: Signature
 RemoveBracesLLVM: true
 SeparateDefinitionBlocks: Always
 CommentPragmas:	'^ IWYU pragma:'
@@ -31,7 +31,6 @@ ConstructorInitializerAllOnOneLineOrOnePerLine:	true
 ConstructorInitializerIndentWidth:	2
 ContinuationIndentWidth:	2
 AlignAfterOpenBracket: AlwaysBreak
-AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations:
   Enabled:         true
   AcrossEmptyLines: false
@@ -52,7 +51,7 @@ AllowShortBlocksOnASingleLine: Never
 Cpp11BracedListStyle:	true
 DerivePointerAlignment:	true
 DisableFormat:	false
-ExperimentalAutoDetectBinPacking:	true
+ExperimentalAutoDetectBinPacking:	false
 ForEachMacros:	[ foreach, Q_FOREACH, BOOST_FOREACH ]
 IncludeCategories:
   - Regex:	'^"(llvm|llvm-c|clang|clang-c)/'
@@ -69,11 +68,11 @@ MacroBlockBegin:	''
 MacroBlockEnd:	''
 MaxEmptyLinesToKeep:	1
 NamespaceIndentation: All
-PenaltyBreakComment:	120
-PenaltyBreakFirstLessLess:	120
-PenaltyBreakString:	120
-PenaltyExcessCharacter:	120
-PenaltyReturnTypeOnItsOwnLine:	120
+PenaltyBreakComment:	80
+PenaltyBreakFirstLessLess:	80
+PenaltyBreakString:	80
+PenaltyExcessCharacter:	80
+PenaltyReturnTypeOnItsOwnLine:	80
 PointerAlignment:	Middle
 ReflowComments:	true
 SortIncludes:	"Never"

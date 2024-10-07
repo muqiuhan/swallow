@@ -94,7 +94,8 @@ namespace swallow::compiler::ir::context
 
     auto CreatePop(llvm::Function *function) noexcept -> llvm::Value *;
 
-    auto CreatePeek(llvm::Function *function, llvm::Value *value) noexcept -> llvm::Function *;
+    auto CreatePeek(llvm::Function *function, llvm::Value *value) noexcept
+      -> llvm::Function *;
 
     void CreatePush(llvm::Function *function, llvm::Value *value) noexcept;
 
@@ -116,9 +117,11 @@ namespace swallow::compiler::ir::context
 
     auto CreateGlobal(llvm::Value *value) noexcept -> llvm::Value *;
 
-    auto CreateApp(llvm::Value *left, llvm::Value *right) noexcept -> llvm::Value *;
+    auto CreateApp(llvm::Value *left, llvm::Value *right) noexcept
+      -> llvm::Value *;
 
-    auto CreateCustomFunction(const std::string &name, int32_t arity) noexcept -> llvm::Function *;
+    auto CreateCustomFunction(const std::string &name, int32_t arity) noexcept
+      -> llvm::Function *;
 
     auto UnwrapDataTag(llvm::Value *value) noexcept -> llvm::Value *;
 

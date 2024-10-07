@@ -46,7 +46,8 @@ namespace swallow::compiler::type
 
     Environment() : Environment(nullptr) {}
 
-    [[nodiscard]] auto Lookup(const std::string &name) const noexcept -> utils::Result<Type::Ptr, utils::Void>;
+    [[nodiscard]] auto Lookup(const std::string &name) const noexcept
+      -> utils::Result<Type::Ptr, utils::Void>;
 
     [[nodiscard]] auto Scope() const noexcept -> Environment;
 

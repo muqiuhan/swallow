@@ -31,7 +31,7 @@
 // version 2.2 of Bison.
 
 /**
- ** \file /home/muqiu/Workspace/swallow/compiler/parser/location.hh
+ ** \file /home/muqiu/Workspace/Swallow/compiler/parser/location.hh
  ** Define the yy::location class.
  */
 
@@ -55,7 +55,7 @@
 
 namespace yy
 {
-#line 58 "/home/muqiu/Workspace/swallow/compiler/parser/location.hh"
+#line 58 "/home/muqiu/Workspace/Swallow/compiler/parser/location.hh"
 
   /// A point in a source file.
   class position
@@ -67,16 +67,18 @@ namespace yy
     typedef int counter_type;
 
     /// Construct a position.
-    explicit position(filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    explicit position(
+      filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
       : filename(f), line(l), column(c)
     {}
 
     /// Initialization.
-    void initialize(filename_type* fn = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    void initialize(
+      filename_type* fn = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
     {
       filename = fn;
-      line     = l;
-      column   = c;
+      line = l;
+      column = c;
     }
 
     /** \name Line and Column related manipulators
@@ -87,7 +89,7 @@ namespace yy
       if (count)
         {
           column = 1;
-          line   = add_(line, count, 1);
+          line = add_(line, count, 1);
         }
     }
 
@@ -105,7 +107,8 @@ namespace yy
 
   private:
     /// Compute max (min, lhs+rhs).
-    static counter_type add_(counter_type lhs, counter_type rhs, counter_type min)
+    static counter_type
+      add_(counter_type lhs, counter_type rhs, counter_type min)
     {
       return lhs + rhs < min ? min : lhs + rhs;
     }
@@ -119,20 +122,30 @@ namespace yy
   }
 
   /// Add \a width columns.
-  inline position operator+(position res, position::counter_type width) { return res += width; }
+  inline position operator+(position res, position::counter_type width)
+  {
+    return res += width;
+  }
 
   /// Subtract \a width columns, in place.
-  inline position& operator-=(position& res, position::counter_type width) { return res += -width; }
+  inline position& operator-=(position& res, position::counter_type width)
+  {
+    return res += -width;
+  }
 
   /// Subtract \a width columns.
-  inline position operator-(position res, position::counter_type width) { return res -= width; }
+  inline position operator-(position res, position::counter_type width)
+  {
+    return res -= width;
+  }
 
   /** \brief Intercept output stream redirection.
    ** \param ostr the destination output stream
    ** \param pos a reference to the position to redirect
    */
   template <typename YYChar>
-  std::basic_ostream<YYChar>& operator<<(std::basic_ostream<YYChar>& ostr, const position& pos)
+  std::basic_ostream<YYChar>&
+    operator<<(std::basic_ostream<YYChar>& ostr, const position& pos)
   {
     if (pos.filename)
       ostr << *pos.filename << ':';
@@ -155,10 +168,13 @@ namespace yy
     explicit location(const position& p = position()) : begin(p), end(p) {}
 
     /// Construct a 0-width location in \a f, \a l, \a c.
-    explicit location(filename_type* f, counter_type l = 1, counter_type c = 1) : begin(f, l, c), end(f, l, c) {}
+    explicit location(filename_type* f, counter_type l = 1, counter_type c = 1)
+      : begin(f, l, c), end(f, l, c)
+    {}
 
     /// Initialization.
-    void initialize(filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
+    void initialize(
+      filename_type* f = YY_NULLPTR, counter_type l = 1, counter_type c = 1)
     {
       begin.initialize(f, l, c);
       end = begin;
@@ -193,7 +209,10 @@ namespace yy
   }
 
   /// Join two locations.
-  inline location operator+(location res, const location& end) { return res += end; }
+  inline location operator+(location res, const location& end)
+  {
+    return res += end;
+  }
 
   /// Add \a width columns to the end position, in place.
   inline location& operator+=(location& res, location::counter_type width)
@@ -203,13 +222,22 @@ namespace yy
   }
 
   /// Add \a width columns to the end position.
-  inline location operator+(location res, location::counter_type width) { return res += width; }
+  inline location operator+(location res, location::counter_type width)
+  {
+    return res += width;
+  }
 
   /// Subtract \a width columns to the end position, in place.
-  inline location& operator-=(location& res, location::counter_type width) { return res += -width; }
+  inline location& operator-=(location& res, location::counter_type width)
+  {
+    return res += -width;
+  }
 
   /// Subtract \a width columns to the end position.
-  inline location operator-(location res, location::counter_type width) { return res -= width; }
+  inline location operator-(location res, location::counter_type width)
+  {
+    return res -= width;
+  }
 
   /** \brief Intercept output stream redirection.
    ** \param ostr the destination output stream
@@ -218,11 +246,15 @@ namespace yy
    ** Avoid duplicate information.
    */
   template <typename YYChar>
-  std::basic_ostream<YYChar>& operator<<(std::basic_ostream<YYChar>& ostr, const location& loc)
+  std::basic_ostream<YYChar>&
+    operator<<(std::basic_ostream<YYChar>& ostr, const location& loc)
   {
-    location::counter_type end_col = 0 < loc.end.column ? loc.end.column - 1 : 0;
+    location::counter_type end_col =
+      0 < loc.end.column ? loc.end.column - 1 : 0;
     ostr << loc.begin;
-    if (loc.end.filename && (!loc.begin.filename || *loc.begin.filename != *loc.end.filename))
+    if (
+      loc.end.filename
+      && (!loc.begin.filename || *loc.begin.filename != *loc.end.filename))
       ostr << '-' << loc.end.filename << ':' << loc.end.line << '.' << end_col;
     else if (loc.begin.line < loc.end.line)
       ostr << '-' << loc.end.line << '.' << end_col;
@@ -233,6 +265,6 @@ namespace yy
 
 } // namespace yy
 
-#line 303 "/home/muqiu/Workspace/swallow/compiler/parser/location.hh"
+#line 303 "/home/muqiu/Workspace/Swallow/compiler/parser/location.hh"
 
 #endif // !YY_YY_HOME_MUQIU_WORKSPACE_SWALLOW_COMPILER_PARSER_LOCATION_HH_INCLUDED
