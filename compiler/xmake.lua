@@ -8,7 +8,7 @@ target("swc")
     add_files("*.cpp", "**/*.cpp")
     add_includedirs(".")
     add_packages("tl_optional", "tl_expected", "spdlog", "llvm")
-    add_ldflags("clang::-stdlib=libc++")
+    add_ldflags("clang::-lc++abi")
     add_cxxflags("clang::-stdlib=libc++")
 
     before_build(function () 
