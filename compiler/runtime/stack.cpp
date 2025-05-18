@@ -33,95 +33,99 @@
 
 namespace swallow::compiler::runtime::stack
 {
-  void Stack::Initialize(Stack *stack) noexcept
+  void Stack::Initialize(Stack *stack)
   {
     stack->Size = 4;
     stack->Count = 0;
-    stack->Data = reinterpret_cast<node::Base **>(std::malloc(sizeof(*(stack->Data)) * stack->Size));
+    stack->Data = reinterpret_cast<node::Base **>(
+      std::malloc(sizeof(*(stack->Data)) * stack->Size));
 
     if (nullptr == stack->Data)
-      Panic("ICE: Cannot initialize runtime stack");
+      Panic("Cannot initialize runtime stack");
   }
 
-  void Stack::Free(Stack *stack) noexcept { free(stack->Data); }
+  void Stack::Free(Stack *stack) { free(stack->Data); }
 
-  void Stack::Push(Stack *stack, node::Base *node) noexcept
+  void Stack::Push(Stack *stack, node::Base *node)
   {
     while (stack->Count >= stack->Size)
       {
-        stack->Data =
-          reinterpret_cast<node::Base **>(realloc(stack->Data, (sizeof(*(stack->Data)) * (stack->Size *= 2))));
+        stack->Data = reinterpret_cast<node::Base **>(
+          realloc(stack->Data, (sizeof(*(stack->Data)) * (stack->Size *= 2))));
 
         if (nullptr == stack->Data)
-          Panic("ICE: Unable to expand runtime stack");
+          Panic("Unable to expand runtime stack");
       }
 
     stack->Data[stack->Count++] = node;
   }
 
-  [[nodiscard]] auto Stack::Pop(Stack *stack) noexcept -> node::Base *
+  [[nodiscard]] auto Stack::Pop(Stack *stack) -> node::Base *
   {
     if (stack->Count < 0)
-      Panic("ICE: Cannot pop element from empty runtime stack");
+      Panic("Cannot pop element from empty runtime stack");
 
     return stack->Data[--(stack->Count)];
   }
 
-  [[nodiscard]] auto Stack::Peek(Stack *stack, uint64_t o) noexcept -> node::Base *
+  [[nodiscard]] auto Stack::Peek(Stack *stack, uint64_t o) -> node::Base *
   {
     if (stack->Count < o)
-      Panic("ICE: peek exceeds the number of existing elements in the "
+      Panic("peek exceeds the number of existing elements in the "
             "runtime stack");
 
     return stack->Data[(stack->Count) - o - 1];
   }
 
-  void Stack::PopN(Stack *stack, uint64_t n) noexcept
+  void Stack::PopN(Stack *stack, uint64_t n)
   {
     if (stack->Count <= n)
-      Panic("ICE: pop exceeds the number of existing elements in the "
+      Panic("pop exceeds the number of existing elements in the "
             "runtime stack");
 
     stack->Count -= n;
   }
 
-  void Stack::Slide(Stack *stack, uint64_t n) noexcept
+  void Stack::Slide(Stack *stack, uint64_t n)
   {
     if (stack->Count < n)
-      Panic("ICE: slide exceeds the number of existing elements in the "
+      Panic("slide exceeds the number of existing elements in the "
             "runtime stack");
 
     stack->Data[stack->Count - n - 1] = stack->Data[stack->Count - 1];
     stack->Count -= n;
   }
 
-  void Stack::Update(Stack *stack, uint64_t o) noexcept
+  void Stack::Update(Stack *stack, uint64_t o)
   {
     if (stack->Count < o + 1)
-      Panic("ICE: update exceeds the number of existing elements in the "
+      Panic("update exceeds the number of existing elements in the "
             "runtime stack");
 
-    auto *ind = reinterpret_cast<node::Ind *>(stack->Data[stack->Count - o - 2]);
+    auto *ind =
+      reinterpret_cast<node::Ind *>(stack->Data[stack->Count - o - 2]);
     ind->Node.Tag = node::Tag::IND;
     ind->Next = stack->Data[stack->Count -= 1];
   }
 
-  void Stack::Allocate(Stack *stack, uint64_t o) noexcept
+  void Stack::Allocate(Stack *stack, uint64_t o)
   {
     while (o--)
-      Stack::Push(stack, reinterpret_cast<node::Base *>(node::Ind::Allocate(nullptr)));
+      Stack::Push(
+        stack, reinterpret_cast<node::Base *>(node::Ind::Allocate(nullptr)));
   }
 
-  void Stack::Pack(Stack *stack, uint64_t n, node::Tag tag) noexcept
+  void Stack::Pack(Stack *stack, uint64_t n, node::Tag tag)
   {
     if (stack->Count <= n)
-      Panic("ICE: update exceeds the number of existing elements in the "
+      Panic("update exceeds the number of existing elements in the "
             "runtime stack");
 
-    auto **data = reinterpret_cast<node::Base **>(std::malloc(sizeof(*stack->Data) * n));
+    auto **data =
+      reinterpret_cast<node::Base **>(std::malloc(sizeof(*stack->Data) * n));
 
     if (data == nullptr)
-      Panic("ICE: Cannot allocate data when pack stack");
+      Panic("Cannot allocate data when pack stack");
 
     std::memcpy(data, &stack->Data[stack->Count - n - 1], n * sizeof(*data));
 
@@ -134,7 +138,7 @@ namespace swallow::compiler::runtime::stack
     stack->Push(stack, reinterpret_cast<node::Base *>(node));
   }
 
-  void Stack::Split(Stack *stack, uint64_t n) noexcept
+  void Stack::Split(Stack *stack, uint64_t n)
   {
     auto *node = reinterpret_cast<node::Data *>(Stack::Pop(stack));
 

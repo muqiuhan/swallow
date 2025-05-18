@@ -2,7 +2,13 @@
 #include "utils/structopt.hpp"
 #include <string>
 
-STRUCTOPT(swallow::compiler::CompilerOptions, file, verbose, dump_ast, dump_types, dump_gmachine_ir);
+STRUCTOPT(
+  swallow::compiler::CompilerOptions,
+  file,
+  verbose,
+  dump_ast,
+  dump_types,
+  dump_gmachine_ir);
 
 auto main(int argc, char *argv[]) -> int
 {
@@ -13,7 +19,9 @@ auto main(int argc, char *argv[]) -> int
         {
           return swallow::compiler::Compiler(
             structopt::app(
-              "swa compile", swallow::compiler::CompilerOptions::VERSION, swallow::compiler::CompilerOptions::HELP)
+              "swa compile",
+              swallow::compiler::CompilerOptions::VERSION,
+              swallow::compiler::CompilerOptions::HELP)
               .parse<swallow::compiler::CompilerOptions>(argc - 1, &argv[1]));
         }
       if (command == "i" || command == "repl")

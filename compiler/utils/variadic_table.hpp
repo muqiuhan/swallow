@@ -58,7 +58,10 @@ namespace swallow::compiler::utils::variadicTable
      * @param static_column_size The size of columns that can't be found
      * automatically
      */
-    VariadicTable(std::vector<std::string> headers, unsigned int static_column_size = 0, unsigned int cell_padding = 1)
+    VariadicTable(
+      std::vector<std::string> headers,
+      unsigned int             static_column_size = 0,
+      unsigned int             cell_padding = 1)
       : _headers(headers)
       , _num_columns(std::tuple_size<DataTuple>::value)
       , _static_column_size(static_column_size)
@@ -75,7 +78,10 @@ namespace swallow::compiler::utils::variadicTable
      *
      * @param data A Tuple of data to add
      */
-    void addRow(Ts... entries) { _data.emplace_back(std::make_tuple(entries...)); }
+    void addRow(Ts... entries)
+    {
+      _data.emplace_back(std::make_tuple(entries...));
+    }
 
     /**
      * Pretty print the table of data
@@ -103,8 +109,10 @@ namespace swallow::compiler::utils::variadicTable
           auto half = _column_sizes[i] / 2;
           half -= _headers[i].size() / 2;
 
-          stream << std::string(_cell_padding, ' ') << std::setw(_column_sizes[i]) << std::left
-                 << std::string(half, ' ') + _headers[i] << std::string(_cell_padding, ' ') << "|";
+          stream << std::string(_cell_padding, ' ')
+                 << std::setw(_column_sizes[i]) << std::left
+                 << std::string(half, ' ') + _headers[i]
+                 << std::string(_cell_padding, ' ') << "|";
         }
 
       stream << "\n";
@@ -132,7 +140,8 @@ namespace swallow::compiler::utils::variadicTable
      * @column_format The format for each column: MUST be the same length as the
      * number of columns.
      */
-    void setColumnFormat(const std::vector<VariadicTableColumnFormat> &column_format)
+    void setColumnFormat(
+      const std::vector<VariadicTableColumnFormat> &column_format)
     {
       assert(column_format.size() == std::tuple_size<DataTuple>::value);
 
@@ -162,14 +171,18 @@ namespace swallow::compiler::utils::variadicTable
     // If it's a floating point value
     template <
       typename T,
-      typename = typename std::enable_if<std::is_arithmetic<typename std::remove_reference<T>::type>::value>::type>
+      typename = typename std::enable_if<
+        std::is_arithmetic<typename std::remove_reference<T>::type>::value>::type>
     static right_type justify(int /*firstchoice*/)
     {
       return std::right;
     }
 
     // Otherwise
-    template <typename T> static left_type justify(long /*secondchoice*/) { return std::left; }
+    template <typename T> static left_type justify(long /*secondchoice*/)
+    {
+      return std::left;
+    }
 
     /**
      * These three functions print out each item in a Tuple into the table
@@ -188,7 +201,9 @@ namespace swallow::compiler::utils::variadicTable
     void print_each(
       TupleType &&,
       StreamType & /*stream*/,
-      std::integral_constant<size_t, std::tuple_size<typename std::remove_reference<TupleType>::type>::value>)
+      std::integral_constant<
+        size_t,
+        std::tuple_size<typename std::remove_reference<TupleType>::type>::value>)
     {}
 
     /**
@@ -198,16 +213,22 @@ namespace swallow::compiler::utils::variadicTable
       std::size_t I,
       typename TupleType,
       typename StreamType,
-      typename =
-        typename std::enable_if<I != std::tuple_size<typename std::remove_reference<TupleType>::type>::value>::type>
-    void print_each(TupleType &&t, StreamType &stream, std::integral_constant<size_t, I>)
+      typename = typename std::enable_if<
+        I
+        != std::tuple_size<
+          typename std::remove_reference<TupleType>::type>::value>::type>
+    void print_each(
+      TupleType &&t, StreamType &stream, std::integral_constant<size_t, I>)
     {
       auto &val = std::get<I>(t);
 
       // Set the precision
       if (!_precision.empty())
         {
-          assert(_precision.size() == std::tuple_size<typename std::remove_reference<TupleType>::type>::value);
+          assert(
+            _precision.size()
+            == std::tuple_size<
+              typename std::remove_reference<TupleType>::type>::value);
 
           stream << std::setprecision(_precision[I]);
         }
@@ -215,7 +236,10 @@ namespace swallow::compiler::utils::variadicTable
       // Set the format
       if (!_column_format.empty())
         {
-          assert(_column_format.size() == std::tuple_size<typename std::remove_reference<TupleType>::type>::value);
+          assert(
+            _column_format.size()
+            == std::tuple_size<
+              typename std::remove_reference<TupleType>::type>::value);
 
           if (_column_format[I] == VariadicTableColumnFormat::SCIENTIFIC)
             stream << std::scientific;
@@ -227,7 +251,8 @@ namespace swallow::compiler::utils::variadicTable
             stream << std::fixed << std::setprecision(2);
         }
 
-      stream << std::string(_cell_padding, ' ') << std::setw(_column_sizes[I]) << justify<decltype(val)>(0) << val
+      stream << std::string(_cell_padding, ' ') << std::setw(_column_sizes[I])
+             << justify<decltype(val)>(0) << val
              << std::string(_cell_padding, ' ') << "|";
 
       // Unset the format
@@ -239,15 +264,20 @@ namespace swallow::compiler::utils::variadicTable
         }
 
       // Recursive call to print the next item
-      print_each(std::forward<TupleType>(t), stream, std::integral_constant<size_t, I + 1>());
+      print_each(
+        std::forward<TupleType>(t),
+        stream,
+        std::integral_constant<size_t, I + 1>());
     }
 
     /**
      * his is what gets called first
      */
-    template <typename TupleType, typename StreamType> void print_each(TupleType &&t, StreamType &stream)
+    template <typename TupleType, typename StreamType>
+    void print_each(TupleType &&t, StreamType &stream)
     {
-      print_each(std::forward<TupleType>(t), stream, std::integral_constant<size_t, 0>());
+      print_each(
+        std::forward<TupleType>(t), stream, std::integral_constant<size_t, 0>());
     }
 
     /**
@@ -255,7 +285,9 @@ namespace swallow::compiler::utils::variadicTable
      *
      * If the datatype has a size() member... let's call it
      */
-    template <class T> size_t sizeOfData(const T &data, decltype(((T *) nullptr)->size()) * /*dummy*/ = nullptr)
+    template <class T>
+    size_t sizeOfData(
+      const T &data, decltype(((T *) nullptr)->size()) * /*dummy*/ = nullptr)
     {
       return data.size();
     }
@@ -266,7 +298,10 @@ namespace swallow::compiler::utils::variadicTable
      * If the datatype is an integer - let's get it's length
      */
     template <class T>
-    size_t sizeOfData(const T &data, typename std::enable_if<std::is_integral<T>::value>::type * /*dummy*/ = nullptr)
+    size_t sizeOfData(
+      const T &data,
+      typename std::enable_if<std::is_integral<T>::value>::type * /*dummy*/ =
+        nullptr)
     {
       if (data == 0)
         return 1;
@@ -291,7 +326,9 @@ namespace swallow::compiler::utils::variadicTable
     void size_each(
       TupleType &&,
       std::vector<size_t> & /*sizes*/,
-      std::integral_constant<size_t, std::tuple_size<typename std::remove_reference<TupleType>::type>::value>)
+      std::integral_constant<
+        size_t,
+        std::tuple_size<typename std::remove_reference<TupleType>::type>::value>)
     {}
 
     /**
@@ -300,9 +337,14 @@ namespace swallow::compiler::utils::variadicTable
     template <
       std::size_t I,
       typename TupleType,
-      typename =
-        typename std::enable_if<I != std::tuple_size<typename std::remove_reference<TupleType>::type>::value>::type>
-    void size_each(TupleType &&t, std::vector<size_t> &sizes, std::integral_constant<size_t, I>)
+      typename = typename std::enable_if<
+        I
+        != std::tuple_size<
+          typename std::remove_reference<TupleType>::type>::value>::type>
+    void size_each(
+      TupleType          &&t,
+      std::vector<size_t> &sizes,
+      std::integral_constant<size_t, I>)
     {
       sizes[I] = sizeOfData(std::get<I>(t));
 
@@ -312,15 +354,20 @@ namespace swallow::compiler::utils::variadicTable
           sizes[I] = 6; // 100.00
 
       // Continue the recursion
-      size_each(std::forward<TupleType>(t), sizes, std::integral_constant<size_t, I + 1>());
+      size_each(
+        std::forward<TupleType>(t),
+        sizes,
+        std::integral_constant<size_t, I + 1>());
     }
 
     /**
      * The function that is actually called that starts the recursion
      */
-    template <typename TupleType> void size_each(TupleType &&t, std::vector<size_t> &sizes)
+    template <typename TupleType>
+    void size_each(TupleType &&t, std::vector<size_t> &sizes)
     {
-      size_each(std::forward<TupleType>(t), sizes, std::integral_constant<size_t, 0>());
+      size_each(
+        std::forward<TupleType>(t), sizes, std::integral_constant<size_t, 0>());
     }
 
     /**

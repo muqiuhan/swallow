@@ -1,32 +1,3 @@
-// Copyright (c) 2023 Muqiu Han
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright notice,
-//       this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//     notice,
-//       this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of Swallow nor the names of its contributors
-//       may be used to endorse or promote products derived from this software
-//       without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #ifndef SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP
 #define SWALLOW_COMPILER_G_MACHINE_INSTRUCTION_HPP
 
@@ -47,7 +18,7 @@ namespace swallow::compiler::gmachine::instruction
 
     virtual ~Instruction() = default;
 
-    virtual void Dump(uint8_t indent, std::ostream &to) const noexcept = 0;
+    virtual void Dump(uint8_t indent, std::ostream &to) const = 0;
   };
 
   class PushInt : public Instruction
@@ -57,7 +28,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit PushInt(int Value) : Value(Value) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class PushGlobal : public Instruction
@@ -67,7 +38,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit PushGlobal(std::string Name) : Name(std::move(Name)) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Push : public Instruction
@@ -77,7 +48,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Push(uint32_t Offset) : Offset(Offset) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Pop : public Instruction
@@ -87,13 +58,13 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Pop(uint32_t Count) : Count(Count) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class MakeApplication : public Instruction
   {
   public:
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Update : public Instruction
@@ -103,7 +74,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Update(uint32_t Offset) : Offset(Offset) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Pack : public Instruction
@@ -114,13 +85,13 @@ namespace swallow::compiler::gmachine::instruction
 
     Pack(int Tag, int Size) : Tag(Tag), Size(Size) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Split : public Instruction
   {
   public:
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Slide : public Instruction
@@ -130,7 +101,7 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Slide(uint32_t Offset) : Offset(Offset) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Binop : public Instruction
@@ -140,13 +111,13 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Binop(utils::Binop Operator) : Operator(Operator) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Eval : public Instruction
   {
   public:
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Allocation : public Instruction
@@ -156,13 +127,13 @@ namespace swallow::compiler::gmachine::instruction
 
     explicit Allocation(int Amount) : Amount(Amount) {}
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Unwind : public Instruction
   {
   public:
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 
   class Jump : public Instruction
@@ -171,7 +142,7 @@ namespace swallow::compiler::gmachine::instruction
     std::vector<std::vector<Instruction::Ptr>> Branches;
     std::map<uint8_t, uint8_t>                 TagMappings;
 
-    void Dump(uint8_t indent, std::ostream &to) const noexcept override;
+    void Dump(uint8_t indent, std::ostream &to) const override;
   };
 } // namespace swallow::compiler::gmachine::instruction
 

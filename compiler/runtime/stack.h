@@ -30,9 +30,9 @@
 #ifndef SWALLOW_COMPILER_RUNTIME_STACK_H
 #define SWALLOW_COMPILER_RUNTIME_STACK_H
 
+#include "error/errors.hpp"
 #include "node.h"
 #include <cstdint>
-#include "error/errors.hpp"
 
 namespace swallow::compiler::runtime::stack
 {
@@ -44,22 +44,22 @@ namespace swallow::compiler::runtime::stack
     node::Base **Data;
 
   public:
-    static void Initialize(Stack *stack) noexcept;
-    static void Free(Stack *stack) noexcept;
-    static void Push(Stack *stack, node::Base *node) noexcept;
+    static void Initialize(Stack *stack);
+    static void Free(Stack *stack);
+    static void Push(Stack *stack, node::Base *node);
 
     [[nodiscard]]
-    static auto Pop(Stack *stack) noexcept -> node::Base *;
+    static auto Pop(Stack *stack) -> node::Base *;
 
     [[nodiscard]]
-    static auto Peek(Stack *stack, uint64_t o) noexcept -> node::Base *;
+    static auto Peek(Stack *stack, uint64_t o) -> node::Base *;
 
-    static void PopN(Stack *stack, uint64_t n) noexcept;
-    static void Slide(Stack *stack, uint64_t n) noexcept;
-    static void Update(Stack *stack, uint64_t o) noexcept;
-    static void Allocate(Stack *stack, uint64_t o) noexcept;
-    static void Pack(Stack *stack, uint64_t n, node::Tag) noexcept;
-    static void Split(Stack *stack, uint64_t n) noexcept;
+    static void PopN(Stack *stack, uint64_t n);
+    static void Slide(Stack *stack, uint64_t n);
+    static void Update(Stack *stack, uint64_t o);
+    static void Allocate(Stack *stack, uint64_t o);
+    static void Pack(Stack *stack, uint64_t n, node::Tag);
+    static void Split(Stack *stack, uint64_t n);
   };
 } // namespace swallow::compiler::runtime::stack
 

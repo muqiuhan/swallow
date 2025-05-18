@@ -1,15 +1,12 @@
-add_requires("tl_optional", "tl_expected", "spdlog")
-add_requires("llvm", { system = true })
+add_requires("spdlog")
 
 target("swc")
     set_kind("static")
     set_languages("c++20")
 
     add_files("*.cpp", "**/*.cpp")
+    add_packages("spdlog")
     add_includedirs(".")
-    add_packages("tl_optional", "tl_expected", "spdlog", "llvm")
-    add_ldflags("clang::-lc++abi")
-    add_cxxflags("clang::-stdlib=libc++")
 
     before_build(function () 
         local command = "flex -o $(projectdir)/compiler/lexer/flex_lexer.cpp $(projectdir)/compiler/lexer/lexer.l"

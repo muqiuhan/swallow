@@ -30,11 +30,11 @@
 #ifndef SWALLOW_COMPILER_RUNTIME_H
 #define SWALLOW_COMPILER_RUNTIME_H
 
+#include "error/errors.hpp"
 #include "node.h"
 #include "stack.h"
-#include "error/errors.hpp"
 
-extern void EntryPoint(swallow::compiler::runtime::stack::Stack *stack) noexcept;
+extern void EntryPoint(swallow::compiler::runtime::stack::Stack *stack);
 
 namespace swallow::compiler::runtime
 {
@@ -43,9 +43,9 @@ namespace swallow::compiler::runtime
   class Runtime
   {
   public:
-    [[nodiscard]] static auto Eval(node::Base *node) noexcept -> node::Base *;
+    [[nodiscard]] static auto Eval(node::Base *node) -> node::Base *;
 
-    static void Unwind(Stack *stack) noexcept;
+    static void Unwind(Stack *stack);
   };
 } // namespace swallow::compiler::runtime
 

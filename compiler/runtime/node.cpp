@@ -28,22 +28,24 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "node.h"
-#include <cstdlib>
 #include "error/errors.hpp"
+#include <cstdlib>
 
 namespace swallow::compiler::runtime::node
 {
-  [[nodiscard]] auto Base::Allocate() noexcept -> Base *
+  [[nodiscard]] auto Base::Allocate() -> Base *
   {
-    auto *node = reinterpret_cast<Base *>(std::malloc(sizeof(class Application)));
+    auto *node =
+      reinterpret_cast<Base *>(std::malloc(sizeof(class Application)));
 
     if (nullptr == node)
-      Panic("ICE: Cannot allocate Base node");
+      Panic("Cannot allocate Base node");
     else
       return node;
   }
 
-  [[nodiscard]] auto Application::Allocate(Base *Left, Base *Right) noexcept -> Application *
+  [[nodiscard]] auto Application::Allocate(Base *Left, Base *Right)
+    -> Application *
   {
     auto *node = reinterpret_cast<Application *>(Base::Allocate());
     node->Node.Tag = Tag::APPLICATION;
@@ -52,7 +54,7 @@ namespace swallow::compiler::runtime::node
     return node;
   }
 
-  [[nodiscard]] auto Int::Allocate(int32_t Value) noexcept -> class Int *
+  [[nodiscard]] auto Int::Allocate(int32_t Value) -> class Int *
   {
     auto *node = reinterpret_cast<Int *>(Base::Allocate());
     node->Node.Tag = Tag::INT;
@@ -60,7 +62,9 @@ namespace swallow::compiler::runtime::node
     return node;
   }
 
-  [[nodiscard]] auto Global::Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *
+  [[nodiscard]] auto
+    Global::Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity)
+      -> Global *
   {
     auto *node = reinterpret_cast<Global *>(Base::Allocate());
     node->Node.Tag = Tag::GLOBAL;
@@ -69,7 +73,7 @@ namespace swallow::compiler::runtime::node
     return node;
   }
 
-  [[nodiscard]] auto Ind::Allocate(Base *Next) noexcept -> Ind *
+  [[nodiscard]] auto Ind::Allocate(Base *Next) -> Ind *
   {
     auto *node = reinterpret_cast<Ind *>(Base::Allocate());
     node->Node.Tag = Tag::IND;

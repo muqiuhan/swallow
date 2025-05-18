@@ -1,1 +1,1 @@
-auto Interpreter(int argc, char *argv[]) noexcept -> int { return 0; }
+auto Interpreter(int argc, char *argv[]) -> int { return 0; }

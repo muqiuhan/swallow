@@ -30,8 +30,8 @@
 #ifndef SWALLOW_COMPILER_RUNTIME_NODE_H
 #define SWALLOW_COMPILER_RUNTIME_NODE_H
 
-#include <cstdint>
 #include "error/errors.hpp"
+#include <cstdint>
 
 namespace swallow::compiler::runtime::stack
 {
@@ -55,7 +55,7 @@ namespace swallow::compiler::runtime::node
     enum Tag Tag;
 
   public:
-    [[nodiscard]] static auto Allocate() noexcept -> Base *;
+    [[nodiscard]] static auto Allocate() -> Base *;
   };
 
   class Application
@@ -66,7 +66,8 @@ namespace swallow::compiler::runtime::node
     Base *Right;
 
   public:
-    [[nodiscard]] static auto Allocate(Base *Left, Base *Right) noexcept -> Application *;
+    [[nodiscard]] static auto Allocate(Base *Left, Base *Right)
+      -> Application *;
   };
 
   class Int
@@ -76,7 +77,7 @@ namespace swallow::compiler::runtime::node
     int32_t Value;
 
   public:
-    [[nodiscard]] static auto Allocate(int32_t Value) noexcept -> Int *;
+    [[nodiscard]] static auto Allocate(int32_t Value) -> Int *;
   };
 
   class Global
@@ -87,7 +88,9 @@ namespace swallow::compiler::runtime::node
     void (*Function)(runtime::stack::Stack *);
 
   public:
-    [[nodiscard]] static auto Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity) noexcept -> Global *;
+    [[nodiscard]] static auto
+      Allocate(void (*Function)(runtime::stack::Stack *), int32_t Arity)
+        -> Global *;
   };
 
   class Ind
@@ -97,7 +100,7 @@ namespace swallow::compiler::runtime::node
     Base  Node;
 
   public:
-    [[nodiscard]] static auto Allocate(Base *Next) noexcept -> Ind *;
+    [[nodiscard]] static auto Allocate(Base *Next) -> Ind *;
   };
 
   class Data
